@@ -12,7 +12,7 @@
         <pubDate>Fri, 05 Nov 2021 16:23:41 +0800</pubDate>
         
         <guid>https://or4ngesec.github.io/post/bluehat-final-writeup/</guid>
-        <description>&lt;img src="https://or4ngesec.github.io/post/bluehat-final-writeup/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post 2021蓝帽杯决赛 Writeup" /&gt;&lt;h2 id=&#34;misc&#34;&gt;Misc&lt;/h2&gt;
+        <description>&lt;h2 id=&#34;misc&#34;&gt;Misc&lt;/h2&gt;
 &lt;h3 id=&#34;溯源取证张三的电脑&#34;&gt;溯源取证——张三的电脑&lt;/h3&gt;
 &lt;p&gt;下载得到压缩包，经过判断类型后得知是 &lt;code&gt;VMDK&lt;/code&gt; 文件，用 vmware 挂载。其中得到了 &lt;code&gt;zhangsan.001&lt;/code&gt; 和 &lt;code&gt;zhangsan.ad1.txt&lt;/code&gt; 两个文件&lt;/p&gt;
 &lt;p&gt;winhex挂载 &lt;code&gt;zhangsan.001&lt;/code&gt;，在分区1的 &lt;code&gt;$RECYCLE.BIN&lt;/code&gt; 中找到 &lt;code&gt;tips.txt.txt&lt;/code&gt; 文件，内容为&lt;/p&gt;
