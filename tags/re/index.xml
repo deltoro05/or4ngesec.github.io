@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Re on or4nge Sec</title>
+    <link>http://example.org/tags/re/</link>
+    <description>Recent content in Re on or4nge Sec</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 05 Nov 2021 16:23:41 +0800</lastBuildDate><atom:link href="http://example.org/tags/re/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2021蓝帽杯决赛 Writeup</title>
+      <link>http://example.org/post/first/</link>
+      <pubDate>Fri, 05 Nov 2021 16:23:41 +0800</pubDate>
+      
+      <guid>http://example.org/post/first/</guid>
+      <description>&lt;p&gt;小橘子真好吃~&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
