@@ -61,32 +61,5 @@
       <description></description>
     </item>
     
-    <item>
-      <title>css</title>
-      <link>http://example.org/tags/css/</link>
-      <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>http://example.org/tags/css/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>html</title>
-      <link>http://example.org/tags/html/</link>
-      <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>http://example.org/tags/html/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>markdown</title>
-      <link>http://example.org/tags/markdown/</link>
-      <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>http://example.org/tags/markdown/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>

@@ -24,21 +24,23 @@
       <guid>http://example.org/page/links/</guid>
       <description>Captains fyhssgssWeb
  ElegentCrazyWeb
- Active Members triplewingsPwn
+ Active Members DaiDaiPwn
+ triplewingsPwn
  s0uthwoodRe
- Retired Members JokerMisc
- </description>
+ zhrMisc
+ kekekaRe
+ NewbieReerRe
+ qyxCrypto
+ pil10wWeb</description>
     </item>
     
     <item>
       <title>About</title>
       <link>http://example.org/page/about/</link>
-      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>http://example.org/page/about/</guid>
-      <description>Written in Go, Hugo is an open source static site generator available under the Apache Licence 2.0. Hugo supports TOML, YAML and JSON data file types, Markdown and HTML content files and uses shortcodes to add rich content. Other notable features are taxonomies, multilingual mode, image processing, custom output formats, HTML/CSS/JS minification and support for Sass SCSS workflows.
-Hugo makes use of a variety of open source projects including:
- https://github.</description>
+      <description></description>
     </item>
     
     <item>
