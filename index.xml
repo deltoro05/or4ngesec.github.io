@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>or4nge Sec</title>
-        <link>http://example.org/</link>
+        <link>https://or4ngesec.github.io/</link>
         <description>Recent content on or4nge Sec</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 05 Nov 2021 16:23:41 +0800</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 05 Nov 2021 16:23:41 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>2021蓝帽杯决赛 Writeup</title>
-        <link>http://example.org/post/first/</link>
+        <link>https://or4ngesec.github.io/post/bluehat-final-writeup/</link>
         <pubDate>Fri, 05 Nov 2021 16:23:41 +0800</pubDate>
         
-        <guid>http://example.org/post/first/</guid>
-        <description>&lt;img src="http://example.org/post/first/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post 2021蓝帽杯决赛 Writeup" /&gt;&lt;h2 id=&#34;misc&#34;&gt;Misc&lt;/h2&gt;
+        <guid>https://or4ngesec.github.io/post/bluehat-final-writeup/</guid>
+        <description>&lt;img src="https://or4ngesec.github.io/post/bluehat-final-writeup/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post 2021蓝帽杯决赛 Writeup" /&gt;&lt;h2 id=&#34;misc&#34;&gt;Misc&lt;/h2&gt;
 &lt;h3 id=&#34;溯源取证张三的电脑&#34;&gt;溯源取证——张三的电脑&lt;/h3&gt;
 &lt;p&gt;下载得到压缩包，经过判断类型后得知是 &lt;code&gt;VMDK&lt;/code&gt; 文件，用 vmware 挂载。其中得到了 &lt;code&gt;zhangsan.001&lt;/code&gt; 和 &lt;code&gt;zhangsan.ad1.txt&lt;/code&gt; 两个文件&lt;/p&gt;
 &lt;p&gt;winhex挂载 &lt;code&gt;zhangsan.001&lt;/code&gt;，在分区1的 &lt;code&gt;$RECYCLE.BIN&lt;/code&gt; 中找到 &lt;code&gt;tips.txt.txt&lt;/code&gt; 文件，内容为&lt;/p&gt;

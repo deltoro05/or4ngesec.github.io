@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>蓝帽杯 on or4nge Sec</title>
-    <link>http://example.org/tags/%E8%93%9D%E5%B8%BD%E6%9D%AF/</link>
+    <link>https://or4ngesec.github.io/tags/%E8%93%9D%E5%B8%BD%E6%9D%AF/</link>
     <description>Recent content in 蓝帽杯 on or4nge Sec</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 05 Nov 2021 16:23:41 +0800</lastBuildDate><atom:link href="http://example.org/tags/%E8%93%9D%E5%B8%BD%E6%9D%AF/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Nov 2021 16:23:41 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/%E8%93%9D%E5%B8%BD%E6%9D%AF/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2021蓝帽杯决赛 Writeup</title>
-      <link>http://example.org/post/first/</link>
+      <link>https://or4ngesec.github.io/post/bluehat-final-writeup/</link>
       <pubDate>Fri, 05 Nov 2021 16:23:41 +0800</pubDate>
       
-      <guid>http://example.org/post/first/</guid>
+      <guid>https://or4ngesec.github.io/post/bluehat-final-writeup/</guid>
       <description>Misc 溯源取证——张三的电脑 下载得到压缩包，经过判断类型后得知是 VMDK 文件，用 vmware 挂载。其中得到了 zhangsan.001 和 zhangsan.ad1.txt 两个文件
 winhex挂载 zhangsan.001，在分区1的 $RECYCLE.BIN 中找到 tips.txt.txt 文件，内容为
 In order to prevent leaving evidence, Zhang San deleted all the key evidence photos. 因此寻找 png 文件，同样在分区1的 $RECYCLE.BIN 中找到了包含相应的 flag 图片 $REFK9A1.png

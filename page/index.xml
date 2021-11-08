@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pages on or4nge Sec</title>
-    <link>http://example.org/page/</link>
+    <link>https://or4ngesec.github.io/page/</link>
     <description>Recent content in Pages on or4nge Sec</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 05 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://example.org/page/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://or4ngesec.github.io/page/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Archives</title>
-      <link>http://example.org/page/archives/</link>
+      <link>https://or4ngesec.github.io/page/archives/</link>
       <pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/page/archives/</guid>
+      <guid>https://or4ngesec.github.io/page/archives/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Members</title>
-      <link>http://example.org/page/links/</link>
+      <link>https://or4ngesec.github.io/page/links/</link>
       <pubDate>Sun, 28 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/page/links/</guid>
+      <guid>https://or4ngesec.github.io/page/links/</guid>
       <description>Captains fyhssgssWeb
  ElegentCrazyWeb
  Active Members DaiDaiPwn
@@ -36,19 +36,19 @@
     
     <item>
       <title>About</title>
-      <link>http://example.org/page/about/</link>
+      <link>https://or4ngesec.github.io/page/about/</link>
       <pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/page/about/</guid>
+      <guid>https://or4ngesec.github.io/page/about/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Search</title>
-      <link>http://example.org/page/search/</link>
+      <link>https://or4ngesec.github.io/page/search/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/page/search/</guid>
+      <guid>https://or4ngesec.github.io/page/search/</guid>
       <description></description>
     </item>
     
