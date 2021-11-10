@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Pages on or4nge Sec</title>
+    <title>Pages on or4nge</title>
     <link>https://or4ngesec.github.io/page/</link>
-    <description>Recent content in Pages on or4nge Sec</description>
+    <description>Recent content in Pages on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 05 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://or4ngesec.github.io/page/index.xml" rel="self" type="application/rss+xml" />
@@ -17,12 +17,13 @@
     </item>
     
     <item>
-      <title>Members</title>
-      <link>https://or4ngesec.github.io/page/links/</link>
-      <pubDate>Sun, 28 Feb 2021 00:00:00 +0000</pubDate>
+      <title>About</title>
+      <link>https://or4ngesec.github.io/page/about/</link>
+      <pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://or4ngesec.github.io/page/links/</guid>
-      <description>Captains fyhssgssWeb
+      <guid>https://or4ngesec.github.io/page/about/</guid>
+      <description>About or4nge 战队成立于2020年
+Members Captains fyhssgssWeb
  ElegentCrazyWeb
  Active Members DaiDaiPwn
  qyxCrypto
@@ -32,15 +33,6 @@
  kekekaRe
  NewbieReerRe
  pil10wWeb</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://or4ngesec.github.io/page/about/</link>
-      <pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://or4ngesec.github.io/page/about/</guid>
-      <description>战队简介 or4nge 战队成立于2020年，由北京航空航天大学学生组成</description>
     </item>
     
     <item>
