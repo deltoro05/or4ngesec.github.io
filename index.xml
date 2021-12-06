@@ -1092,7 +1092,7 @@ n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;c
             fw&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;write(newpic)
             fw&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close
             &lt;span style=&#34;color:#75715e&#34;&gt;# return None&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;恢复的图片&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;恢复后图片新增内容&lt;/p&gt;
 &lt;p&gt;&lt;figure 
 	
 		class=&#34;gallery-image&#34; 
