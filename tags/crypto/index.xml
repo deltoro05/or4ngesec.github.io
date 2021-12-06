@@ -6,7 +6,27 @@
     <description>Recent content in Crypto on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 05 Nov 2021 16:23:41 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/crypto/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Dec 2021 19:23:41 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/crypto/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2021暗泉杯 Writeup</title>
+      <link>https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/</link>
+      <pubDate>Mon, 06 Dec 2021 19:23:41 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/</guid>
+      <description>Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
+[萌]odd_upload 题目描述：目录结构与官方项目example相同
+所以去查看smarty的目录结构，同时上传文件发现过滤了php相关的很多后缀，但.tpl没有过滤，同时可以控制上传的目录，所以向./templates目录上传header.tpl覆盖原有的内容，添加一句：{system(&#39;cat /flag&#39;)}，之后再重新访问题目链接就能获取flag。
+图片: https://uploader.shimo.im/f/uuaFRSoVR69HaTfu.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8
+flag{1ae85554-c785-4321-8d77-0f68974929f8}
+easyinject 源码中提示了用户名为guest，密码为EC77k8RHquAMLKAX，登陆后提示
+The flag is a special email address username.It is attribute of one account and there are multiple accounts in the directory. flag is composed of a-z0-9_
+说实话这个提示看得我云里雾里，attribute我能理解，directory是啥？
+按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&#39;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：
+Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49
+有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
+import requests url = &amp;#34;http://47.</description>
+    </item>
+    
     <item>
       <title>2021蓝帽杯决赛 Writeup</title>
       <link>https://or4ngesec.github.io/post/bluehat-final-writeup/</link>
