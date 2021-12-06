@@ -18,8 +18,23 @@
 &lt;h3 id=&#34;萌odd_upload&#34;&gt;[萌]odd_upload&lt;/h3&gt;
 &lt;p&gt;题目描述：目录结构与官方项目example相同&lt;/p&gt;
 &lt;p&gt;所以去查看&lt;code&gt;smarty&lt;/code&gt;的目录结构，同时上传文件发现过滤了&lt;code&gt;php&lt;/code&gt;相关的很多后缀，但&lt;code&gt;.tpl&lt;/code&gt;没有过滤，同时可以控制上传的目录，所以向&lt;code&gt;./templates&lt;/code&gt;目录上传&lt;code&gt;header.tpl&lt;/code&gt;覆盖原有的内容，添加一句：&lt;code&gt;{system(&#39;cat /flag&#39;)}&lt;/code&gt;，之后再重新访问&lt;code&gt;题目链接&lt;/code&gt;就能获取flag。&lt;/p&gt;
-&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/uuaFRSoVR69HaTfu.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/uuaFRSoVR69HaTfu.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 113; 
+			flex-basis: 273px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/odd_upload_flag.png&#34; data-size=&#34;1028x902&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/odd_upload_flag.png&#34;
+			width=&#34;1028&#34;
+			height=&#34;902&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/odd_upload_flag_hu215009848e3c3cc6a32cead659f9e57f_23593_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/odd_upload_flag_hu215009848e3c3cc6a32cead659f9e57f_23593_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;flag{1ae85554-c785-4321-8d77-0f68974929f8}&lt;/code&gt;&lt;/p&gt;
 &lt;h3 id=&#34;easyinject&#34;&gt;easyinject&lt;/h3&gt;
 &lt;p&gt;源码中提示了用户名为guest，密码为EC77k8RHquAMLKAX，登陆后提示&lt;/p&gt;
@@ -273,8 +288,23 @@ alphabet &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; string&lt;span
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;pwn&#34;&gt;Pwn&lt;/h2&gt;
 &lt;h3 id=&#34;签到nssshop&#34;&gt;[签到]NssShop&lt;/h3&gt;
 &lt;p&gt;随便输了个数&lt;/p&gt;
-&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/QXuqtCvAexd2JgoZ.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/QXuqtCvAexd2JgoZ.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 121; 
+			flex-basis: 291px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/NssShop_flag.png&#34; data-size=&#34;296x244&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/NssShop_flag.png&#34;
+			width=&#34;296&#34;
+			height=&#34;244&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/NssShop_flag_hu2136924aee23e291c5cd4597f9c77a83_15343_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/NssShop_flag_hu2136924aee23e291c5cd4597f9c77a83_15343_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;h3 id=&#34;justdoit&#34;&gt;justdoit&lt;/h3&gt;
 &lt;p&gt;有一个汇编在调用read_long函数的最后，配合上atol可以任意往上往下更改栈的位置，利用这一点在栈上构造rop用ret2libc拿shell&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-assemble&#34; data-lang=&#34;assemble&#34;&gt;add rbp rax
@@ -307,8 +337,23 @@ p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvuntil(&lt;span styl
 p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendline(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-40&amp;#34;&lt;/span&gt;)
 
 p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;interactive()
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/w4FrR6RK8Vzl86cG.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/w4FrR6RK8Vzl86cG.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 98; 
+			flex-basis: 236px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/justdoit_flag.png&#34; data-size=&#34;920x935&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/justdoit_flag.png&#34;
+			width=&#34;920&#34;
+			height=&#34;935&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/justdoit_flag_hu5b35613d8237bffa3a456163560a9e5c_152476_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/justdoit_flag_hu5b35613d8237bffa3a456163560a9e5c_152476_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;h3 id=&#34;reallneedgoodluck&#34;&gt;reallNeedGoodLuck&lt;/h3&gt;
 &lt;p&gt;任意地址四字节写， 改error的got表为main，改atoi的got表为system，撞上的几率很大，直接手动爆破就行&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; pwn &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
@@ -335,12 +380,42 @@ p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendline(&lt;span style
 p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x00\x00\x00\x00&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
 p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendline(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/bin/sh&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x00&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
 p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;interactive()
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/JUvjyuc0LJvyRkOM.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/JUvjyuc0LJvyRkOM.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 74; 
+			flex-basis: 177px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/reallNeedGoodLuck_flag.png&#34; data-size=&#34;808x1091&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/reallNeedGoodLuck_flag.png&#34;
+			width=&#34;808&#34;
+			height=&#34;1091&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/reallNeedGoodLuck_flag_huba92621b780a05f9686296760b6accd9_126748_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/reallNeedGoodLuck_flag_huba92621b780a05f9686296760b6accd9_126748_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;h2 id=&#34;reverse&#34;&gt;Reverse&lt;/h2&gt;
 &lt;h3 id=&#34;签到signin&#34;&gt;[签到]Signin&lt;/h3&gt;
-&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/xoIyyTaWuglz1pIW.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/xoIyyTaWuglz1pIW.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 448; 
+			flex-basis: 1075px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/Signin_flag.png&#34; data-size=&#34;560x125&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/Signin_flag.png&#34;
+			width=&#34;560&#34;
+			height=&#34;125&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/Signin_flag_hue4682e70a343556bcc5ae6844af20877_11339_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/Signin_flag_hue4682e70a343556bcc5ae6844af20877_11339_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;h3 id=&#34;萌新happyctf&#34;&gt;[萌新]happyCTF&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;rxusoCqxw{yqK`{KZqag{r`i&amp;#39;&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; s:
@@ -969,8 +1044,23 @@ sage: key
 &lt;p&gt;题目描述，直接提交&lt;/p&gt;
 &lt;h3 id=&#34;只是个png别想太多了png&#34;&gt;只是个PNG，别想太多了.png&lt;/h3&gt;
 &lt;p&gt;拿到png，利用pngdebugger查，发现后面的块恢复成IDAT就行&lt;/p&gt;
-&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/inO169OTs8tNs7Wh.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/inO169OTs8tNs7Wh.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 49; 
+			flex-basis: 118px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/PNG_crc.png&#34; data-size=&#34;668x1348&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/PNG_crc.png&#34;
+			width=&#34;668&#34;
+			height=&#34;1348&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/PNG_crc_hu7fb44d12b693e56868c68a33699f3c3a_37698_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/PNG_crc_hu7fb44d12b693e56868c68a33699f3c3a_37698_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;crc不对，爆破长宽，抄了个大师傅的脚本&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; zlib
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; struct
@@ -1003,8 +1093,18 @@ n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;c
             fw&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close
             &lt;span style=&#34;color:#75715e&#34;&gt;# return None&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;恢复的图片&lt;/p&gt;
-&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/BT9qDeIE9eluW1bN.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/BT9qDeIE9eluW1bN.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://uploader.shimo.im/f/BT9qDeIE9eluW1bN.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTQwNzQsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkzNzc0LCJ1c2VySWQiOjYyNTQxNzA4fQ.ccVEp7P5S00CpKOPT4EgUQl04CdmtbYqm0FNLPnawNY&#34; &gt;
+		&lt;img src=&#34;https://uploader.shimo.im/f/BT9qDeIE9eluW1bN.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTQwNzQsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkzNzc0LCJ1c2VySWQiOjYyNTQxNzA4fQ.ccVEp7P5S00CpKOPT4EgUQl04CdmtbYqm0FNLPnawNY&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;看到多了一个压缩的部分，拿binwalk分了下，flag在后面的文件中&lt;/p&gt;
 &lt;p&gt;flag{zhe_ti_mu_ye_tai_bt_le_XD}&lt;/p&gt;
 &lt;h3 id=&#34;压缩包压缩包压缩包压缩包&#34;&gt;压缩包压缩包压缩包压缩包&lt;/h3&gt;
@@ -1113,12 +1213,42 @@ cap&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
             print(e)
             os&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;remove(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;flag&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%d&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;.7z&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;(i))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;运行结果是194，将flag194.7z解压得到flag.png&lt;/p&gt;
-&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/t9OXpuy7WrjvL70G.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/t9OXpuy7WrjvL70G.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 100; 
+			flex-basis: 240px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/range_download_qrcode.png&#34; data-size=&#34;385x385&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/range_download_qrcode.png&#34;
+			width=&#34;385&#34;
+			height=&#34;385&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/range_download_qrcode_hu64278edc3cde930e526f8461766b2668_2247_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/range_download_qrcode_hu64278edc3cde930e526f8461766b2668_2247_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;解码为5133687161454e534e6b394d4d325a7854475233566e6870626a42554e6a5a4a5645466c4e47786a62324e464d47705557464635546d6c536148565165564659645563774e327073515863324f5846555247314555564134555570706344686957444d336544684c596c4255556e6333636e687165486c756446413351577470566e4242526b6c4a5457316c515452754d555661636e4a7859556430566c4d3559557844656a4a35626c68334d6d5a4c51513d3d&lt;/p&gt;
 &lt;p&gt;ciphey一把梭：&lt;/p&gt;
-&lt;p&gt;图片: &lt;a class=&#34;link&#34; href=&#34;https://uploader.shimo.im/f/etu1tTw2aUjMoUmM.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://uploader.shimo.im/f/etu1tTw2aUjMoUmM.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 394; 
+			flex-basis: 947px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/range_download_decode.png&#34; data-size=&#34;1082x274&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/range_download_decode.png&#34;
+			width=&#34;1082&#34;
+			height=&#34;274&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/range_download_decode_hu8799db84a95c69dc76d36555839d8d57_40648_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/range_download_decode_hu8799db84a95c69dc76d36555839d8d57_40648_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;flag{6095B134-5437-4B21-BE52-EDC46A276297}&lt;/p&gt;
 </description>
         </item>

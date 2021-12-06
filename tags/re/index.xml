@@ -16,7 +16,7 @@
       <description>Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
 [萌]odd_upload 题目描述：目录结构与官方项目example相同
 所以去查看smarty的目录结构，同时上传文件发现过滤了php相关的很多后缀，但.tpl没有过滤，同时可以控制上传的目录，所以向./templates目录上传header.tpl覆盖原有的内容，添加一句：{system(&#39;cat /flag&#39;)}，之后再重新访问题目链接就能获取flag。
-图片: https://uploader.shimo.im/f/uuaFRSoVR69HaTfu.png!thumbnail?accessToken=eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhY2Nlc3NfcmVzb3VyY2UiLCJleHAiOjE2Mzg3OTE0MDYsImciOiI4eEFOU0sxSFh0RXVEaDJDIiwiaWF0IjoxNjM4NzkxMTA2LCJ1c2VySWQiOjYyNTQxNzA4fQ.qhgzLANLUWj_OYHag00GThFC3YuP8w3wcz64P1q-vU8
+
 flag{1ae85554-c785-4321-8d77-0f68974929f8}
 easyinject 源码中提示了用户名为guest，密码为EC77k8RHquAMLKAX，登陆后提示
 The flag is a special email address username.It is attribute of one account and there are multiple accounts in the directory. flag is composed of a-z0-9_
