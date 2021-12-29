@@ -12,18 +12,18 @@
         <pubDate>Tue, 28 Dec 2021 16:23:17 +0800</pubDate>
         
         <guid>https://or4ngesec.github.io/post/sctf2021-writeup-by-or4nge/</guid>
-        <description>&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
+        <description>&lt;img src="https://or4ngesec.github.io/post/sctf2021-writeup-by-or4nge/cover.png" alt="Featured image of post SCTF2021 Writeup by or4nge" /&gt;&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
 &lt;h3 id=&#34;loginme&#34;&gt;loginme&lt;/h3&gt;
 &lt;p&gt;第一步绕过本地验证，&lt;code&gt;x-forwarded-for&lt;/code&gt; 和 &lt;code&gt;client-ip&lt;/code&gt; 被过滤了，&lt;code&gt;X-Real-IP:127.0.0.1&lt;/code&gt; 绕过&lt;/p&gt;
 &lt;p&gt;第二步是 gin 的模板注入，让 id 为一个不存在的值，age 为 &lt;code&gt;{{.Password}}&lt;/code&gt; 就可以获得 admin 结构体中的 Password 变量值了。&lt;/p&gt;
 &lt;p&gt;http://124.71.166.197:18001/admin/index?id=5&amp;amp;age={{.Password}}&lt;/p&gt;
 &lt;h3 id=&#34;upload_it&#34;&gt;Upload_it&lt;/h3&gt;
 &lt;p&gt;可以任意上传 &lt;code&gt;/tmp&lt;/code&gt; 目录下文件， 可以直接写进 session 文件。查看 phpinfo 发现 session 的处理器是 php，于是可以把 &lt;code&gt;upload_path|$serialize&lt;/code&gt; 写进 &lt;code&gt;/tmp/sess_or4nge&lt;/code&gt;，然后改自己的 session_id 为 or4nge，即可触发反序列化。&lt;/p&gt;
-&lt;p&gt;利用给的Composer.json：&lt;/p&gt;
+&lt;p&gt;利用给的 Composer.json：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;symfony/string&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;^5.3&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;,&lt;/span&gt;
 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;opis/closure&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;^3.6&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;结合出题人发布的文章&lt;a class=&#34;link&#34; href=&#34;https://www.anquanke.com/post/id/217929#h2-3&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://www.anquanke.com/post/id/217929#h2-3&lt;/a&gt;找到一条链，其中lazystring的任意无参数函数调用接的是闭包函数 &lt;code&gt;__invoke&lt;/code&gt;，可以将闭包函数序列化进去。&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;结合出题人发布的文章 &lt;a class=&#34;link&#34; href=&#34;https://www.anquanke.com/post/id/217929#h2-3&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.anquanke.com/post/id/217929#h2-3&lt;/a&gt; 找到一条链，其中 lazystring 的任意无参数函数调用接的是闭包函数 &lt;code&gt;__invoke&lt;/code&gt;，可以将闭包函数序列化进去。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Symfony\Component\String&lt;/span&gt;{
     &lt;span style=&#34;color:#66d9ef&#34;&gt;require&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;path&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\t&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;o\autoload.php&amp;#34;&lt;/span&gt;;
@@ -1180,7 +1180,7 @@ print (s2n(res[&lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt;:][::&lt
  } 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;sycgame&#34;&gt;SycGame&lt;/h3&gt;
 &lt;p&gt;推箱子游戏&lt;/p&gt;
-&lt;p&gt;github找了个自动求解脚本，然后在脚本里加一个 alarm，求解一次的时间超过 3s 就自动退出&lt;/p&gt;
+&lt;p&gt;github 找了个自动求解脚本，然后在脚本里加一个 alarm，求解一次的时间超过 3s 就自动退出&lt;/p&gt;
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/tonyling/skb-solver&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://github.com/tonyling/skb-solver&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;题目的程序和 github 上的脚本写的都有点问题，最后大概是脚本有 1/5 到 1/10 的概率求解出一轮，接下来爆破一波就行（服务器第一天不太稳定，爆破完不回显 flag&amp;hellip;）&lt;/p&gt;
@@ -1253,8 +1253,8 @@ maxn&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;crypto&#34;&gt;Crypto&lt;/h2&gt;
 &lt;h3 id=&#34;ciruit-map&#34;&gt;ciruit map&lt;/h3&gt;
-&lt;p&gt;是个混淆电路，目标flag最终就是要求出keys&lt;/p&gt;
-&lt;p&gt;电路中多给了一个值是validation，用这个值可以构造中间相遇攻击，从而将秘钥爆破空间缩小到2**24，pypy3跑然后在密钥空间中验证电路是否能通，能通的就是正确的秘钥&lt;/p&gt;
+&lt;p&gt;是个混淆电路，目标 flag 最终就是要求出 keys&lt;/p&gt;
+&lt;p&gt;电路中多给了一个值是 validation，用这个值可以构造中间相遇攻击，从而将秘钥爆破空间缩小到 &lt;code&gt;2**24&lt;/code&gt;，pypy3 跑然后在密钥空间中验证电路是否能通，能通的就是正确的秘钥&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; block_cipher &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; encrypt_data, decrypt_data, decrypt
 &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; collections &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; defaultdict
 &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; tqdm &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; tqdm
@@ -1655,7 +1655,7 @@ fp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; open(&lt;span style=
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-plain&#34; data-lang=&#34;plain&#34;&gt;.../-.-./-/..-./-.././.../.----/.-./...--/..--.-/-../.-./../...-/./.../..--.-/../-./-/-----/..--.-/...-/.-/.--./---/.-./.--/.--.-./...-/./...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;解莫斯码得到flag&lt;/p&gt;
 &lt;h3 id=&#34;low_re&#34;&gt;low_re&lt;/h3&gt;
-&lt;p&gt;vmp壳，根据题目描述，应该无法逆向出正确的逻辑，什么信息都没有的情况下想到用pintools来试试，手动尝试发现长度是17位，并且指令数量差异很明显&lt;/p&gt;
+&lt;p&gt;vmp 壳，根据题目描述，应该无法逆向出正确的逻辑，什么信息都没有的情况下想到用 pintools 来试试，手动尝试发现长度是 17 位，并且指令数量差异很明显&lt;/p&gt;
 &lt;p&gt;按位爆破：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; subprocess
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; string

