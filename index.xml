@@ -6,7 +6,630 @@
         <description>Recent content on or4nge</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Thu, 13 Jan 2022 13:23:41 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 26 Jan 2022 13:03:21 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>HWS2022冬令营预选赛 Writeup</title>
+        <link>https://or4ngesec.github.io/post/hws2022-writeup/</link>
+        <pubDate>Wed, 26 Jan 2022 13:03:21 +0800</pubDate>
+        
+        <guid>https://or4ngesec.github.io/post/hws2022-writeup/</guid>
+        <description>&lt;img src="https://or4ngesec.github.io/post/hws2022-writeup/cover.jpg" alt="Featured image of post HWS2022冬令营预选赛 Writeup" /&gt;&lt;h2 id=&#34;re&#34;&gt;RE&lt;/h2&gt;
+&lt;h3 id=&#34;babyvm&#34;&gt;babyVM&lt;/h3&gt;
+&lt;p&gt;将花指令patch掉&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 406; 
+			flex-basis: 975px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213318513.png&#34; data-size=&#34;943x232&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213318513.png&#34;
+			width=&#34;943&#34;
+			height=&#34;232&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213318513_hu7b60cca09a3c5aed19ccb63bc8a32b5c_30800_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213318513_hu7b60cca09a3c5aed19ccb63bc8a32b5c_30800_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 274; 
+			flex-basis: 658px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213343256.png&#34; data-size=&#34;741x270&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213343256.png&#34;
+			width=&#34;741&#34;
+			height=&#34;270&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213343256_hu38ef6290adb576484852bfcc831e76ce_23726_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213343256_hu38ef6290adb576484852bfcc831e76ce_23726_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;将patch好的应用到文件。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 121; 
+			flex-basis: 292px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213720377.png&#34; data-size=&#34;806x662&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213720377.png&#34;
+			width=&#34;806&#34;
+			height=&#34;662&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213720377_hu05ab85e67e7f95cf07857bdd8b104ffd_61366_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213720377_hu05ab85e67e7f95cf07857bdd8b104ffd_61366_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;能看出来是个虚拟机逆向题&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 343; 
+			flex-basis: 823px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213829067.png&#34; data-size=&#34;563x164&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213829067.png&#34;
+			width=&#34;563&#34;
+			height=&#34;164&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213829067_hu42eb3fcb2176931fe26fa2afdfb86a31_14931_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213829067_hu42eb3fcb2176931fe26fa2afdfb86a31_14931_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;动态调试的过程中可以看到程序向内存里写了一段数据&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;0xFF,0x223,0x23B,0x237,0x237,0x24B,0x22B,0xFB,0x22B,0x223,0x24F,0xEF,0x237,0xEF,0x24F,0x24F,0x223,0x223,0x23B,0x237,0xFF,0x233,0x233,0x233,0x237,0x24B,0x233,0x24F,0x22B,0x22B,0x24B,0xEF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 695; 
+			flex-basis: 1669px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213857515.png&#34; data-size=&#34;988x142&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213857515.png&#34;
+			width=&#34;988&#34;
+			height=&#34;142&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213857515_hu1aae7d93d95461b307a001febb94758c_15221_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124213857515_hu1aae7d93d95461b307a001febb94758c_15221_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这个部分把上述数据每一个都减了0x63&lt;/p&gt;
+&lt;p&gt;程序获得用户的输入&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 360; 
+			flex-basis: 865px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214023035.png&#34; data-size=&#34;483x134&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214023035.png&#34;
+			width=&#34;483&#34;
+			height=&#34;134&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214023035_huec807fb922fa529e819d2e56d9d0ff60_9215_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214023035_huec807fb922fa529e819d2e56d9d0ff60_9215_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;比较的过程中可以发现，用户输入的长度应该是0x26&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 1135; 
+			flex-basis: 2725px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214035403.png&#34; data-size=&#34;1022x90&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214035403.png&#34;
+			width=&#34;1022&#34;
+			height=&#34;90&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214035403_hu65dbebb5353a1aad675fbb63c386a95d_11327_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214035403_hu65dbebb5353a1aad675fbb63c386a95d_11327_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;并且在后面比较的过程中，flag{}这几个字符占了6个。&lt;/p&gt;
+&lt;p&gt;再向后跟踪的过程中发现&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 582; 
+			flex-basis: 1398px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214239982.png&#34; data-size=&#34;781x134&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214239982.png&#34;
+			width=&#34;781&#34;
+			height=&#34;134&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214239982_hu4365a3459f0c5ff67524505cbd202153_13834_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214239982_hu4365a3459f0c5ff67524505cbd202153_13834_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;用户的输入和0x42做了异或&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 300; 
+			flex-basis: 722px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214339739.png&#34; data-size=&#34;611x203&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214339739.png&#34;
+			width=&#34;611&#34;
+			height=&#34;203&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214339739_hu17c66bc8db7f858487d4678cd9dafe2f_19942_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214339739_hu17c66bc8db7f858487d4678cd9dafe2f_19942_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;再把结果左移两位，和前面的数据做了比较，因此最后的exp是：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;dump &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;156&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;448&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;472&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;468&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;468&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;488&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;456&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;152&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;456&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;448&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;492&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;140&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;468&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;140&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;492&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;492&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;448&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;448&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;472&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;468&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;156&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;464&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;464&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;464&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;468&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;488&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;464&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;492&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;456&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;456&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;488&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;140&lt;/span&gt;]
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(len(dump)):
+    print(chr((dump[i]&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x42&lt;/span&gt;),end&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
+    
+print()
+&lt;span style=&#34;color:#75715e&#34;&gt;# e247780d029a7a992247e6667869008a&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;easyvm&#34;&gt;EasyVM&lt;/h3&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 187; 
+			flex-basis: 450px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214737380.png&#34; data-size=&#34;904x482&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214737380.png&#34;
+			width=&#34;904&#34;
+			height=&#34;482&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214737380_hu90329dd4f804f11a6b84fdae40fc4f0a_51553_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124214737380_hu90329dd4f804f11a6b84fdae40fc4f0a_51553_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;和上题一样，去除应该应该去除的花指令。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 266; 
+			flex-basis: 638px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215558634.png&#34; data-size=&#34;556x209&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215558634.png&#34;
+			width=&#34;556&#34;
+			height=&#34;209&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215558634_huee033b6ad3bb9e3944781f6c5e4969e7_18619_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215558634_huee033b6ad3bb9e3944781f6c5e4969e7_18619_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;然后引发了一个异常&lt;/p&gt;
+&lt;p&gt;观察异常处理函数&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 91; 
+			flex-basis: 220px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215651860.png&#34; data-size=&#34;603x656&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215651860.png&#34;
+			width=&#34;603&#34;
+			height=&#34;656&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215651860_hu9d013bdd10615fce5c56f95682edba1a_38201_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215651860_hu9d013bdd10615fce5c56f95682edba1a_38201_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;看到输入的长度为42&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 176; 
+			flex-basis: 424px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215732319.png&#34; data-size=&#34;1073x607&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215732319.png&#34;
+			width=&#34;1073&#34;
+			height=&#34;607&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215732319_hu64b9e5529f4cbec42aa545f110a69e47_42221_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215732319_hu64b9e5529f4cbec42aa545f110a69e47_42221_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;在这个函数里面输入经过了base64编码，而且和0xa,0xb,0xc,0xd异或&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 112; 
+			flex-basis: 269px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215838225.png&#34; data-size=&#34;572x509&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215838225.png&#34;
+			width=&#34;572&#34;
+			height=&#34;509&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215838225_hub6fe97bc063a3f7a40f2052f0e450051_57626_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215838225_hub6fe97bc063a3f7a40f2052f0e450051_57626_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;然后根据函数地址表进行虚拟机逻辑。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 115; 
+			flex-basis: 277px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215938533.png&#34; data-size=&#34;773x668&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215938533.png&#34;
+			width=&#34;773&#34;
+			height=&#34;668&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215938533_hu9d373a3ebe2e6ad93ff8964c6d85a828_45757_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124215938533_hu9d373a3ebe2e6ad93ff8964c6d85a828_45757_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;动态调试中可以发现函数将输入经过特制变换的 base64 和前一个结果异或，和 0xee 异或，再进行比较，然后动态调试的过程中把最终的结果提取出来，可以写出脚本。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; base64
+
+dump &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0xBE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x36&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x27&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x99&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x44&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5F&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x17&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4A&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x43&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x22&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x88&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x54&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x67&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x06&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x50&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x58&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x84&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x36&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x85&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x52&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE3&lt;/span&gt;]
+x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;0xa&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0xb&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0xc&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0xd&lt;/span&gt;]
+
+dump &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dump[::&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]
+
+
+dump1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; []
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,len(dump)):
+    dump1&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;append(dump[i]&lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt;dump[i&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0xee&lt;/span&gt;)
+
+
+dump1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dump1[::&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]
+
+
+dump2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; []
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(len(dump1)):
+    dump2&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;append((dump1[i]&lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt;x[(i)&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;])&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;to_bytes(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,byteorder&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;big&amp;#39;&lt;/span&gt;))
+
+print (base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;join(dump2)))
+&lt;span style=&#34;color:#75715e&#34;&gt;# b&amp;#39;flag{2586dc76-98d5-44e2-ad58-d06e6559d82a}&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;crypto&#34;&gt;Crypto&lt;/h2&gt;
+&lt;h3 id=&#34;babyrsa&#34;&gt;babyrsa&lt;/h3&gt;
+&lt;p&gt;把 n 扔到 factordb 上直接分解了出来，拿到 pq，直接解密就行&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; libnum &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; n2s
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;exgcd&lt;/span&gt;(a, b):
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; b &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, a
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+		x, y, q &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; exgcd(b, a &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; b)
+		x, y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; y, (x &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; (a &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; b) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; y)
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; x, y, q
+
+p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;98197216341757567488149177586991336976901080454854408243068885480633972200382596026756300968618883148721598031574296054706280190113587145906781375704611841087782526897314537785060868780928063942914187241017272444601926795083433477673935377466676026146695321415853502288291409333200661670651818749836420808033&lt;/span&gt;
+q &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;133639826298015917901017908376475546339925646165363264658181838203059432536492968144231040597990919971381628901127402671873954769629458944972912180415794436700950304720548263026421362847590283353425105178540468631051824814390421486132775876582962969734956410033443729557703719598998956317920674659744121941513&lt;/span&gt;
+N &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;13123058934861171416713230498081453101147538789122070079961388806126697916963123413431108069961369055630747412550900239402710827847917960870358653962948282381351741121884528399369764530446509936240262290248305226552117100584726616255292963971141510518678552679033220315246377746270515853987903184512948801397452104554589803725619076066339968999308910127885089547678968793196148780382182445270838659078189316664538631875879022325427220682805580410213245364855569367702919157881367085677283124732874621569379901272662162025780608669577546548333274766058755786449491277002349918598971841605936268030140638579388226573929&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; p &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; q &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; N
+e &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2199344405076718723439776106818391416986774637417452818162477025957976213477191723664184407417234793814926418366905751689789699138123658292718951547073938244835923378103264574262319868072792187129755570696127796856136279813658923777933069924139862221947627969330450735758091555899551587605175567882253565613163972396640663959048311077691045791516671857020379334217141651855658795614761069687029140601439597978203375244243343052687488606544856116827681065414187957956049947143017305483200122033343857370223678236469887421261592930549136708160041001438350227594265714800753072939126464647703962260358930477570798420877&lt;/span&gt;
+flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1492164290534197296766878830710549288168716657792979479408332026408553210558539364503279432780006256047888761718878241924947937039103166564146378209168719163067531460700424309878383312837345239570897122826051628153030129647363574035072755426112229160684859510640271933580581310029921376842631120847546030843821787623965614564745724229763999106839802052036834811357341644073138100679508864747009014415530176077648226083725813290110828240582884113726976794751006967153951269748482024859714451264220728184903144004573228365893961477199925864862018084224563883101101842275596219857205470076943493098825250412323522013524&lt;/span&gt;
+d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; exgcd(e, (p &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; (q &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;))[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]
+print(n2s(pow(flag, d, N)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;flag:&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 1129; 
+			flex-basis: 2711px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124162048959.png&#34; data-size=&#34;1887x167&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124162048959.png&#34;
+			width=&#34;1887&#34;
+			height=&#34;167&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124162048959_hua0f4205903f448830dc5078d7cdf74b6_81039_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124162048959_hua0f4205903f448830dc5078d7cdf74b6_81039_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;crypto_elgamal&#34;&gt;crypto_Elgamal&lt;/h3&gt;
+&lt;p&gt;首先是一个 LCG 的链式求解，通过五个值解出 A,B,q&lt;/p&gt;
+&lt;p&gt;分析 elgmal 签名，同样使用了 LCG，那么有两个加密值就能够恢复消息，推导如下&lt;/p&gt;
+&lt;p&gt;$$
+c_{2&#39;}\equiv mh^{Ar_1+B}
+\equiv m(h^{r_1})^Ah^B
+\equiv mh^{r_1}(h^{r_1})^{A-1}h^B
+\equiv c_2(h^{r_1})^{A-1}h^B\pmod p
+$$&lt;/p&gt;
+&lt;p&gt;$$
+\therefore (h^{r_1})^{A-1} \equiv c_{2&#39;}c_2^{-1}h^{-B} \pmod p
+$$&lt;/p&gt;
+&lt;p&gt;可以设法求出 $h^{r_1}$ 的值，然后就可以通过 $c_2=mh^{r_1}$ 求解出 m 值&lt;/p&gt;
+&lt;p&gt;但由于 $A-1$ 和 $p-1$ 不互素，无法直接求得逆元，因此需要高次同余开根算法，这里使用了 AMM 算法进行求解，按照论文直接复现出来，得到 $h^{r_1}$ 的值&lt;/p&gt;
+&lt;p&gt;最后计算 $m\equiv c_2(h^{r_1})^{-1}\pmod p$ 得到flag&lt;/p&gt;
+&lt;p&gt;LCG 求解 ABq：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; Crypto.Util.number &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;gcd&lt;/span&gt;(a,b): 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(b&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;): 
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; a 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;: 
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; gcd(b,a&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;b) 
+s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;  [&lt;span style=&#34;color:#ae81ff&#34;&gt;543263588863771657634119&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;628899245716105951093835&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;78708024695487418261582&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;598971435111109998816796&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;789474285039501272453373&lt;/span&gt;]
+t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; []
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;):
+    t&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;append(s[i]&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;s[i&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]) 
+all_n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; []
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;):
+    all_n&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;append(gcd((t[i&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;t[i&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;t[i]&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;t[i]), (t[i&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;t[i]&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;t[i&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;t[i&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]))) 
+
+MMI &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; A, n,s&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,t&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,N&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;: (n &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; t&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;N &lt;span style=&#34;color:#f92672&#34;&gt;or&lt;/span&gt; MMI(n, A&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;n, t, s&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;A&lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt;n&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;t, N &lt;span style=&#34;color:#f92672&#34;&gt;or&lt;/span&gt; n),&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)[n&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#75715e&#34;&gt;#逆元计算&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; all_n:
+    n&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;abs(n)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; n&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;continue&lt;/span&gt;
+    a&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;(s[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;s[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;])&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;MMI((s[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;s[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]),n)&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;n
+    ani&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MMI(a,n)
+    b&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;(s[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;a&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;s[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;])&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;n
+    print(a, b, n)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;AMM 算法代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; random
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; math
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; libnum
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; time
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; Crypto.Util.number &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; bytes_to_long,long_to_bytes
+p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;GF&lt;/span&gt;(a):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;global&lt;/span&gt; p
+    p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;g&lt;/span&gt;(a,b):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;global&lt;/span&gt; p
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; pow(a,b,p)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AMM&lt;/span&gt;(x,e,p):
+    GF(p)
+    y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randint(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, p&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; g(y, (p&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt;e) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:
+        y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randint(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, p&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        print(y)
+    &lt;span style=&#34;color:#75715e&#34;&gt;#p-1 = e^t*s&lt;/span&gt;
+    t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+    s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; p &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; e &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+        t &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        print(t)
+    s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; (e&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;t)
+    &lt;span style=&#34;color:#75715e&#34;&gt;# s|ralpha-1&lt;/span&gt;
+    k &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt;((s &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; k &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; e &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;):
+        k &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+    alpha &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (s &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; k &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; e
+    
+    a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; g(y, (e &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt; (t &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) ) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; s)
+    b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; g(x, e &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; alpha &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+    c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; g(y, s)
+    h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+    &lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, t&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;):
+        print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;cur_i&amp;#39;&lt;/span&gt;,i)
+        d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; g(b,e&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;(t&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;i))
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; d &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:
+            j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+            j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;math&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;log(d,a) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; e)
+        b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; b &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; (g(g(c, e), j))
+        h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; g(c, j)
+        c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; g(c,e)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (g(x,alpha &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; h)) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; p
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;解题脚本：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#coding=utf-8&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; gmpy2 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; libnum &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; amm &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; AMM
+A &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;12742153496769814072597&lt;/span&gt;
+B &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3035433788765894539799&lt;/span&gt;
+q &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;791763770658839585424113&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# A = 107868759310796409744994&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# B = 492302818740419286543885&lt;/span&gt;
+
+p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;65211247300401312530078141569304950676358489059623557848188896752173856845051471066071652073612337629832155846984721797768267868868902023383604553319793550396610085424563231688918357710337401138108050205457200940158475922063279384491022916790549837379548978141370347556053597178221402425212594060342213485311&lt;/span&gt;
+g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;27642593390439430783453736408814717946185190497201679721975757020767271070510268596627490205095779429964809833535285315202625851326460572368018875381603399143376574281200028337681552876140857556460885848491160812604549770668188783258592940823128376128198726254875984002214053523752696104568469730021811399216&lt;/span&gt;
+h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;54585833166051670245656045196940486576634589000609010947618047461787934106392112227019662788387352615714332234871251868259282522817042504587428441746855906297390193418159792477477443129333707197013251839952389651332058368911829464978546505729530760951698134101053626585254469108630886768357270544236516534904&lt;/span&gt;
+
+c1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;60724920570148295800083597588524297283595971970237964464679084640302395172192639331196385150232229004030419122038089044697951208850497923486467859070476427472465291810423905736825272208842988090394035980454248119048131354993356125895595138979611664707727518852984351599604226889848831071126576874892808080133&lt;/span&gt;
+c2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;48616294792900599931167965577794374684760165574922600262773518630884983374432147726140430372696876107933565006549344582099592376234783044818320678499613925823621554608542446585829308488452057340023780821973913517239972817669309837103043456714481646128392677624092659929248296869048674230341175765084122344264&lt;/span&gt;
+c1_ &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;42875731538109170678735196002365281622531058597803022779529275736483962610547258618168523955709341579773947887175626960699426438456382655370090748369934296474999389316334717699127421889816721511602392591677377678759026657582648354688447456509292302633971842316239774410380221303269351351929586256938787054867&lt;/span&gt;
+c2_ &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64829024929257668640929285124747107162970460545535885047576569803424908055130477684809317765011143527867645692710091307694839524199204611328374569742391489915929451079830143261799375621377093290249652912850024319433129432676683899459510155157108727860920017105870104383111111395351496171846620163716404148070&lt;/span&gt;
+
+k &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (p &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; q
+&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; k &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; q &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; p
+&lt;span style=&#34;color:#75715e&#34;&gt;# print(q, k)&lt;/span&gt;
+
+hr1_A_1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; c2_ &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; invert(c2, p) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pow(h,&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;B, p) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; p
+&lt;span style=&#34;color:#75715e&#34;&gt;# print(hr1_A_1)&lt;/span&gt;
+d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; xgcd(A &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, p &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; (p &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+
+cur_x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AMM(hr1_A_1, &lt;span style=&#34;color:#ae81ff&#34;&gt;7438&lt;/span&gt;, p)
+&lt;span style=&#34;color:#75715e&#34;&gt;# assert pow(cur_x, A - 1, p) == hr1_A_1&lt;/span&gt;
+
+d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; xgcd(A &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, p &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; (p &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+x_7438 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pow(hr1_A_1, d, p)
+
+x_3719 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AMM(x_7438, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, p)
+x_3719_ &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; x_3719
+
+x_3719s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [x_3719, x_3719_]
+
+mol &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (p &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3719&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;check&lt;/span&gt;(mm):
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; mm:
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt;:
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;False&lt;/span&gt;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; eve_c &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; x_3719s:
+	cur_x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AMM(eve_c, &lt;span style=&#34;color:#ae81ff&#34;&gt;3719&lt;/span&gt;, p)
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; pow(cur_x, A &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, p) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; hr1_A_1
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6000&lt;/span&gt;):
+		cur_use &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cur_x &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pow(i, mol, p)
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; pow(cur_use, A &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, p) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; hr1_A_1
+		cur_m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; xgcd(cur_use, p)[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; c2 &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; p
+		cur_m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; n2s(int(cur_m))
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; check(cur_m):
+			print(cur_m)
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# b&amp;#39;flag{19e9f185e6a680324cedd6e6d9382743}&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;misc&#34;&gt;Misc&lt;/h2&gt;
+&lt;h3 id=&#34;badpdf&#34;&gt;badPDF&lt;/h3&gt;
+&lt;p&gt;文件在运行之后在 &lt;code&gt;%tmp%&lt;/code&gt; 目录下释放了三个文件，将 js 和 tmp 都提取出来&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 191; 
+			flex-basis: 459px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212037970.png&#34; data-size=&#34;993x519&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212037970.png&#34;
+			width=&#34;993&#34;
+			height=&#34;519&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212037970_hu63f6623ef9d48b9fa7ae58442718ad86_33005_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212037970_hu63f6623ef9d48b9fa7ae58442718ad86_33005_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;tmp的内容好像是在混淆，查了一下应该是使用 &lt;code&gt;winrm.vbs&lt;/code&gt; 绕过应用白名单执行任意未签名代码(&lt;a class=&#34;link&#34; href=&#34;https://www.anquanke.com/post/id/151711&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.anquanke.com/post/id/151711&lt;/a&gt;)，再一找发现是原题&lt;/p&gt;
+&lt;p&gt;找个 vbs 脚本改一下&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-vbscript&#34; data-lang=&#34;vbscript&#34;&gt;for i= 1 to len(&amp;quot;676d60667a64333665326564333665326564333665326536653265643336656564333665327c&amp;quot;) step 2:
+	flag = flag &amp;amp; chr(asc(chr(&amp;quot;&amp;amp;h&amp;quot; &amp;amp; mid(&amp;quot;676d60667a64333665326564333665326564333665326536653265643336656564333665327c&amp;quot;,i,2)))xor 1):
+	next:
+msgbox(flag)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 182; 
+			flex-basis: 438px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124161134316.png&#34; data-size=&#34;298x163&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124161134316.png&#34;
+			width=&#34;298&#34;
+			height=&#34;163&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124161134316_hu480744dbff6bc1ed45331d426702f983_7568_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124161134316_hu480744dbff6bc1ed45331d426702f983_7568_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;gogogo&#34;&gt;gogogo&lt;/h3&gt;
+&lt;p&gt;先解puzzle，gaps不知道为啥跑不动，手动硬拼，口令是3e8f092d4d7b80ce338d6e238efb01&lt;/p&gt;
+&lt;p&gt;随后是个内存取证，在内存剪切板上又看到了上面的口令，确定了该口令只有30位而不是个md5&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 774; 
+			flex-basis: 1858px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212246733.png&#34; data-size=&#34;1061x137&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212246733.png&#34;
+			width=&#34;1061&#34;
+			height=&#34;137&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212246733_hucc2b3df8a35389a3ad06fc7fe93cda85_128221_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212246733_hucc2b3df8a35389a3ad06fc7fe93cda85_128221_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;在内存的文件找到了csgo.zip，用口令解密拿到图片，但显示不出来，用010editor打开图片，发现png文件头重复，删掉一个，看到正经图片，但是缺少定位符&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 317; 
+			flex-basis: 761px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212525281.png&#34; data-size=&#34;387x122&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212525281.png&#34;
+			width=&#34;387&#34;
+			height=&#34;122&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212525281_hu5711cb69a37a3679f077ddf2a23f05c1_10702_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/hws2022-writeup/image-20220124212525281_hu5711cb69a37a3679f077ddf2a23f05c1_10702_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;图片是个Aztec码，找了个二层的定位符，硬拼一下，在线网站直接解(&lt;a class=&#34;link&#34; href=&#34;https://products.aspose.app/barcode/recognize/aztec#/recognized&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://products.aspose.app/barcode/recognize/aztec#/recognized&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 100; 
+			flex-basis: 240px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/flag2.jpg&#34; data-size=&#34;433x432&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/flag2.jpg&#34;
+			width=&#34;433&#34;
+			height=&#34;432&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/flag2_huc5086ebb22bf916465b83c2a7c530445_42222_480x0_resize_q75_box.jpg 480w, https://or4ngesec.github.io/post/hws2022-writeup/flag2_huc5086ebb22bf916465b83c2a7c530445_42222_1024x0_resize_q75_box.jpg 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;flag:&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 132; 
+			flex-basis: 317px&#34;
+	&gt;
+	&lt;a href=&#34;https://or4ngesec.github.io/post/hws2022-writeup/getflag.jpg&#34; data-size=&#34;930x704&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/hws2022-writeup/getflag.jpg&#34;
+			width=&#34;930&#34;
+			height=&#34;704&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/hws2022-writeup/getflag_hu23b5a80d39962219c3277f1e334fbc68_253718_480x0_resize_q75_box.jpg 480w, https://or4ngesec.github.io/post/hws2022-writeup/getflag_hu23b5a80d39962219c3277f1e334fbc68_253718_1024x0_resize_q75_box.jpg 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>长安战“疫” Writeup</title>
         <link>https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/</link>
         <pubDate>Thu, 13 Jan 2022 13:23:41 +0800</pubDate>

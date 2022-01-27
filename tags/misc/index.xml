@@ -6,7 +6,36 @@
     <description>Recent content in Misc on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Jan 2022 13:23:41 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/misc/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Jan 2022 13:03:21 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/misc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HWS2022冬令营预选赛 Writeup</title>
+      <link>https://or4ngesec.github.io/post/hws2022-writeup/</link>
+      <pubDate>Wed, 26 Jan 2022 13:03:21 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/hws2022-writeup/</guid>
+      <description>RE babyVM 将花指令patch掉
+
+
+将patch好的应用到文件。
+
+能看出来是个虚拟机逆向题
+
+动态调试的过程中可以看到程序向内存里写了一段数据
+0xFF,0x223,0x23B,0x237,0x237,0x24B,0x22B,0xFB,0x22B,0x223,0x24F,0xEF,0x237,0xEF,0x24F,0x24F,0x223,0x223,0x23B,0x237,0xFF,0x233,0x233,0x233,0x237,0x24B,0x233,0x24F,0x22B,0x22B,0x24B,0xEF
+这个部分把上述数据每一个都减了0x63
+程序获得用户的输入
+
+比较的过程中可以发现，用户输入的长度应该是0x26
+
+并且在后面比较的过程中，flag{}这几个字符占了6个。
+再向后跟踪的过程中发现
+
+用户的输入和0x42做了异或
+
+再把结果左移两位，和前面的数据做了比较，因此最后的exp是：
+dump = [156, 448, 472, 468, 468, 488, 456, 152, 456, 448, 492, 140, 468, 140, 492, 492, 448, 448, 472, 468, 156, 464, 464, 464, 468, 488, 464, 492, 456, 456, 488, 140] for i in range(len(dump)): print(chr((dump[i]&amp;gt;&amp;gt;2)^0x42),end=&amp;#39;&amp;#39;) print() # e247780d029a7a992247e6667869008a EasyVM</description>
+    </item>
+    
     <item>
       <title>长安战“疫” Writeup</title>
       <link>https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/</link>
