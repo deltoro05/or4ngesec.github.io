@@ -23,7 +23,7 @@ easyinject 源码中提示了用户名为guest，密码为EC77k8RHquAMLKAX，登
 The flag is a special email address username.It is attribute of one account and there are multiple accounts in the directory. flag is composed of a-z0-9_
 说实话这个提示看得我云里雾里，attribute我能理解，directory是啥？
 按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&#39;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：
-Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49 有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
+Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
 import requests url = &amp;#34;http://47.</description>
     </item>
     

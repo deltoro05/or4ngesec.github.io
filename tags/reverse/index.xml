@@ -6,7 +6,22 @@
     <description>Recent content in Reverse on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Dec 2021 22:23:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/reverse/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Feb 2022 22:32:31 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/reverse/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HGAME2022 Writeup by or4nge</title>
+      <link>https://or4ngesec.github.io/post/hgame2022-writeup-by-or4nge/</link>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/hgame2022-writeup-by-or4nge/</guid>
+      <description>week1 [Web]Fujiwara Tofu Shop  By SSGSS
+ 一个个改请求头就 ok
+GET / HTTP/1.1Host: game.summ3r.topUser-Agent: Hachi-RokuAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2Accept-Encoding: gzip, deflateConnection: closeGasoline: 100Cookie: flavor=Raspberry;Upgrade-Insecure-Requests: 1Cache-Control: max-age=0Referer: qiumingshan.netX-Real-IP: 127.0.0.1[Web]Tetris plus  By SSGSS
+ 一个个翻 js，长度最长的那个用 js 运行一下就是 flag
+[Web]蛛蛛&amp;hellip;嘿嘿♥我的蛛蛛  By SSGSS
+ 爬虫题
+import requests import re url = &amp;#39;https://hgame-spider.vidar.club/b7412bb0b0&amp;#39; now = &amp;#39;?key=M7H8z1oG%2B1SaPudvsDf7GEm%2F9hyalx2liQ6X2mBSz4iXDqmZwkyLTWPY02GWc5OZf%2F9zO73pRTg3XdoyjfgY3g%3D%3D&amp;#39; while True: r = requests.get(url + now) try: now = re.</description>
+    </item>
+    
     <item>
       <title>KCTF2021 Fall Writeup by or4nge</title>
       <link>https://or4ngesec.github.io/post/kctf2021-fall-writeup-by-or4nge/</link>

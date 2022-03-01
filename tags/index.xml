@@ -6,13 +6,76 @@
     <description>Recent content in Tags on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 26 Jan 2022 13:03:21 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Feb 2022 22:32:31 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Crypto</title>
       <link>https://or4ngesec.github.io/tags/crypto/</link>
-      <pubDate>Wed, 26 Jan 2022 13:03:21 +0800</pubDate>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
       
       <guid>https://or4ngesec.github.io/tags/crypto/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CTF</title>
+      <link>https://or4ngesec.github.io/tags/ctf/</link>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HGAME</title>
+      <link>https://or4ngesec.github.io/tags/hgame/</link>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/hgame/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Misc</title>
+      <link>https://or4ngesec.github.io/tags/misc/</link>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/misc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pwn</title>
+      <link>https://or4ngesec.github.io/tags/pwn/</link>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/pwn/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reverse</title>
+      <link>https://or4ngesec.github.io/tags/reverse/</link>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/reverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Web</title>
+      <link>https://or4ngesec.github.io/tags/web/</link>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/web/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Writeup</title>
+      <link>https://or4ngesec.github.io/tags/writeup/</link>
+      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/writeup/</guid>
       <description></description>
     </item>
     
@@ -26,15 +89,6 @@
     </item>
     
     <item>
-      <title>Misc</title>
-      <link>https://or4ngesec.github.io/tags/misc/</link>
-      <pubDate>Wed, 26 Jan 2022 13:03:21 +0800</pubDate>
-      
-      <guid>https://or4ngesec.github.io/tags/misc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Re</title>
       <link>https://or4ngesec.github.io/tags/re/</link>
       <pubDate>Wed, 26 Jan 2022 13:03:21 +0800</pubDate>
@@ -44,38 +98,11 @@
     </item>
     
     <item>
-      <title>Writeup</title>
-      <link>https://or4ngesec.github.io/tags/writeup/</link>
-      <pubDate>Wed, 26 Jan 2022 13:03:21 +0800</pubDate>
-      
-      <guid>https://or4ngesec.github.io/tags/writeup/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>cazy</title>
       <link>https://or4ngesec.github.io/tags/cazy/</link>
       <pubDate>Thu, 13 Jan 2022 13:23:41 +0800</pubDate>
       
       <guid>https://or4ngesec.github.io/tags/cazy/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Pwn</title>
-      <link>https://or4ngesec.github.io/tags/pwn/</link>
-      <pubDate>Thu, 13 Jan 2022 13:23:41 +0800</pubDate>
-      
-      <guid>https://or4ngesec.github.io/tags/pwn/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Web</title>
-      <link>https://or4ngesec.github.io/tags/web/</link>
-      <pubDate>Thu, 13 Jan 2022 13:23:41 +0800</pubDate>
-      
-      <guid>https://or4ngesec.github.io/tags/web/</guid>
       <description></description>
     </item>
     
@@ -103,15 +130,6 @@
       <pubDate>Thu, 23 Dec 2021 22:23:17 +0800</pubDate>
       
       <guid>https://or4ngesec.github.io/tags/kctf/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Reverse</title>
-      <link>https://or4ngesec.github.io/tags/reverse/</link>
-      <pubDate>Thu, 23 Dec 2021 22:23:17 +0800</pubDate>
-      
-      <guid>https://or4ngesec.github.io/tags/reverse/</guid>
       <description></description>
     </item>
     
