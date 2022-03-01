@@ -114,7 +114,7 @@
 
 
                 <time class="article-time--reading">
-                    42 minute read
+                    43 minute read
                 </time>
             </div>
         
@@ -631,10 +631,8 @@ rc4<span style="color:#f92672">.</span>decrypt(cipher)
 			height="521"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/Matryohska_Braille_hu1ef9402c42d229f1a815d5ff057eea54_49890_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/Matryohska_Braille_hu1ef9402c42d229f1a815d5ff057eea54_49890_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="Braille">
+			>
 	</a>
-	
-	<figcaption>Braille</figcaption>
 	
 </figure></p>
 <p>此时发现解密得到的字符共有三种：<code>-</code>，<code>/</code>，和 <code>⠨</code>，猜测下一层为 Morse 密码。用 <code>.</code> 替换 <code>⠨</code> 后使用Morse密码解密网站 <a class="link" href="https://www.bejson.com/enc/morse/"  target="_blank" rel="noopener"
@@ -652,10 +650,8 @@ rc4<span style="color:#f92672">.</span>decrypt(cipher)
 			height="365"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/Matryohska_Matwrong_huaf77fcc770d1ebaab12e40da6bea5e9f_99673_480x0_resize_q75_box.jpg 480w, /post/hgame2022-writeup-by-or4nge/img/Matryohska_Matwrong_huaf77fcc770d1ebaab12e40da6bea5e9f_99673_1024x0_resize_q75_box.jpg 1024w"
 			loading="lazy"
-			alt="Matwrong">
+			>
 	</a>
-	
-	<figcaption>Matwrong</figcaption>
 	
 </figure></p>
 <p>得到的字符串显然不是正确形式。注意到每两个字符由一个逗号间隔，而逗号的 Morse 编码为一段回文字符串 <code>--..--</code>。联想到题目中出现的“纸条背面”的提示，尝试将字符串倒转处理。此时逗号位置的 Morse 编码仍为 <code>--..--</code>。解码得到：</p>
@@ -672,10 +668,8 @@ rc4<span style="color:#f92672">.</span>decrypt(cipher)
 			height="405"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/Matryohska_Matright_hud680c8ff9e80c35773d650698972e193_104665_480x0_resize_q75_box.jpg 480w, /post/hgame2022-writeup-by-or4nge/img/Matryohska_Matright_hud680c8ff9e80c35773d650698972e193_104665_1024x0_resize_q75_box.jpg 1024w"
 			loading="lazy"
-			alt="Matright">
+			>
 	</a>
-	
-	<figcaption>Matright</figcaption>
 	
 </figure></p>
 <p>发现是 Hex 编码，使用 Python 编写脚本解密得到一段 Base64 字符串：</p>
@@ -785,10 +779,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="187"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/Trouble_zip_level1_hu5cc55c4cc8fcd5cc8e94d4d6b88693e7_20591_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/Trouble_zip_level1_hu5cc55c4cc8fcd5cc8e94d4d6b88693e7_20591_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="level1">
+			>
 	</a>
-	
-	<figcaption>level1</figcaption>
 	
 </figure></p>
 <p>猜测第一层压缩包的密码是 6 位数字，属于弱口令，可以通过暴力破解得到压缩包口令。使用压缩包爆破工具 ARCHPR，设置口令为 6 位数字，暴力破解，得到压缩包密码为 483279。</p>
@@ -805,10 +797,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="286"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/Trouble_zip_6digits_hufa710a20e81c59678c4c6db855815f7c_45418_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/Trouble_zip_6digits_hufa710a20e81c59678c4c6db855815f7c_45418_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="6digits">
+			>
 	</a>
-	
-	<figcaption>6digits</figcaption>
 	
 </figure></p>
 <p>解压得到 flag.zip，README.md 和 password-note.txt 三个文件，其中 flag.zip 是加密的压缩包，README.md 中发现提示：</p>
@@ -825,10 +815,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="127"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/Trouble_zip_tip_hub7027b049dadde1d4bd2c8c523192d43_10211_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/Trouble_zip_tip_hub7027b049dadde1d4bd2c8c523192d43_10211_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="tip">
+			>
 	</a>
-	
-	<figcaption>tip</figcaption>
 	
 </figure></p>
 <p>推测给出的密码本 password-note.txt 中存在压缩包的密码，因此使用字典爆破得到口令：</p>
@@ -845,10 +833,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="273"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/Trouble_zip_level2_hu7270c18238be5323f81d2716266bf0c6_51013_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/Trouble_zip_level2_hu7270c18238be5323f81d2716266bf0c6_51013_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="level2">
+			>
 	</a>
-	
-	<figcaption>level2</figcaption>
 	
 </figure></p>
 <p>第二层压缩包解压后得到第三个加密的压缩包 flag.zip 和一个 README.md 文件。将 md 文件压缩后在 WinRAR 中查看，发现其 CRC32 值和 flag.zip 中的 README.md 文件 CRC32 值相同。于是推测这两个文件可能是同一文件，因此使用明文爆破的方式攻击。</p>
@@ -867,10 +853,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="177"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/Trouble_zip_hidzip_hu4c35d1743c256eba7a489e1aaf21b587_82215_480x0_resize_q75_box.jpg 480w, /post/hgame2022-writeup-by-or4nge/img/Trouble_zip_hidzip_hu4c35d1743c256eba7a489e1aaf21b587_82215_1024x0_resize_q75_box.jpg 1024w"
 			loading="lazy"
-			alt="hidzip">
+			>
 	</a>
-	
-	<figcaption>hidzip</figcaption>
 	
 </figure></p>
 <p>使用 binwalk 工具分离得到一个加密的压缩包，用 HexEditor 查看发现数据标志位和目录标志位均为 <code>09 00</code>，猜测使用了伪加密并将其改为 <code>00 00</code>，发现压缩包内文件解密，即可得到 flag。</p>
@@ -893,10 +877,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="144"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/GoodNetwork_hint_hub360c69ca5ec6d564c916a53e8937bf9_18254_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/GoodNetwork_hint_hub360c69ca5ec6d564c916a53e8937bf9_18254_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="hint">
+			>
 	</a>
-	
-	<figcaption>hint</figcaption>
 	
 </figure></p>
 <p><figure 
@@ -912,10 +894,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="396"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/GoodNetwork_base64_hufb41f0c7acf8ff78be6e3088594834ca_7769_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/GoodNetwork_base64_hufb41f0c7acf8ff78be6e3088594834ca_7769_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="base64">
+			>
 	</a>
-	
-	<figcaption>base64</figcaption>
 	
 </figure></p>
 <p>TCP 流中还存在一大段 Base64 编码，<code>Content-Type: image/png</code> 提示这段编码即为传输的图片，使用 Base64 转图片工具 <a class="link" href="https://tool.jisuapi.com/base642pic.html"  target="_blank" rel="noopener"
@@ -933,10 +913,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="556"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/GoodNetwork_image_hu10d5edb2f5b098f2d31dce16b6a34984_80099_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/GoodNetwork_image_hu10d5edb2f5b098f2d31dce16b6a34984_80099_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image">
+			>
 	</a>
-	
-	<figcaption>image</figcaption>
 	
 </figure></p>
 <p><figure 
@@ -952,10 +930,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="635"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/GoodNetwork_base2image_hu4c0c636db3e86c90f49c2c42938d337a_484752_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/GoodNetwork_base2image_hu4c0c636db3e86c90f49c2c42938d337a_484752_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="base2image">
+			>
 	</a>
-	
-	<figcaption>base2image</figcaption>
 	
 </figure></p>
 <p>使用 Stegsolve 查看图片各个通道，在 Green2 通道中发现条形码，扫描得到 flag 的前半段。</p>
@@ -972,10 +948,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="395"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/GoodNetwork_firsthalf_hu23c2c5c8741367aaf5e2a7a8e9ade851_46207_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/GoodNetwork_firsthalf_hu23c2c5c8741367aaf5e2a7a8e9ade851_46207_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="firsthalf">
+			>
 	</a>
-	
-	<figcaption>firsthalf</figcaption>
 	
 </figure></p>
 <p>利用 Data Extract 工具检查 LSB 隐写情况，最终发现当设置 <code>Bit Planes：Red0，Green0，Blue0，Extracted By：Column，Bit Order：LSB First</code> 时得到 flag 后半段。</p>
@@ -992,10 +966,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="837"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/GoodNetwork_secondhalf_hu8438922e8bae4c53cd62bc725d28e15a_68855_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/GoodNetwork_secondhalf_hu8438922e8bae4c53cd62bc725d28e15a_68855_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="secondhalf">
+			>
 	</a>
-	
-	<figcaption>secondhalf</figcaption>
 	
 </figure></p>
 <h3 id="misc群青其实是幽灵东京">[Misc]群青(其实是幽灵东京)</h3>
@@ -1016,10 +988,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="209"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/QunQing_Yoasobi_hu469f14e44cc6b8da185d331c1408badb_514032_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/QunQing_Yoasobi_hu469f14e44cc6b8da185d331c1408badb_514032_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="Yoasobi">
+			>
 	</a>
-	
-	<figcaption>Yoasobi</figcaption>
 	
 </figure></p>
 <p>​查看文件属性，在“详细信息”一栏中发现提示：why not try try SilentEye。</p>
@@ -1036,10 +1006,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="173"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/QunQing_tipwav_hu2566a2b7166ca649ad77c10a88b3cdcd_4633_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/QunQing_tipwav_hu2566a2b7166ca649ad77c10a88b3cdcd_4633_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="tipwav">
+			>
 	</a>
-	
-	<figcaption>tipwav</figcaption>
 	
 </figure></p>
 <p>​这些信息提示可能存在 SilentEye 隐写。使用 SilentEye 中的 Encrypted 方式解密，设置密钥为 Yoasobi，得到一个新的 wav 文件。</p>
@@ -1056,10 +1024,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="522"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/QunQing_silenteye_hu749eb616a4717df22e0e4902ea7b3d92_68588_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/QunQing_silenteye_hu749eb616a4717df22e0e4902ea7b3d92_68588_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="silenteye">
+			>
 	</a>
-	
-	<figcaption>silenteye</figcaption>
 	
 </figure></p>
 <p>​文件名 S_S_T_V.wav 提示为 SSTV 隐写，使用 robot36 分析得到一张含有二维码的图片，扫描即可得到 flag。</p>
@@ -1076,10 +1042,8 @@ flag <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</s
 			height="240"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/QunQing_QR_hu2ca258c85f495c4bfb58e30fb973a4d3_25957_480x0_resize_q75_box.jpg 480w, /post/hgame2022-writeup-by-or4nge/img/QunQing_QR_hu2ca258c85f495c4bfb58e30fb973a4d3_25957_1024x0_resize_q75_box.jpg 1024w"
 			loading="lazy"
-			alt="QR">
+			>
 	</a>
-	
-	<figcaption>QR</figcaption>
 	
 </figure></p>
 <h3 id="iot饭卡的-uno">[IOT]饭卡的 uno</h3>
@@ -1402,6 +1366,11 @@ free(<span style="color:#ae81ff">0</span>)
 
 p<span style="color:#f92672">.</span>interactive()
 </code></pre></div><h3 id="rexd-maze">[RE]xD MAZE</h3>
+<blockquote>
+<p>By s0uthwood</p>
+</blockquote>
+<p>一维的迷宫，直接用 vscode 的小技巧转成 flag</p>
+<p>选中 512 个 <code>#</code> 和后面的一个空格，然后 <code>CTRL+SHIFT+L</code> 全选，换成 <code>3</code>，以此类推</p>
 <h3 id="refakeshell">[RE]fakeshell</h3>
 <blockquote>
 <p>By oneQuiz</p>
@@ -1420,10 +1389,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="466"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207085127425_hu42c6455fdb78ef1edddc3104b5e8c316_41800_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207085127425_hu42c6455fdb78ef1edddc3104b5e8c316_41800_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207085127425">
+			>
 	</a>
-	
-	<figcaption>image-20220207085127425</figcaption>
 	
 </figure></p>
 <p><figure 
@@ -1439,10 +1406,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="333"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207085152260_huaea897d637f99572a9f0b0f8b4ab602e_32154_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207085152260_huaea897d637f99572a9f0b0f8b4ab602e_32154_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207085152260">
+			>
 	</a>
-	
-	<figcaption>image-20220207085152260</figcaption>
 	
 </figure></p>
 <p>但是直接用 <code>aHappyhg4me</code> 指向的字符串解密只有乱码。</p>
@@ -1459,10 +1424,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="50"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207085339570_hud03c2553b601f02ecfff9970d1cb59f4_7312_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207085339570_hud03c2553b601f02ecfff9970d1cb59f4_7312_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207085339570">
+			>
 	</a>
-	
-	<figcaption>image-20220207085339570</figcaption>
 	
 </figure></p>
 <p><figure 
@@ -1478,10 +1441,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="535"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207085413778_hu2dad1803ca5e2912b7a278610ab435cc_47765_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207085413778_hu2dad1803ca5e2912b7a278610ab435cc_47765_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207085413778">
+			>
 	</a>
-	
-	<figcaption>image-20220207085413778</figcaption>
 	
 </figure></p>
 <p>之后我就卡住了，看了 WP 才知道原来在 c 语言中，被 <code>__attribute__((constructor))</code> 分配属性的函数会先于 <code>main()</code> 函数被调用，IDA 将其反编译到 <code>init</code> 中。不过我直接看也看 <code>init</code> 我也看不出来什么不对劲，只是能看出它好像是调用了其他函数的指针。</p>
@@ -1498,10 +1459,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="315"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207090438527_hu522f7b6a3d246fb4f41a95d60ed1cc29_29168_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207090438527_hu522f7b6a3d246fb4f41a95d60ed1cc29_29168_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207090438527">
+			>
 	</a>
-	
-	<figcaption>image-20220207090438527</figcaption>
 	
 </figure></p>
 <p>不过我们只要在 <code>aHappyhg4me</code> 处按下 <code>X</code> 查看其被交叉引用的记录，就可以较容易地发现明显这个字符串是被修改过的。</p>
@@ -1518,10 +1477,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="266"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207091047316_hube9a80b19feaecae3f8c055188637a26_21925_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207091047316_hube9a80b19feaecae3f8c055188637a26_21925_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207091047316">
+			>
 	</a>
-	
-	<figcaption>image-20220207091047316</figcaption>
 	
 </figure></p>
 <p>双击 <code>mov</code> 指令，成功找到修改秘钥字符串的函数。</p>
@@ -1538,10 +1495,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="448"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207091507014_hu540f55b904194844930832ae5a1f95e7_39983_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207091507014_hu540f55b904194844930832ae5a1f95e7_39983_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207091507014">
+			>
 	</a>
-	
-	<figcaption>image-20220207091507014</figcaption>
 	
 </figure></p>
 <p>解密得到flag。</p>
@@ -1558,10 +1513,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="488"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207091812702_hu08357b1bfc21c61cdd6b9be0f9af2ff0_47259_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207091812702_hu08357b1bfc21c61cdd6b9be0f9af2ff0_47259_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207091812702">
+			>
 	</a>
-	
-	<figcaption>image-20220207091812702</figcaption>
 	
 </figure></p>
 <p>关于 <code>__attribute__</code>：</p>
@@ -1601,10 +1554,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="146"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207093954147_hufd5fc201c2a4c40faeee999712106998_23328_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207093954147_hufd5fc201c2a4c40faeee999712106998_23328_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207093954147">
+			>
 	</a>
-	
-	<figcaption>image-20220207093954147</figcaption>
 	
 </figure></p>
 <p>还可以通过参数设置优先级关系：</p>
@@ -1651,14 +1602,60 @@ p<span style="color:#f92672">.</span>interactive()
 			height="167"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207093947895_huabc9c763f3ab4b66813626fd1306f983_24986_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/fakeshell_image-20220207093947895_huabc9c763f3ab4b66813626fd1306f983_24986_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207093947895">
+			>
 	</a>
-	
-	<figcaption>image-20220207093947895</figcaption>
 	
 </figure></p>
 <h3 id="recreakme2">[RE]creakme2</h3>
-<h3 id="reupx-magic-0">[RE]upx magic 0</h3>
+<blockquote>
+<p>By s0uthwood</p>
+</blockquote>
+<p>在加密函数里看一下汇编，发现用了 try except 来构造了一个除 0 异常，当最高位为 0 时，异或一个 0x1234567</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">encipher</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> num_rounds, <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">2</span>], <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> key[<span style="color:#ae81ff">4</span>]) {
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], sum<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9E3779B1</span>;
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> num_rounds; i<span style="color:#f92672">++</span>) {
+        v0 <span style="color:#f92672">+=</span> (((v1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v1) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[sum <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);
+        sum <span style="color:#f92672">+=</span> delta;
+        <span style="color:#66d9ef">if</span> (sum <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+            sum <span style="color:#f92672">^=</span> <span style="color:#ae81ff">0x1234567</span>;
+        printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sum);
+        v1 <span style="color:#f92672">+=</span> (((v0 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v0) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[(sum<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">11</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);
+    }
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;
+    printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sum);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">decipher</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> num_rounds, <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">2</span>], <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> key[<span style="color:#ae81ff">4</span>]) {
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9E3779B1</span>, sum<span style="color:#f92672">=</span><span style="color:#ae81ff">0xc78e4d05</span>;
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> num_rounds; i<span style="color:#f92672">++</span>) {
+        v1 <span style="color:#f92672">-=</span> (((v0 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v0) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[(sum<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">11</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);
+        <span style="color:#66d9ef">if</span> (sum <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+            sum <span style="color:#f92672">^=</span> <span style="color:#ae81ff">0x1234567</span>;
+        sum <span style="color:#f92672">-=</span> delta;
+        printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sum);
+        v0 <span style="color:#f92672">-=</span> (((v1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v1) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[sum <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);
+    }
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+{
+    <span style="color:#66d9ef">uint32_t</span> v[]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">0x457E62CF</span>, <span style="color:#ae81ff">0x9537896C</span>, <span style="color:#ae81ff">0x1F7E7F72</span>, <span style="color:#ae81ff">0xF7A073D8</span>, <span style="color:#ae81ff">0x8E996868</span>, <span style="color:#ae81ff">0x40AFAF99</span>, <span style="color:#ae81ff">0xF990E34</span>, <span style="color:#ae81ff">0x196F4086</span>};
+    <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> k[<span style="color:#ae81ff">4</span>]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>};
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> r<span style="color:#f92672">=</span><span style="color:#ae81ff">32</span>;
+    decipher(r, v, k);
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>, k);
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, k);
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>, k);
+    printf(<span style="color:#e6db74">&#34;%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v);
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><h3 id="reupx-magic-0">[RE]upx magic 0</h3>
 <blockquote>
 <p>By oneQuiz</p>
 </blockquote>
@@ -1677,10 +1674,8 @@ p<span style="color:#f92672">.</span>interactive()
 			height="539"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/upx0_image-20220207094935570_huf62ebc71fd80e17e86be16e18e4c695e_54979_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/upx0_image-20220207094935570_huf62ebc71fd80e17e86be16e18e4c695e_54979_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="image-20220207094935570">
+			>
 	</a>
-	
-	<figcaption>image-20220207094935570</figcaption>
 	
 </figure></p>
 <p>顺了一遍发现这个加密是单向的，然后卡住（我太笨了T-T）</p>
@@ -1760,6 +1755,10 @@ p<span style="color:#f92672">.</span>interactive()
 <p>多项式 $x^{16} + x^{12}+ x^5+1（0x1021）$，初始值 $0x0000$，低位在前，高位在后，结果与 $0x0000$ 异或；</p>
 </blockquote>
 <h3 id="reupx-magic-1">[RE]upx magic 1</h3>
+<blockquote>
+<p>By s0uthwood</p>
+</blockquote>
+<p>发现没法自动脱壳，010 打开之后，手动把三个 <code>UPX?</code> 改成 <code>UPX!</code>，之后就能自动脱壳了</p>
 <h3 id="cryptochinese-character-encryption">[Crypto]Chinese Character Encryption</h3>
 <blockquote>
 <p>By NULLPointer</p>
@@ -2612,10 +2611,8 @@ print(n2s(pow(c, d, n)))
 			height="269"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/CardVirus_imageinfo_hu1e4d8e99f2b07f04176a82bbae3aebec_41399_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/CardVirus_imageinfo_hu1e4d8e99f2b07f04176a82bbae3aebec_41399_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="imageinfo">
+			>
 	</a>
-	
-	<figcaption>imageinfo</figcaption>
 	
 </figure></p>
 <p>随后使用 pslist 和 filescan 指令查看运行程序和系统文件，为加快扫描速度只提取 flag 等关键词，发现名为 flag.txt.txt.7z 和 flag.txt.txt.WannaRen 的文件。</p>
@@ -2632,10 +2629,8 @@ print(n2s(pow(c, d, n)))
 			height="139"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/CardVirus_wannaren_hu248b25003f41073691ee836af893ee5b_46043_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/CardVirus_wannaren_hu248b25003f41073691ee836af893ee5b_46043_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="wannaren">
+			>
 	</a>
-	
-	<figcaption>wannaren</figcaption>
 	
 </figure></p>
 <p>使用 dumpfiles 指令提取文件，用 HexEditor 扫描无异常，打开 flag.txt.txt.WannaRen 文件发现内容被加密，无法阅读。查阅相关资料得知系统感染了 WannaRen 病毒导致系统内部存储文件被加密。WannaRen 使用 RC4 和 RSA 的混合加密模式，加密后的文件名会被修改为 WannaRen，只能使用对应的 RSA 私钥解密，无法被暴力破解。目前已有针对该病毒的解密工具，下载解密工具并按照操作流程解密得到 flag.txt.txt 文件。</p>
@@ -2652,10 +2647,8 @@ print(n2s(pow(c, d, n)))
 			height="503"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/CardVirus_wannarendec_hue2bad3d01574e30ab4e7c888f730a039_38357_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/CardVirus_wannarendec_hue2bad3d01574e30ab4e7c888f730a039_38357_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="wannarendec">
+			>
 	</a>
-	
-	<figcaption>wannarendec</figcaption>
 	
 </figure></p>
 <p><figure 
@@ -2671,10 +2664,8 @@ print(n2s(pow(c, d, n)))
 			height="219"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/CardVirus_flag_hu29c17174b2717c25cfe9ea45d77cf067_19643_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/CardVirus_flag_hu29c17174b2717c25cfe9ea45d77cf067_19643_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="flag">
+			>
 	</a>
-	
-	<figcaption>flag</figcaption>
 	
 </figure></p>
 <p>文件内容使用新与佛论禅加密，使用解密网站 <a class="link" href="http://hi.pcmoe.net/buddha.html"  target="_blank" rel="noopener"
@@ -2692,10 +2683,8 @@ print(n2s(pow(c, d, n)))
 			height="505"
 			srcset="/post/hgame2022-writeup-by-or4nge/img/CardVirus_yflc_hue3cbca2b1538ec9060e9b9706870ef67_56825_480x0_resize_box_3.png 480w, /post/hgame2022-writeup-by-or4nge/img/CardVirus_yflc_hue3cbca2b1538ec9060e9b9706870ef67_56825_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
-			alt="yflc">
+			>
 	</a>
-	
-	<figcaption>yflc</figcaption>
 	
 </figure></p>
 <h2 id="week4">week4</h2>
