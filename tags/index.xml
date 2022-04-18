@@ -6,7 +6,34 @@
     <description>Recent content in Tags on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Feb 2022 22:32:31 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Apr 2022 15:03:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>starCTF</title>
+      <link>https://or4ngesec.github.io/tags/starctf/</link>
+      <pubDate>Mon, 18 Apr 2022 15:03:17 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/starctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Writeup</title>
+      <link>https://or4ngesec.github.io/tags/writeup/</link>
+      <pubDate>Mon, 18 Apr 2022 15:03:17 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/writeup/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>XCTF</title>
+      <link>https://or4ngesec.github.io/tags/xctf/</link>
+      <pubDate>Mon, 18 Apr 2022 15:03:17 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/tags/xctf/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Crypto</title>
       <link>https://or4ngesec.github.io/tags/crypto/</link>
@@ -71,15 +98,6 @@
     </item>
     
     <item>
-      <title>Writeup</title>
-      <link>https://or4ngesec.github.io/tags/writeup/</link>
-      <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
-      
-      <guid>https://or4ngesec.github.io/tags/writeup/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>HWS</title>
       <link>https://or4ngesec.github.io/tags/hws/</link>
       <pubDate>Wed, 26 Jan 2022 13:03:21 +0800</pubDate>
@@ -112,15 +130,6 @@
       <pubDate>Tue, 28 Dec 2021 16:23:17 +0800</pubDate>
       
       <guid>https://or4ngesec.github.io/tags/sctf/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>XCTF</title>
-      <link>https://or4ngesec.github.io/tags/xctf/</link>
-      <pubDate>Tue, 28 Dec 2021 16:23:17 +0800</pubDate>
-      
-      <guid>https://or4ngesec.github.io/tags/xctf/</guid>
       <description></description>
     </item>
     

