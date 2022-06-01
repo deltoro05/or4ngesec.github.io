@@ -12,7 +12,7 @@
         <pubDate>Wed, 01 Jun 2022 17:17:17 +0800</pubDate>
         
         <guid>https://or4ngesec.github.io/post/ciscn-2022-writeup-by-or4nge/</guid>
-        <description>&lt;img src="https://or4ngesec.github.io/cover.png" alt="Featured image of post CISCN2022 初赛 Writeup by or4nge" /&gt;&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
+        <description>&lt;img src="https://or4ngesec.github.io/post/ciscn-2022-writeup-by-or4nge/cover.jpg" alt="Featured image of post CISCN2022 初赛 Writeup by or4nge" /&gt;&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
 &lt;h3 id=&#34;ezpop&#34;&gt;ezpop&lt;/h3&gt;
 &lt;p&gt;tp6.0.12的反序列化洞，直接用现成的链的打就行&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt;
