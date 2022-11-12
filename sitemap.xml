@@ -2,10 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://or4ngesec.github.io/post/wdb2022-writeup-by-or4nge/</loc>
-    <lastmod>2022-08-31T11:45:17+08:00</lastmod>
+    <loc>https://or4ngesec.github.io/tags/%E5%BC%BA%E7%BD%91%E6%8B%9F%E6%80%81/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/post/qwnt-writeup-by-or4nge/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/categories/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/post/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/tags/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/tags/writeup/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/categories/writeup/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/post/wdb2022-writeup-by-or4nge/</loc>
     <lastmod>2022-08-31T11:45:17+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/tags/crypto/</loc>
@@ -14,28 +35,13 @@
     <loc>https://or4ngesec.github.io/tags/misc/</loc>
     <lastmod>2022-08-31T11:45:17+08:00</lastmod>
   </url><url>
-    <loc>https://or4ngesec.github.io/</loc>
-    <lastmod>2022-08-31T11:45:17+08:00</lastmod>
-  </url><url>
-    <loc>https://or4ngesec.github.io/post/</loc>
-    <lastmod>2022-08-31T11:45:17+08:00</lastmod>
-  </url><url>
     <loc>https://or4ngesec.github.io/tags/pwn/</loc>
     <lastmod>2022-08-31T11:45:17+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/tags/re/</loc>
     <lastmod>2022-08-31T11:45:17+08:00</lastmod>
   </url><url>
-    <loc>https://or4ngesec.github.io/tags/</loc>
-    <lastmod>2022-08-31T11:45:17+08:00</lastmod>
-  </url><url>
     <loc>https://or4ngesec.github.io/tags/web/</loc>
-    <lastmod>2022-08-31T11:45:17+08:00</lastmod>
-  </url><url>
-    <loc>https://or4ngesec.github.io/tags/writeup/</loc>
-    <lastmod>2022-08-31T11:45:17+08:00</lastmod>
-  </url><url>
-    <loc>https://or4ngesec.github.io/categories/writeup/</loc>
     <lastmod>2022-08-31T11:45:17+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/tags/%E7%BD%91%E9%BC%8E%E6%9D%AF/</loc>
