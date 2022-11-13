@@ -300,14 +300,14 @@
 	
 </figure></p>
 <p>再把结果左移两位，和前面的数据做了比较，因此最后的exp是：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dump <span style="color:#f92672">=</span> [<span style="color:#ae81ff">156</span>, <span style="color:#ae81ff">448</span>, <span style="color:#ae81ff">472</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">488</span>, <span style="color:#ae81ff">456</span>, <span style="color:#ae81ff">152</span>, <span style="color:#ae81ff">456</span>, <span style="color:#ae81ff">448</span>, <span style="color:#ae81ff">492</span>, <span style="color:#ae81ff">140</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">140</span>, <span style="color:#ae81ff">492</span>, <span style="color:#ae81ff">492</span>, <span style="color:#ae81ff">448</span>, <span style="color:#ae81ff">448</span>, <span style="color:#ae81ff">472</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">156</span>, <span style="color:#ae81ff">464</span>, <span style="color:#ae81ff">464</span>, <span style="color:#ae81ff">464</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">488</span>, <span style="color:#ae81ff">464</span>, <span style="color:#ae81ff">492</span>, <span style="color:#ae81ff">456</span>, <span style="color:#ae81ff">456</span>, <span style="color:#ae81ff">488</span>, <span style="color:#ae81ff">140</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(dump)):
-</span></span><span style="display:flex;"><span>    print(chr((dump[i]<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">^</span><span style="color:#ae81ff">0x42</span>),end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>print()
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># e247780d029a7a992247e6667869008a</span>
-</span></span></code></pre></div><h3 id="easyvm">EasyVM</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">dump <span style="color:#f92672">=</span> [<span style="color:#ae81ff">156</span>, <span style="color:#ae81ff">448</span>, <span style="color:#ae81ff">472</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">488</span>, <span style="color:#ae81ff">456</span>, <span style="color:#ae81ff">152</span>, <span style="color:#ae81ff">456</span>, <span style="color:#ae81ff">448</span>, <span style="color:#ae81ff">492</span>, <span style="color:#ae81ff">140</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">140</span>, <span style="color:#ae81ff">492</span>, <span style="color:#ae81ff">492</span>, <span style="color:#ae81ff">448</span>, <span style="color:#ae81ff">448</span>, <span style="color:#ae81ff">472</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">156</span>, <span style="color:#ae81ff">464</span>, <span style="color:#ae81ff">464</span>, <span style="color:#ae81ff">464</span>, <span style="color:#ae81ff">468</span>, <span style="color:#ae81ff">488</span>, <span style="color:#ae81ff">464</span>, <span style="color:#ae81ff">492</span>, <span style="color:#ae81ff">456</span>, <span style="color:#ae81ff">456</span>, <span style="color:#ae81ff">488</span>, <span style="color:#ae81ff">140</span>]
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(dump)):
+    print(chr((dump[i]<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">^</span><span style="color:#ae81ff">0x42</span>),end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+    
+print()
+<span style="color:#75715e"># e247780d029a7a992247e6667869008a</span>
+</code></pre></div><h3 id="easyvm">EasyVM</h3>
 <p><figure 
 	
 		class="gallery-image" 
@@ -417,54 +417,54 @@
 	
 </figure></p>
 <p>动态调试中可以发现函数将输入经过特制变换的 base64 和前一个结果异或，和 0xee 异或，再进行比较，然后动态调试的过程中把最终的结果提取出来，可以写出脚本。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>dump <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x00</span>,<span style="color:#ae81ff">0xBE</span>, <span style="color:#ae81ff">0x36</span>, <span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x4F</span>, <span style="color:#ae81ff">0xDE</span>, <span style="color:#ae81ff">0x44</span>, <span style="color:#ae81ff">0xEE</span>, <span style="color:#ae81ff">0x5F</span>, 
-</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xDA</span>, <span style="color:#ae81ff">0x0B</span>, <span style="color:#ae81ff">0xB5</span>, <span style="color:#ae81ff">0x17</span>, <span style="color:#ae81ff">0xB8</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0xC2</span>, <span style="color:#ae81ff">0x4E</span>, <span style="color:#ae81ff">0x9C</span>, <span style="color:#ae81ff">0x4A</span>, 
-</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0x43</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x22</span>, <span style="color:#ae81ff">0x8A</span>, <span style="color:#ae81ff">0x3B</span>, <span style="color:#ae81ff">0x88</span>, <span style="color:#ae81ff">0x5B</span>, <span style="color:#ae81ff">0xE5</span>, <span style="color:#ae81ff">0x54</span>, 
-</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xFF</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0xD5</span>, <span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0xD4</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0xAD</span>, <span style="color:#ae81ff">0x0B</span>, <span style="color:#ae81ff">0xD8</span>, <span style="color:#ae81ff">0x50</span>, 
-</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xF9</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0xC5</span>, <span style="color:#ae81ff">0x4A</span>, <span style="color:#ae81ff">0xFD</span>, <span style="color:#ae81ff">0x2F</span>, <span style="color:#ae81ff">0x84</span>, <span style="color:#ae81ff">0x36</span>, 
-</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x85</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0xFB</span>, <span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0xD7</span>, <span style="color:#ae81ff">0x0D</span>, <span style="color:#ae81ff">0xE3</span>]
-</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0xa</span>,<span style="color:#ae81ff">0xb</span>,<span style="color:#ae81ff">0xc</span>,<span style="color:#ae81ff">0xd</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>dump <span style="color:#f92672">=</span> dump[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>dump1 <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,len(dump)):
-</span></span><span style="display:flex;"><span>    dump1<span style="color:#f92672">.</span>append(dump[i]<span style="color:#f92672">^</span>dump[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">^</span><span style="color:#ae81ff">0xee</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>dump1 <span style="color:#f92672">=</span> dump1[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>dump2 <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(dump1)):
-</span></span><span style="display:flex;"><span>    dump2<span style="color:#f92672">.</span>append((dump1[i]<span style="color:#f92672">^</span>x[(i)<span style="color:#f92672">%</span><span style="color:#ae81ff">4</span>])<span style="color:#f92672">.</span>to_bytes(<span style="color:#ae81ff">1</span>,byteorder<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;big&#39;</span>))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print (base64<span style="color:#f92672">.</span>b64decode(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(dump2)))
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># b&#39;flag{2586dc76-98d5-44e2-ad58-d06e6559d82a}&#39;</span>
-</span></span></code></pre></div><h2 id="crypto">Crypto</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> base64
+
+dump <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x00</span>,<span style="color:#ae81ff">0xBE</span>, <span style="color:#ae81ff">0x36</span>, <span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x4F</span>, <span style="color:#ae81ff">0xDE</span>, <span style="color:#ae81ff">0x44</span>, <span style="color:#ae81ff">0xEE</span>, <span style="color:#ae81ff">0x5F</span>, 
+  <span style="color:#ae81ff">0xDA</span>, <span style="color:#ae81ff">0x0B</span>, <span style="color:#ae81ff">0xB5</span>, <span style="color:#ae81ff">0x17</span>, <span style="color:#ae81ff">0xB8</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0xC2</span>, <span style="color:#ae81ff">0x4E</span>, <span style="color:#ae81ff">0x9C</span>, <span style="color:#ae81ff">0x4A</span>, 
+  <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0x43</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x22</span>, <span style="color:#ae81ff">0x8A</span>, <span style="color:#ae81ff">0x3B</span>, <span style="color:#ae81ff">0x88</span>, <span style="color:#ae81ff">0x5B</span>, <span style="color:#ae81ff">0xE5</span>, <span style="color:#ae81ff">0x54</span>, 
+  <span style="color:#ae81ff">0xFF</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0xD5</span>, <span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0xD4</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0xAD</span>, <span style="color:#ae81ff">0x0B</span>, <span style="color:#ae81ff">0xD8</span>, <span style="color:#ae81ff">0x50</span>, 
+  <span style="color:#ae81ff">0xF9</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0xC5</span>, <span style="color:#ae81ff">0x4A</span>, <span style="color:#ae81ff">0xFD</span>, <span style="color:#ae81ff">0x2F</span>, <span style="color:#ae81ff">0x84</span>, <span style="color:#ae81ff">0x36</span>, 
+  <span style="color:#ae81ff">0x85</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0xFB</span>, <span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0xD7</span>, <span style="color:#ae81ff">0x0D</span>, <span style="color:#ae81ff">0xE3</span>]
+x <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0xa</span>,<span style="color:#ae81ff">0xb</span>,<span style="color:#ae81ff">0xc</span>,<span style="color:#ae81ff">0xd</span>]
+
+dump <span style="color:#f92672">=</span> dump[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+
+
+dump1 <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,len(dump)):
+    dump1<span style="color:#f92672">.</span>append(dump[i]<span style="color:#f92672">^</span>dump[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">^</span><span style="color:#ae81ff">0xee</span>)
+
+
+dump1 <span style="color:#f92672">=</span> dump1[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+
+
+dump2 <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(dump1)):
+    dump2<span style="color:#f92672">.</span>append((dump1[i]<span style="color:#f92672">^</span>x[(i)<span style="color:#f92672">%</span><span style="color:#ae81ff">4</span>])<span style="color:#f92672">.</span>to_bytes(<span style="color:#ae81ff">1</span>,byteorder<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;big&#39;</span>))
+
+print (base64<span style="color:#f92672">.</span>b64decode(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(dump2)))
+<span style="color:#75715e"># b&#39;flag{2586dc76-98d5-44e2-ad58-d06e6559d82a}&#39;</span>
+</code></pre></div><h2 id="crypto">Crypto</h2>
 <h3 id="babyrsa">babyrsa</h3>
 <p>把 n 扔到 factordb 上直接分解了出来，拿到 pq，直接解密就行</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> n2s
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exgcd</span>(a, b):
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> b <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, a
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>		x, y, q <span style="color:#f92672">=</span> exgcd(b, a <span style="color:#f92672">%</span> b)
-</span></span><span style="display:flex;"><span>		x, y <span style="color:#f92672">=</span> y, (x <span style="color:#f92672">-</span> (a <span style="color:#f92672">//</span> b) <span style="color:#f92672">*</span> y)
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> x, y, q
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">98197216341757567488149177586991336976901080454854408243068885480633972200382596026756300968618883148721598031574296054706280190113587145906781375704611841087782526897314537785060868780928063942914187241017272444601926795083433477673935377466676026146695321415853502288291409333200661670651818749836420808033</span>
-</span></span><span style="display:flex;"><span>q <span style="color:#f92672">=</span> <span style="color:#ae81ff">133639826298015917901017908376475546339925646165363264658181838203059432536492968144231040597990919971381628901127402671873954769629458944972912180415794436700950304720548263026421362847590283353425105178540468631051824814390421486132775876582962969734956410033443729557703719598998956317920674659744121941513</span>
-</span></span><span style="display:flex;"><span>N <span style="color:#f92672">=</span> <span style="color:#ae81ff">13123058934861171416713230498081453101147538789122070079961388806126697916963123413431108069961369055630747412550900239402710827847917960870358653962948282381351741121884528399369764530446509936240262290248305226552117100584726616255292963971141510518678552679033220315246377746270515853987903184512948801397452104554589803725619076066339968999308910127885089547678968793196148780382182445270838659078189316664538631875879022325427220682805580410213245364855569367702919157881367085677283124732874621569379901272662162025780608669577546548333274766058755786449491277002349918598971841605936268030140638579388226573929</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> p <span style="color:#f92672">*</span> q <span style="color:#f92672">==</span> N
-</span></span><span style="display:flex;"><span>e <span style="color:#f92672">=</span> <span style="color:#ae81ff">2199344405076718723439776106818391416986774637417452818162477025957976213477191723664184407417234793814926418366905751689789699138123658292718951547073938244835923378103264574262319868072792187129755570696127796856136279813658923777933069924139862221947627969330450735758091555899551587605175567882253565613163972396640663959048311077691045791516671857020379334217141651855658795614761069687029140601439597978203375244243343052687488606544856116827681065414187957956049947143017305483200122033343857370223678236469887421261592930549136708160041001438350227594265714800753072939126464647703962260358930477570798420877</span>
-</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">1492164290534197296766878830710549288168716657792979479408332026408553210558539364503279432780006256047888761718878241924947937039103166564146378209168719163067531460700424309878383312837345239570897122826051628153030129647363574035072755426112229160684859510640271933580581310029921376842631120847546030843821787623965614564745724229763999106839802052036834811357341644073138100679508864747009014415530176077648226083725813290110828240582884113726976794751006967153951269748482024859714451264220728184903144004573228365893961477199925864862018084224563883101101842275596219857205470076943493098825250412323522013524</span>
-</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> exgcd(e, (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (q <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>))[<span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>print(n2s(pow(flag, d, N)))
-</span></span></code></pre></div><p>flag:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> n2s
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exgcd</span>(a, b):
+	<span style="color:#66d9ef">if</span> b <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, a
+	<span style="color:#66d9ef">else</span>:
+		x, y, q <span style="color:#f92672">=</span> exgcd(b, a <span style="color:#f92672">%</span> b)
+		x, y <span style="color:#f92672">=</span> y, (x <span style="color:#f92672">-</span> (a <span style="color:#f92672">//</span> b) <span style="color:#f92672">*</span> y)
+		<span style="color:#66d9ef">return</span> x, y, q
+
+p <span style="color:#f92672">=</span> <span style="color:#ae81ff">98197216341757567488149177586991336976901080454854408243068885480633972200382596026756300968618883148721598031574296054706280190113587145906781375704611841087782526897314537785060868780928063942914187241017272444601926795083433477673935377466676026146695321415853502288291409333200661670651818749836420808033</span>
+q <span style="color:#f92672">=</span> <span style="color:#ae81ff">133639826298015917901017908376475546339925646165363264658181838203059432536492968144231040597990919971381628901127402671873954769629458944972912180415794436700950304720548263026421362847590283353425105178540468631051824814390421486132775876582962969734956410033443729557703719598998956317920674659744121941513</span>
+N <span style="color:#f92672">=</span> <span style="color:#ae81ff">13123058934861171416713230498081453101147538789122070079961388806126697916963123413431108069961369055630747412550900239402710827847917960870358653962948282381351741121884528399369764530446509936240262290248305226552117100584726616255292963971141510518678552679033220315246377746270515853987903184512948801397452104554589803725619076066339968999308910127885089547678968793196148780382182445270838659078189316664538631875879022325427220682805580410213245364855569367702919157881367085677283124732874621569379901272662162025780608669577546548333274766058755786449491277002349918598971841605936268030140638579388226573929</span>
+<span style="color:#66d9ef">assert</span> p <span style="color:#f92672">*</span> q <span style="color:#f92672">==</span> N
+e <span style="color:#f92672">=</span> <span style="color:#ae81ff">2199344405076718723439776106818391416986774637417452818162477025957976213477191723664184407417234793814926418366905751689789699138123658292718951547073938244835923378103264574262319868072792187129755570696127796856136279813658923777933069924139862221947627969330450735758091555899551587605175567882253565613163972396640663959048311077691045791516671857020379334217141651855658795614761069687029140601439597978203375244243343052687488606544856116827681065414187957956049947143017305483200122033343857370223678236469887421261592930549136708160041001438350227594265714800753072939126464647703962260358930477570798420877</span>
+flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">1492164290534197296766878830710549288168716657792979479408332026408553210558539364503279432780006256047888761718878241924947937039103166564146378209168719163067531460700424309878383312837345239570897122826051628153030129647363574035072755426112229160684859510640271933580581310029921376842631120847546030843821787623965614564745724229763999106839802052036834811357341644073138100679508864747009014415530176077648226083725813290110828240582884113726976794751006967153951269748482024859714451264220728184903144004573228365893961477199925864862018084224563883101101842275596219857205470076943493098825250412323522013524</span>
+d <span style="color:#f92672">=</span> exgcd(e, (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (q <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>))[<span style="color:#ae81ff">0</span>]
+print(n2s(pow(flag, d, N)))
+</code></pre></div><p>flag:</p>
 <p><figure 
 	
 		class="gallery-image" 
@@ -486,149 +486,149 @@
 <p>首先是一个 LCG 的链式求解，通过五个值解出 A,B,q</p>
 <p>分析 elgmal 签名，同样使用了 LCG，那么有两个加密值就能够恢复消息，推导如下</p>
 <p>$$
-c_{2&rsquo;}\equiv mh^{Ar_1+B}
+c_{2'}\equiv mh^{Ar_1+B}
 \equiv m(h^{r_1})^Ah^B
 \equiv mh^{r_1}(h^{r_1})^{A-1}h^B
 \equiv c_2(h^{r_1})^{A-1}h^B\pmod p
 $$</p>
 <p>$$
-\therefore (h^{r_1})^{A-1} \equiv c_{2&rsquo;}c_2^{-1}h^{-B} \pmod p
+\therefore (h^{r_1})^{A-1} \equiv c_{2'}c_2^{-1}h^{-B} \pmod p
 $$</p>
 <p>可以设法求出 $h^{r_1}$ 的值，然后就可以通过 $c_2=mh^{r_1}$ 求解出 m 值</p>
 <p>但由于 $A-1$ 和 $p-1$ 不互素，无法直接求得逆元，因此需要高次同余开根算法，这里使用了 AMM 算法进行求解，按照论文直接复现出来，得到 $h^{r_1}$ 的值</p>
 <p>最后计算 $m\equiv c_2(h^{r_1})^{-1}\pmod p$ 得到flag</p>
 <p>LCG 求解 ABq：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gcd</span>(a,b): 
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(b<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>): 
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> a 
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>: 
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> gcd(b,a<span style="color:#f92672">%</span>b) 
-</span></span><span style="display:flex;"><span>s <span style="color:#f92672">=</span>  [<span style="color:#ae81ff">543263588863771657634119</span>, <span style="color:#ae81ff">628899245716105951093835</span>, <span style="color:#ae81ff">78708024695487418261582</span>, <span style="color:#ae81ff">598971435111109998816796</span>, <span style="color:#ae81ff">789474285039501272453373</span>]
-</span></span><span style="display:flex;"><span>t <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
-</span></span><span style="display:flex;"><span>    t<span style="color:#f92672">.</span>append(s[i]<span style="color:#f92672">-</span>s[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]) 
-</span></span><span style="display:flex;"><span>all_n <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">3</span>):
-</span></span><span style="display:flex;"><span>    all_n<span style="color:#f92672">.</span>append(gcd((t[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>t[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span>t[i]<span style="color:#f92672">*</span>t[i]), (t[i<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">*</span>t[i]<span style="color:#f92672">-</span>t[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>t[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]))) 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>MMI <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> A, n,s<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,t<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,N<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>: (n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">and</span> t<span style="color:#f92672">%</span>N <span style="color:#f92672">or</span> MMI(n, A<span style="color:#f92672">%</span>n, t, s<span style="color:#f92672">-</span>A<span style="color:#f92672">//</span>n<span style="color:#f92672">*</span>t, N <span style="color:#f92672">or</span> n),<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)[n<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1</span>] <span style="color:#75715e">#逆元计算</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> n <span style="color:#f92672">in</span> all_n:
-</span></span><span style="display:flex;"><span>    n<span style="color:#f92672">=</span>abs(n)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> n<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>
-</span></span><span style="display:flex;"><span>    a<span style="color:#f92672">=</span>(s[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">-</span>s[<span style="color:#ae81ff">1</span>])<span style="color:#f92672">*</span>MMI((s[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span>s[<span style="color:#ae81ff">0</span>]),n)<span style="color:#f92672">%</span>n
-</span></span><span style="display:flex;"><span>    ani<span style="color:#f92672">=</span>MMI(a,n)
-</span></span><span style="display:flex;"><span>    b<span style="color:#f92672">=</span>(s[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span>a<span style="color:#f92672">*</span>s[<span style="color:#ae81ff">0</span>])<span style="color:#f92672">%</span>n
-</span></span><span style="display:flex;"><span>    print(a, b, n)
-</span></span></code></pre></div><p>AMM 算法代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> random
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> math
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> libnum
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> bytes_to_long,long_to_bytes
-</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">GF</span>(a):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> p
-</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> a
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">g</span>(a,b):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> p
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pow(a,b,p)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">AMM</span>(x,e,p):
-</span></span><span style="display:flex;"><span>    GF(p)
-</span></span><span style="display:flex;"><span>    y <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> g(y, (p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">//</span>e) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>        y <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>        print(y)
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#p-1 = e^t*s</span>
-</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> p <span style="color:#f92672">%</span> e <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>        t <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        print(t)
-</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> p <span style="color:#f92672">//</span> (e<span style="color:#f92672">**</span>t)
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># s|ralpha-1</span>
-</span></span><span style="display:flex;"><span>    k <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>((s <span style="color:#f92672">*</span> k <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> e <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>):
-</span></span><span style="display:flex;"><span>        k <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    alpha <span style="color:#f92672">=</span> (s <span style="color:#f92672">*</span> k <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> e
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    a <span style="color:#f92672">=</span> g(y, (e <span style="color:#f92672">**</span> (t <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) ) <span style="color:#f92672">*</span> s)
-</span></span><span style="display:flex;"><span>    b <span style="color:#f92672">=</span> g(x, e <span style="color:#f92672">*</span> alpha <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>    c <span style="color:#f92672">=</span> g(y, s)
-</span></span><span style="display:flex;"><span>    h <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, t<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
-</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;cur_i&#39;</span>,i)
-</span></span><span style="display:flex;"><span>        d <span style="color:#f92672">=</span> g(b,e<span style="color:#f92672">**</span>(t<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>i))
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> d <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>            j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>            j <span style="color:#f92672">=</span> (<span style="color:#f92672">-</span>math<span style="color:#f92672">.</span>log(d,a) <span style="color:#f92672">%</span> e)
-</span></span><span style="display:flex;"><span>        b <span style="color:#f92672">=</span> b <span style="color:#f92672">*</span> (g(g(c, e), j))
-</span></span><span style="display:flex;"><span>        h <span style="color:#f92672">=</span> h <span style="color:#f92672">*</span> g(c, j)
-</span></span><span style="display:flex;"><span>        c <span style="color:#f92672">=</span> g(c,e)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (g(x,alpha <span style="color:#f92672">*</span> h)) <span style="color:#f92672">%</span> p
-</span></span></code></pre></div><p>解题脚本：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#coding=utf-8</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> gmpy2 <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> amm <span style="color:#f92672">import</span> AMM
-</span></span><span style="display:flex;"><span>A <span style="color:#f92672">=</span> <span style="color:#ae81ff">12742153496769814072597</span>
-</span></span><span style="display:flex;"><span>B <span style="color:#f92672">=</span> <span style="color:#ae81ff">3035433788765894539799</span>
-</span></span><span style="display:flex;"><span>q <span style="color:#f92672">=</span> <span style="color:#ae81ff">791763770658839585424113</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># A = 107868759310796409744994</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># B = 492302818740419286543885</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">65211247300401312530078141569304950676358489059623557848188896752173856845051471066071652073612337629832155846984721797768267868868902023383604553319793550396610085424563231688918357710337401138108050205457200940158475922063279384491022916790549837379548978141370347556053597178221402425212594060342213485311</span>
-</span></span><span style="display:flex;"><span>g <span style="color:#f92672">=</span> <span style="color:#ae81ff">27642593390439430783453736408814717946185190497201679721975757020767271070510268596627490205095779429964809833535285315202625851326460572368018875381603399143376574281200028337681552876140857556460885848491160812604549770668188783258592940823128376128198726254875984002214053523752696104568469730021811399216</span>
-</span></span><span style="display:flex;"><span>h <span style="color:#f92672">=</span> <span style="color:#ae81ff">54585833166051670245656045196940486576634589000609010947618047461787934106392112227019662788387352615714332234871251868259282522817042504587428441746855906297390193418159792477477443129333707197013251839952389651332058368911829464978546505729530760951698134101053626585254469108630886768357270544236516534904</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>c1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">60724920570148295800083597588524297283595971970237964464679084640302395172192639331196385150232229004030419122038089044697951208850497923486467859070476427472465291810423905736825272208842988090394035980454248119048131354993356125895595138979611664707727518852984351599604226889848831071126576874892808080133</span>
-</span></span><span style="display:flex;"><span>c2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">48616294792900599931167965577794374684760165574922600262773518630884983374432147726140430372696876107933565006549344582099592376234783044818320678499613925823621554608542446585829308488452057340023780821973913517239972817669309837103043456714481646128392677624092659929248296869048674230341175765084122344264</span>
-</span></span><span style="display:flex;"><span>c1_ <span style="color:#f92672">=</span> <span style="color:#ae81ff">42875731538109170678735196002365281622531058597803022779529275736483962610547258618168523955709341579773947887175626960699426438456382655370090748369934296474999389316334717699127421889816721511602392591677377678759026657582648354688447456509292302633971842316239774410380221303269351351929586256938787054867</span>
-</span></span><span style="display:flex;"><span>c2_ <span style="color:#f92672">=</span> <span style="color:#ae81ff">64829024929257668640929285124747107162970460545535885047576569803424908055130477684809317765011143527867645692710091307694839524199204611328374569742391489915929451079830143261799375621377093290249652912850024319433129432676683899459510155157108727860920017105870104383111111395351496171846620163716404148070</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>k <span style="color:#f92672">=</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> q
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> k <span style="color:#f92672">*</span> q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> p
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># print(q, k)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>hr1_A_1 <span style="color:#f92672">=</span> c2_ <span style="color:#f92672">*</span> invert(c2, p) <span style="color:#f92672">*</span> pow(h,<span style="color:#f92672">-</span>B, p) <span style="color:#f92672">%</span> p
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># print(hr1_A_1)</span>
-</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> xgcd(A <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">%</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cur_x <span style="color:#f92672">=</span> AMM(hr1_A_1, <span style="color:#ae81ff">7438</span>, p)
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># assert pow(cur_x, A - 1, p) == hr1_A_1</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> xgcd(A <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">%</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>x_7438 <span style="color:#f92672">=</span> pow(hr1_A_1, d, p)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>x_3719 <span style="color:#f92672">=</span> AMM(x_7438, <span style="color:#ae81ff">2</span>, p)
-</span></span><span style="display:flex;"><span>x_3719_ <span style="color:#f92672">=</span> p <span style="color:#f92672">-</span> x_3719
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>x_3719s <span style="color:#f92672">=</span> [x_3719, x_3719_]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>mol <span style="color:#f92672">=</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> <span style="color:#ae81ff">3719</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check</span>(mm):
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mm:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">128</span>:
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> eve_c <span style="color:#f92672">in</span> x_3719s:
-</span></span><span style="display:flex;"><span>	cur_x <span style="color:#f92672">=</span> AMM(eve_c, <span style="color:#ae81ff">3719</span>, p)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">assert</span> pow(cur_x, A <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p) <span style="color:#f92672">==</span> hr1_A_1
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6000</span>):
-</span></span><span style="display:flex;"><span>		cur_use <span style="color:#f92672">=</span> cur_x <span style="color:#f92672">*</span> pow(i, mol, p)
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">assert</span> pow(cur_use, A <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p) <span style="color:#f92672">==</span> hr1_A_1
-</span></span><span style="display:flex;"><span>		cur_m <span style="color:#f92672">=</span> xgcd(cur_use, p)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> c2 <span style="color:#f92672">%</span> p
-</span></span><span style="display:flex;"><span>		cur_m <span style="color:#f92672">=</span> n2s(int(cur_m))
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> check(cur_m):
-</span></span><span style="display:flex;"><span>			print(cur_m)
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># b&#39;flag{19e9f185e6a680324cedd6e6d9382743}&#39;</span>
-</span></span></code></pre></div><h2 id="misc">Misc</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gcd</span>(a,b): 
+    <span style="color:#66d9ef">if</span>(b<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>): 
+        <span style="color:#66d9ef">return</span> a 
+    <span style="color:#66d9ef">else</span>: 
+        <span style="color:#66d9ef">return</span> gcd(b,a<span style="color:#f92672">%</span>b) 
+s <span style="color:#f92672">=</span>  [<span style="color:#ae81ff">543263588863771657634119</span>, <span style="color:#ae81ff">628899245716105951093835</span>, <span style="color:#ae81ff">78708024695487418261582</span>, <span style="color:#ae81ff">598971435111109998816796</span>, <span style="color:#ae81ff">789474285039501272453373</span>]
+t <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+    t<span style="color:#f92672">.</span>append(s[i]<span style="color:#f92672">-</span>s[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]) 
+all_n <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">3</span>):
+    all_n<span style="color:#f92672">.</span>append(gcd((t[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>t[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span>t[i]<span style="color:#f92672">*</span>t[i]), (t[i<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">*</span>t[i]<span style="color:#f92672">-</span>t[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>t[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]))) 
+
+MMI <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> A, n,s<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,t<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,N<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>: (n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">and</span> t<span style="color:#f92672">%</span>N <span style="color:#f92672">or</span> MMI(n, A<span style="color:#f92672">%</span>n, t, s<span style="color:#f92672">-</span>A<span style="color:#f92672">//</span>n<span style="color:#f92672">*</span>t, N <span style="color:#f92672">or</span> n),<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)[n<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1</span>] <span style="color:#75715e">#逆元计算</span>
+<span style="color:#66d9ef">for</span> n <span style="color:#f92672">in</span> all_n:
+    n<span style="color:#f92672">=</span>abs(n)
+    <span style="color:#66d9ef">if</span> n<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+        <span style="color:#66d9ef">continue</span>
+    a<span style="color:#f92672">=</span>(s[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">-</span>s[<span style="color:#ae81ff">1</span>])<span style="color:#f92672">*</span>MMI((s[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span>s[<span style="color:#ae81ff">0</span>]),n)<span style="color:#f92672">%</span>n
+    ani<span style="color:#f92672">=</span>MMI(a,n)
+    b<span style="color:#f92672">=</span>(s[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span>a<span style="color:#f92672">*</span>s[<span style="color:#ae81ff">0</span>])<span style="color:#f92672">%</span>n
+    print(a, b, n)
+</code></pre></div><p>AMM 算法代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> random
+<span style="color:#f92672">import</span> math
+<span style="color:#f92672">import</span> libnum
+<span style="color:#f92672">import</span> time
+<span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> bytes_to_long,long_to_bytes
+p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">GF</span>(a):
+    <span style="color:#66d9ef">global</span> p
+    p <span style="color:#f92672">=</span> a
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">g</span>(a,b):
+    <span style="color:#66d9ef">global</span> p
+    <span style="color:#66d9ef">return</span> pow(a,b,p)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">AMM</span>(x,e,p):
+    GF(p)
+    y <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">while</span> g(y, (p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">//</span>e) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+        y <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+        print(y)
+    <span style="color:#75715e">#p-1 = e^t*s</span>
+    t <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+    s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">while</span> p <span style="color:#f92672">%</span> e <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+        t <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        print(t)
+    s <span style="color:#f92672">=</span> p <span style="color:#f92672">//</span> (e<span style="color:#f92672">**</span>t)
+    <span style="color:#75715e"># s|ralpha-1</span>
+    k <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>    
+    <span style="color:#66d9ef">while</span>((s <span style="color:#f92672">*</span> k <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> e <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>):
+        k <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    alpha <span style="color:#f92672">=</span> (s <span style="color:#f92672">*</span> k <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> e
+    
+    a <span style="color:#f92672">=</span> g(y, (e <span style="color:#f92672">**</span> (t <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) ) <span style="color:#f92672">*</span> s)
+    b <span style="color:#f92672">=</span> g(x, e <span style="color:#f92672">*</span> alpha <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+    c <span style="color:#f92672">=</span> g(y, s)
+    h <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#75715e">#</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, t<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
+        print(<span style="color:#e6db74">&#39;cur_i&#39;</span>,i)
+        d <span style="color:#f92672">=</span> g(b,e<span style="color:#f92672">**</span>(t<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>i))
+        <span style="color:#66d9ef">if</span> d <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+        <span style="color:#66d9ef">else</span>:
+            j <span style="color:#f92672">=</span> (<span style="color:#f92672">-</span>math<span style="color:#f92672">.</span>log(d,a) <span style="color:#f92672">%</span> e)
+        b <span style="color:#f92672">=</span> b <span style="color:#f92672">*</span> (g(g(c, e), j))
+        h <span style="color:#f92672">=</span> h <span style="color:#f92672">*</span> g(c, j)
+        c <span style="color:#f92672">=</span> g(c,e)
+    <span style="color:#66d9ef">return</span> (g(x,alpha <span style="color:#f92672">*</span> h)) <span style="color:#f92672">%</span> p
+</code></pre></div><p>解题脚本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#coding=utf-8</span>
+<span style="color:#f92672">from</span> gmpy2 <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">from</span> amm <span style="color:#f92672">import</span> AMM
+A <span style="color:#f92672">=</span> <span style="color:#ae81ff">12742153496769814072597</span>
+B <span style="color:#f92672">=</span> <span style="color:#ae81ff">3035433788765894539799</span>
+q <span style="color:#f92672">=</span> <span style="color:#ae81ff">791763770658839585424113</span>
+<span style="color:#75715e"># A = 107868759310796409744994</span>
+<span style="color:#75715e"># B = 492302818740419286543885</span>
+
+p <span style="color:#f92672">=</span> <span style="color:#ae81ff">65211247300401312530078141569304950676358489059623557848188896752173856845051471066071652073612337629832155846984721797768267868868902023383604553319793550396610085424563231688918357710337401138108050205457200940158475922063279384491022916790549837379548978141370347556053597178221402425212594060342213485311</span>
+g <span style="color:#f92672">=</span> <span style="color:#ae81ff">27642593390439430783453736408814717946185190497201679721975757020767271070510268596627490205095779429964809833535285315202625851326460572368018875381603399143376574281200028337681552876140857556460885848491160812604549770668188783258592940823128376128198726254875984002214053523752696104568469730021811399216</span>
+h <span style="color:#f92672">=</span> <span style="color:#ae81ff">54585833166051670245656045196940486576634589000609010947618047461787934106392112227019662788387352615714332234871251868259282522817042504587428441746855906297390193418159792477477443129333707197013251839952389651332058368911829464978546505729530760951698134101053626585254469108630886768357270544236516534904</span>
+
+c1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">60724920570148295800083597588524297283595971970237964464679084640302395172192639331196385150232229004030419122038089044697951208850497923486467859070476427472465291810423905736825272208842988090394035980454248119048131354993356125895595138979611664707727518852984351599604226889848831071126576874892808080133</span>
+c2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">48616294792900599931167965577794374684760165574922600262773518630884983374432147726140430372696876107933565006549344582099592376234783044818320678499613925823621554608542446585829308488452057340023780821973913517239972817669309837103043456714481646128392677624092659929248296869048674230341175765084122344264</span>
+c1_ <span style="color:#f92672">=</span> <span style="color:#ae81ff">42875731538109170678735196002365281622531058597803022779529275736483962610547258618168523955709341579773947887175626960699426438456382655370090748369934296474999389316334717699127421889816721511602392591677377678759026657582648354688447456509292302633971842316239774410380221303269351351929586256938787054867</span>
+c2_ <span style="color:#f92672">=</span> <span style="color:#ae81ff">64829024929257668640929285124747107162970460545535885047576569803424908055130477684809317765011143527867645692710091307694839524199204611328374569742391489915929451079830143261799375621377093290249652912850024319433129432676683899459510155157108727860920017105870104383111111395351496171846620163716404148070</span>
+
+k <span style="color:#f92672">=</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> q
+<span style="color:#66d9ef">assert</span> k <span style="color:#f92672">*</span> q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> p
+<span style="color:#75715e"># print(q, k)</span>
+
+hr1_A_1 <span style="color:#f92672">=</span> c2_ <span style="color:#f92672">*</span> invert(c2, p) <span style="color:#f92672">*</span> pow(h,<span style="color:#f92672">-</span>B, p) <span style="color:#f92672">%</span> p
+<span style="color:#75715e"># print(hr1_A_1)</span>
+d <span style="color:#f92672">=</span> xgcd(A <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">%</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+
+cur_x <span style="color:#f92672">=</span> AMM(hr1_A_1, <span style="color:#ae81ff">7438</span>, p)
+<span style="color:#75715e"># assert pow(cur_x, A - 1, p) == hr1_A_1</span>
+
+d <span style="color:#f92672">=</span> xgcd(A <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">%</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+x_7438 <span style="color:#f92672">=</span> pow(hr1_A_1, d, p)
+
+x_3719 <span style="color:#f92672">=</span> AMM(x_7438, <span style="color:#ae81ff">2</span>, p)
+x_3719_ <span style="color:#f92672">=</span> p <span style="color:#f92672">-</span> x_3719
+
+x_3719s <span style="color:#f92672">=</span> [x_3719, x_3719_]
+
+mol <span style="color:#f92672">=</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> <span style="color:#ae81ff">3719</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check</span>(mm):
+	<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> mm:
+		<span style="color:#66d9ef">if</span> i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">128</span>:
+			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+
+<span style="color:#66d9ef">for</span> eve_c <span style="color:#f92672">in</span> x_3719s:
+	cur_x <span style="color:#f92672">=</span> AMM(eve_c, <span style="color:#ae81ff">3719</span>, p)
+	<span style="color:#66d9ef">assert</span> pow(cur_x, A <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p) <span style="color:#f92672">==</span> hr1_A_1
+	<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6000</span>):
+		cur_use <span style="color:#f92672">=</span> cur_x <span style="color:#f92672">*</span> pow(i, mol, p)
+		<span style="color:#66d9ef">assert</span> pow(cur_use, A <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p) <span style="color:#f92672">==</span> hr1_A_1
+		cur_m <span style="color:#f92672">=</span> xgcd(cur_use, p)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> c2 <span style="color:#f92672">%</span> p
+		cur_m <span style="color:#f92672">=</span> n2s(int(cur_m))
+		<span style="color:#66d9ef">if</span> check(cur_m):
+			print(cur_m)
+			<span style="color:#66d9ef">break</span>
+<span style="color:#75715e"># b&#39;flag{19e9f185e6a680324cedd6e6d9382743}&#39;</span>
+</code></pre></div><h2 id="misc">Misc</h2>
 <h3 id="badpdf">badPDF</h3>
 <p>文件在运行之后在 <code>%tmp%</code> 目录下释放了三个文件，将 js 和 tmp 都提取出来</p>
 <p><figure 
@@ -651,8 +651,8 @@ $$</p>
 <p>tmp的内容好像是在混淆，查了一下应该是使用 <code>winrm.vbs</code> 绕过应用白名单执行任意未签名代码(<a class="link" href="https://www.anquanke.com/post/id/151711"  target="_blank" rel="noopener"
     >https://www.anquanke.com/post/id/151711</a>)，再一找发现是原题</p>
 <p>找个 vbs 脚本改一下</p>
-<pre tabindex="0"><code class="language-vbscript" data-lang="vbscript">for i= 1 to len(&#34;676d60667a64333665326564333665326564333665326536653265643336656564333665327c&#34;) step 2:
-	flag = flag &amp; chr(asc(chr(&#34;&amp;h&#34; &amp; mid(&#34;676d60667a64333665326564333665326564333665326536653265643336656564333665327c&#34;,i,2)))xor 1):
+<pre tabindex="0"><code class="language-vbscript" data-lang="vbscript">for i= 1 to len(&quot;676d60667a64333665326564333665326564333665326536653265643336656564333665327c&quot;) step 2:
+	flag = flag &amp; chr(asc(chr(&quot;&amp;h&quot; &amp; mid(&quot;676d60667a64333665326564333665326564333665326536653265643336656564333665327c&quot;,i,2)))xor 1):
 	next:
 msgbox(flag)
 </code></pre><p>运行结果：</p>

