@@ -943,20 +943,25 @@ bAzlsD1ChiFW5eMC5tUokHErPkdjqARE
         </item>
         <item>
         <title>西湖论剑 Writeup by or4nge</title>
-        <link>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/tmp/</link>
+        <link>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</link>
         <pubDate>Mon, 07 Nov 2022 19:00:00 +0800</pubDate>
         
-        <guid>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/tmp/</guid>
+        <guid>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</guid>
         <description>&lt;h2 id=&#34;web&#34;&gt;Web&lt;/h2&gt;
 &lt;h3 id=&#34;扭转乾坤&#34;&gt;扭转乾坤&lt;/h3&gt;
 &lt;p&gt;apache层面的waf说content-type不能是multipart/form-data,结合题目描述利用tomcat和apache对content-type理解差异性大小写绕过后随意上传文件即可获取flag。
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 178; 
+			flex-basis: 428px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/web1.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/web1.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web1.png&#34; data-size=&#34;1217x681&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web1.png&#34;
+			width=&#34;1217&#34;
+			height=&#34;681&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web1_hu61753d2efaed42fb982b28377642d192_68717_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web1_hu61753d2efaed42fb982b28377642d192_68717_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -994,12 +999,17 @@ bAzlsD1ChiFW5eMC5tUokHErPkdjqARE
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(r&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;text)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;访问首页即可下载flag文件。
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 263; 
+			flex-basis: 633px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/web2.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/web2.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web2.png&#34; data-size=&#34;826x313&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web2.png&#34;
+			width=&#34;826&#34;
+			height=&#34;313&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web2_hu8899f92139a8719d40be7c169321e3a5_11312_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web2_hu8899f92139a8719d40be7c169321e3a5_11312_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1087,12 +1097,17 @@ bAzlsD1ChiFW5eMC5tUokHErPkdjqARE
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;unusual-php&#34;&gt;unusual php&lt;/h3&gt;
 &lt;p&gt;能AFR，显示的报错是/tmp/fuck.php执行的，对index.php产生怀疑，直接读index.php发现是乱码，用伪协议读到二进制文件猜测是密文，应该是开启了zend扩展。阅读phpinfo发现存在zend-test的扩展。
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 1406; 
+			flex-basis: 3375px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/web3.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/web3.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web3.png&#34; data-size=&#34;1280x91&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web3.png&#34;
+			width=&#34;1280&#34;
+			height=&#34;91&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web3_hu793b05da768dabdc494c82698321c63c_41716_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web3_hu793b05da768dabdc494c82698321c63c_41716_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1101,12 +1116,17 @@ bAzlsD1ChiFW5eMC5tUokHErPkdjqARE
 扩展位置：/usr/local/lib/php/extensions/no-debug-non-zts-20190902/zend_test.so
 对.so文件进行逆向，在my_compile_file函数中看到大概逻辑，读文件，用rc4解密后zend_stream_open到/tmp/fuck.php然后执行，密钥是abcsdfadfjiweur
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 250; 
+			flex-basis: 601px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/web4.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/web4.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web4.png&#34; data-size=&#34;1280x511&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web4.png&#34;
+			width=&#34;1280&#34;
+			height=&#34;511&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web4_hu8990d77c86efb0eb3a2592654a32d937_188406_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web4_hu8990d77c86efb0eb3a2592654a32d937_188406_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1115,12 +1135,17 @@ bAzlsD1ChiFW5eMC5tUokHErPkdjqARE
 对一句话木马进行rc4加密，上传至远程，即可rce。
 拿到shell后尝试suid提权未果，尝试sudo -l提权发现chmod不需要密码，故把flag的权限改为可读即可读到flag。
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 567; 
+			flex-basis: 1360px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/web5.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/web5.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web5.png&#34; data-size=&#34;533x94&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web5.png&#34;
+			width=&#34;533&#34;
+			height=&#34;94&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web5_hu46c12983a455a12a7916215da94391d8_6628_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web5_hu46c12983a455a12a7916215da94391d8_6628_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1129,12 +1154,17 @@ bAzlsD1ChiFW5eMC5tUokHErPkdjqARE
 &lt;h3 id=&#34;node-magical-login&#34;&gt;Node Magical Login&lt;/h3&gt;
 &lt;p&gt;flag1是通过设置cookie的user=admin键值对获得。
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 253; 
+			flex-basis: 607px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/web6.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/web6.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web6.png&#34; data-size=&#34;1265x500&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web6.png&#34;
+			width=&#34;1265&#34;
+			height=&#34;500&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web6_hudb2cdbcb1df2a0c182dfb7cf60c1addf_54857_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web6_hudb2cdbcb1df2a0c182dfb7cf60c1addf_54857_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1153,12 +1183,17 @@ flag2通过这种方式获取：&lt;/p&gt;
 &lt;p&gt;前半部分bypass filter是不小心多打了一个斜杠绕过去的&lt;code&gt;//api/test&lt;/code&gt;
 后面的反序列化部分注意到了lib里有这些依赖，给的又是原生反序列化入口，所以无视了fastjson。
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 455; 
+			flex-basis: 1092px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/web7.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/web7.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web7.png&#34; data-size=&#34;769x169&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web7.png&#34;
+			width=&#34;769&#34;
+			height=&#34;169&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web7_hub2b0826ea5d5617a634a5a6e3472036f_22397_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web7_hub2b0826ea5d5617a634a5a6e3472036f_22397_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1170,12 +1205,17 @@ alliance:1.0, commons-logging:1.2
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;就想当然的去复现spring2的链子，后来发现spring版本对不上已经来不及了。
 fastjson最经典的部分是自动触发getter来getProperties加载字节码，如何触发getter可以通过JSON.parse触发，也可以通过toJSONString触发，很有意思的是JSON这个类的tostring就是toJSONString
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 890; 
+			flex-basis: 2137px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/web8.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/web8.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web8.png&#34; data-size=&#34;873x98&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web8.png&#34;
+			width=&#34;873&#34;
+			height=&#34;98&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web8_hu8339a80c6f30bb71537544cf62bc069c_7109_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/web8_hu8339a80c6f30bb71537544cf62bc069c_7109_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1424,12 +1464,17 @@ fastjson最经典的部分是自动触发getter来getProperties加载字节码�
 &lt;h3 id=&#34;dual-personality&#34;&gt;Dual personality&lt;/h3&gt;
 &lt;p&gt;程序设计了天堂之门转换架构，在函数401120后会从x86架构转为x64,同时函数401120会处理地址407050，将其填为一个给定的函数地址
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 172; 
+			flex-basis: 414px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/re1.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/re1.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re1.png&#34; data-size=&#34;738x427&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re1.png&#34;
+			width=&#34;738&#34;
+			height=&#34;427&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re1_hu28578b5edf2959d7cca7e513aa48c1f9_40291_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re1_hu28578b5edf2959d7cca7e513aa48c1f9_40291_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1515,12 +1560,17 @@ fastjson最经典的部分是自动触发getter来getProperties加载字节码�
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;babyre&#34;&gt;BabyRE&lt;/h3&gt;
 &lt;p&gt;此程序在preinitialize阶段就完成了整个流程，分析40615c所在的三个函数即可
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 824; 
+			flex-basis: 1978px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/re2.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/re2.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re2.png&#34; data-size=&#34;1212x147&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re2.png&#34;
+			width=&#34;1212&#34;
+			height=&#34;147&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re2_hu4ddecdd44ad59cfecd1361bb275da944_28302_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re2_hu4ddecdd44ad59cfecd1361bb275da944_28302_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1532,12 +1582,17 @@ fastjson最经典的部分是自动触发getter来getProperties加载字节码�
 按照atexit的性质，它们应当从后往前执行，即先编码，再做sha1（但此处的sha1仅是一个校验，并不算中间过程），再进行rc4.
 经过分析可知，rc4加密的密钥由输入得来，当输入超过42个字符时，超出的六个字符即是rc4的密钥
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 831; 
+			flex-basis: 1996px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/re3.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/re3.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re3.png&#34; data-size=&#34;998x120&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re3.png&#34;
+			width=&#34;998&#34;
+			height=&#34;120&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re3_hu874b16a78bcdd5c71ca92c3c585b12b6_20819_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/re3_hu874b16a78bcdd5c71ca92c3c585b12b6_20819_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1605,12 +1660,17 @@ fastjson最经典的部分是自动触发getter来getProperties加载字节码�
 &lt;h3 id=&#34;mp3&#34;&gt;mp3&lt;/h3&gt;
 &lt;p&gt;HexEditor查看MP3文件发现png格式头89504E47。
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 257; 
+			flex-basis: 618px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/misc1.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/misc1.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/misc1.png&#34; data-size=&#34;900x349&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/misc1.png&#34;
+			width=&#34;900&#34;
+			height=&#34;349&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/misc1_hu4936dc5096ff4fe597a87db21fcdf1f0_76760_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/misc1_hu4936dc5096ff4fe597a87db21fcdf1f0_76760_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -1618,12 +1678,17 @@ fastjson最经典的部分是自动触发getter来getProperties加载字节码�
 &lt;/figure&gt;
 提取图片，Stegsolve查看lsb隐写，发现任意勾选三通道之一可以解出一个zip压缩包。
 &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 143; 
+			flex-basis: 343px&#34;
 	&gt;
-	&lt;a href=&#34;https://or4ngesec.github.io/img/misc2.png&#34; &gt;
-		&lt;img src=&#34;https://or4ngesec.github.io/img/misc2.png&#34;
-			
-			
-			
+	&lt;a href=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/misc2.png&#34; data-size=&#34;1077x753&#34;&gt;
+		&lt;img src=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/misc2.png&#34;
+			width=&#34;1077&#34;
+			height=&#34;753&#34;
+			srcset=&#34;https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/misc2_hu6952adcc65d66d0b3ac66f5a47d0b686_56024_480x0_resize_box_3.png 480w, https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/img/misc2_hu6952adcc65d66d0b3ac66f5a47d0b686_56024_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
