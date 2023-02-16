@@ -20,19 +20,10 @@
     <loc>https://or4ngesec.github.io/tags/</loc>
     <lastmod>2022-11-07T19:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://or4ngesec.github.io/tags/web/</loc>
-    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://or4ngesec.github.io/tags/writeup/</loc>
     <lastmod>2022-11-07T19:00:00+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/categories/writeup/</loc>
-    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://or4ngesec.github.io/tags/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/</loc>
-    <lastmod>2022-11-07T19:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</loc>
     <lastmod>2022-11-07T19:00:00+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/post/wdb2022-writeup-by-or4nge/</loc>
@@ -48,6 +39,9 @@
     <lastmod>2022-08-31T11:45:17+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/tags/re/</loc>
+    <lastmod>2022-08-31T11:45:17+08:00</lastmod>
+  </url><url>
+    <loc>https://or4ngesec.github.io/tags/web/</loc>
     <lastmod>2022-08-31T11:45:17+08:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/tags/%E7%BD%91%E9%BC%8E%E6%9D%AF/</loc>
@@ -138,5 +132,9 @@
     <lastmod>2020-10-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://or4ngesec.github.io/page/search/</loc>
+  </url><url>
+    <loc>https://or4ngesec.github.io/tags/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/</loc>
+  </url><url>
+    <loc>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</loc>
   </url>
 </urlset>

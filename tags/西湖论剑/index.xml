@@ -5,12 +5,11 @@
     <link>https://or4ngesec.github.io/tags/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/</link>
     <description>Recent content in 西湖论剑 on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Mon, 07 Nov 2022 19:00:00 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://or4ngesec.github.io/tags/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>西湖论剑 Writeup by or4nge</title>
       <link>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</link>
-      <pubDate>Mon, 07 Nov 2022 19:00:00 +0800</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://or4ngesec.github.io/post/xhlj-writeup-by-or4nge/</guid>
       <description>Web 扭转乾坤 apache层面的waf说content-type不能是multipart/form-data,结合题目描述利用tomcat和apache对content-type理解差异性大小写绕过后随意上传文件即可获取flag。 real_ez_node CRLF注入+原型链污染+ejs模板注入
